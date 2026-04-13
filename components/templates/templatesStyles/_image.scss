@@ -1,0 +1,31 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _image.scss
+// ================================
+
+.minimalImageContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba($primary-color, 0.08);
+
+  // clamp : 260px (360px) → 420px (1280px)
+  height: clamp(260px, 17.39vw + 197.4px, 420px);
+  padding: clamp(1.4rem, 1.63vw + 0.81rem, 3rem);
+}
+
+.minimalImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 8px;
+  transition: transform 0.4s ease;
+
+  .minimalCard:hover & {
+    transform: scale(1.05);
+  }
+}

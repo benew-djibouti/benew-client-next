@@ -1,66 +1,41 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+// =============================
+// MÉTADONNÉES SPÉCIFIQUES PAGE D'ACCUEIL
+// =============================
+
+import HomeComponent from 'components/home';
+
+export const metadata = {
+  title: 'Accueil - Benew | Templates et Applications Web & Mobile',
+  description:
+    'Découvrez Benew, votre partenaire pour des templates premium et applications web & mobile professionnelles. Solutions sur-mesure pour votre business en ligne.',
+  keywords: [
+    'benew',
+    'accueil',
+    'templates premium',
+    'applications web',
+    'développement mobile',
+    'e-commerce',
+    'Djibouti',
+  ],
+
+  openGraph: {
+    title: 'Benew - Votre partenaire digital',
+    description:
+      'Templates premium et applications web & mobile pour propulser votre business en ligne.',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://benew-dj.com', // ✅ Fallback ajouté
+  },
+
+  // Données structurées pour le SEO
+  other: {
+    'application-name': 'Benew',
+    'theme-color': '#f6a037',
+  },
+
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://benew-dj.com', // ✅ Fallback ajouté
+  },
+};
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+  return <HomeComponent />;
 }

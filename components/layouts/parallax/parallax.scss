@@ -1,0 +1,148 @@
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 parallax.scss
+// ================================
+
+.parallax {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  // =============================
+  // TITRE — clamp : 2.2rem (360px) → 5rem (1280px)
+  // formule : 3.04vw + 1.1rem → ~2.2rem à 360px, ~5rem à 1280px
+  // =============================
+  h1 {
+    font-family: font-family('parallax') !important;
+    background: linear-gradient(
+      45deg,
+      $text-color,
+      $primary-color,
+      $secondary-color
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 8px rgba($background-color, 0.3);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    font-size: clamp(2.2rem, 3.04vw + 1.1rem, 5rem);
+    text-align: center;
+
+    @include from('large-1920') {
+      font-size: 5.2rem;
+    }
+  }
+
+  // =============================
+  // MOUNTAINS — contain sur mobile, cover sur desktop
+  // =============================
+  .mountains {
+    background-image: url('/mountains.png');
+    background-position: bottom;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 3;
+
+    // Mobile/tablette : contain pour ne pas couper l'image
+    background-size: contain;
+
+    // Desktop : cover pour remplir
+    @include desktop-up {
+      background-size: cover;
+      background-repeat: repeat;
+    }
+  }
+
+  // =============================
+  // PLANETS — même logique que mountains
+  // =============================
+  .planets {
+    background-position: bottom;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 2;
+
+    background-size: contain;
+
+    @include desktop-up {
+      background-size: cover;
+      background-repeat: repeat;
+    }
+  }
+
+  // =============================
+  // STARS — toujours cover
+  // =============================
+  .stars {
+    background-image: url('/stars.png');
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+  }
+}
+
+// =============================
+// CAS SPÉCIAUX
+// =============================
+
+@include mobile-landscape {
+  .parallax {
+    h1 {
+      font-size: 2rem;
+      letter-spacing: 0.01em;
+    }
+
+    .mountains,
+    .planets,
+    .stars {
+      background-size: cover;
+      background-position: center bottom;
+    }
+  }
+}
+
+@include tall-screen {
+  .parallax h1 {
+    @include below-desktop {
+      font-size: 3.2rem;
+    }
+  }
+}
+
+@include reduced-motion {
+  .parallax .mountains,
+  .parallax .planets,
+  .parallax .stars {
+    transform: none !important;
+  }
+}
+
+@include high-density {
+  .parallax .mountains,
+  .parallax .planets,
+  .parallax .stars {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+@include from('large-1920') {
+  .parallax h1 {
+    font-size: 5.5rem;
+    letter-spacing: 0.03em;
+  }
+}

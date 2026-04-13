@@ -1,0 +1,12 @@
+// app/templates/[id]/applications/[appID]/error.scss
+@use '../../../../styles/abstracts' as *;
+@use '../../../../styles/components/error-shared' as *;
+
+.application-detail-error {
+  @include error-page-wrapper();
+
+  // Surcharge du fond — ce niveau de l'arborescence
+  // utilise un gradient légèrement différent (couleurs directes)
+  // pour rester cohérent avec le reste de la page application
+  background: linear-gradient(to bottom, #0c0c1d, #151528);
+}

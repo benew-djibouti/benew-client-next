@@ -1,0 +1,236 @@
+// components/channel/skeletons/channel-skeleton.scss
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// =============================
+// ANIMATION SKELETON
+// =============================
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: calc(400px + 100%) 0;
+  }
+}
+
+.skeleton-animate {
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.06) 25%,
+    rgba($text-color, 0.12) 50%,
+    rgba($text-color, 0.06) 75%
+  );
+  background-size: 400px 100%;
+  animation: skeletonShimmer 1.8s infinite linear;
+  border-radius: 8px;
+}
+
+// =============================
+// CONTENEUR PRINCIPAL
+// =============================
+
+.channel-skeleton {
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('/stars.png');
+  background-repeat: repeat;
+  background-size: auto;
+}
+
+// =============================
+// HEADER SKELETON
+// =============================
+
+.channel-skeleton__header {
+  text-align: center;
+
+  // base → medium-768 → large-1280
+  padding: 4rem 1.5rem 2rem;
+
+  @include from('medium-768') {
+    padding: 5rem 2rem 2.5rem;
+  }
+
+  @include from('large-1280') {
+    padding: 6rem 3rem 3rem;
+  }
+}
+
+.channel-skeleton__header-inner {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.skeleton-title {
+  // height : 2.5rem (360px) → 3rem (768px) → 3.5rem (1280px)
+  height: clamp(2.5rem, 0.61vw + 2.28rem, 3.5rem);
+
+  // width : 280px (360px) → 400px (1280px)
+  width: clamp(280px, 13.04vw + 233px, 400px);
+
+  background: linear-gradient(
+    90deg,
+    rgba($primary-color, 0.12) 25%,
+    rgba($primary-color, 0.2) 50%,
+    rgba($primary-color, 0.12) 75%
+  );
+  background-size: 400px 100%;
+  animation: skeletonShimmer 1.8s infinite linear;
+  border-radius: 10px;
+}
+
+.skeleton-subtitle {
+  // height : 1rem (360px) → 1.1rem (768px)
+  height: clamp(1rem, 0.12vw + 0.96rem, 1.1rem);
+
+  width: 380px;
+  max-width: 90%;
+}
+
+// =============================
+// TOOLBAR SKELETON
+// =============================
+
+.channel-skeleton__toolbar {
+  // base → medium-768 → large-1280
+  padding: 0 1.5rem 2rem;
+
+  @include from('medium-768') {
+    padding: 0 2rem 2rem;
+  }
+
+  @include from('large-1280') {
+    padding: 0 3rem 2.5rem;
+  }
+}
+
+.channel-skeleton__toolbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.skeleton-search {
+  // height : 3rem (360px) → 3.2rem (768px)
+  height: clamp(3rem, 0.24vw + 2.91rem, 3.2rem);
+  border-radius: 12px;
+  max-width: 480px;
+}
+
+// =============================
+// GRILLE SKELETON
+// =============================
+
+.channel-skeleton__content {
+  // base → medium-768 → large-1280
+  padding: 0 1.5rem 4rem;
+
+  @include from('medium-768') {
+    padding: 0 2rem 4rem;
+  }
+
+  @include from('large-1280') {
+    padding: 0 3rem 5rem;
+  }
+}
+
+.channel-skeleton__grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
+
+  // base : 1 colonne mobile
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+  @include from('medium-768') {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.75rem;
+  }
+
+  @include from('large-1280') {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+}
+
+// =============================
+// CARTE SKELETON
+// =============================
+
+.skeleton-card {
+  background: rgba($text-color, 0.02);
+  border: 1px solid rgba($primary-color, 0.06);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.skeleton-card__thumbnail {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(
+    90deg,
+    rgba($color-purple, 0.1) 25%,
+    rgba($color-purple, 0.18) 50%,
+    rgba($color-purple, 0.1) 75%
+  );
+  background-size: 400px 100%;
+  animation: skeletonShimmer 2s infinite linear;
+  border-radius: 0;
+}
+
+.skeleton-card__body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.skeleton-card__category {
+  height: 0.75rem;
+  width: 70px;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    rgba($primary-color, 0.15) 25%,
+    rgba($primary-color, 0.25) 50%,
+    rgba($primary-color, 0.15) 75%
+  );
+  background-size: 400px 100%;
+  animation: skeletonShimmer 1.8s infinite linear;
+}
+
+.skeleton-card__title {
+  height: 1rem;
+  width: 90%;
+
+  &--short {
+    width: 65%;
+  }
+}
+
+.skeleton-card__meta {
+  height: 0.8rem;
+  width: 50%;
+}
+
+// =============================
+// ACCESSIBILITÉ
+// =============================
+
+@include reduced-motion {
+  .skeleton-animate,
+  .skeleton-title,
+  .skeleton-subtitle,
+  .skeleton-search,
+  .skeleton-card__thumbnail,
+  .skeleton-card__category {
+    animation: none;
+    opacity: 0.6;
+  }
+}

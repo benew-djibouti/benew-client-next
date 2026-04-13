@@ -1,0 +1,487 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _confirmation.scss - Étape 4 avec plateformes de paiement
+// ================================
+
+.confirmationStep {
+  text-align: center;
+
+  p {
+    color: $text-color;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+
+    // 📱 MOBILE FIRST
+    font-size: 1rem;
+
+    @include until('small-sm') {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+
+    @include from('large-xs') {
+      font-size: 1rem;
+    }
+  }
+}
+
+// =============================
+// MESSAGE PRINCIPAL DE CONFIRMATION
+// =============================
+
+.confirmation-main-message {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba($primary-color, 0.2);
+
+  @include until('small-sm') {
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// =============================
+// SECTION PLATEFORMES DE PAIEMENT
+// =============================
+
+.payment-platforms-section {
+  background: rgba($primary-color, 0.05);
+  border: 1px solid rgba($primary-color, 0.2);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  text-align: left;
+
+  // 📱 MOBILE FIRST
+  padding: 1.5rem 1.25rem;
+
+  @include until('small-sm') {
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  @include from('medium-sm') {
+    padding: 1.75rem 1.5rem;
+  }
+
+  @include from('large-xs') {
+    padding: 2rem;
+  }
+}
+
+.platforms-title {
+  color: $primary-color;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.75rem;
+
+  // 📱 MOBILE FIRST
+  font-size: 1.2rem;
+
+  @include until('small-sm') {
+    font-size: 1.1rem;
+  }
+
+  @include from('medium-sm') {
+    font-size: 1.3rem;
+  }
+
+  @include from('large-xs') {
+    font-size: 1.4rem;
+  }
+}
+
+.platforms-subtitle {
+  color: rgba($text-color, 0.8);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+
+  // 📱 MOBILE FIRST
+  font-size: 0.95rem;
+
+  @include until('small-sm') {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+
+  @include from('medium-sm') {
+    font-size: 1rem;
+  }
+}
+
+// =============================
+// LISTE DES PLATEFORMES
+// =============================
+
+.platforms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @include until('small-sm') {
+    gap: 0.875rem;
+    margin-bottom: 1.25rem;
+  }
+
+  @include from('medium-sm') {
+    gap: 1.25rem;
+  }
+}
+
+// =============================
+// CARTE PLATEFORME INDIVIDUELLE
+// =============================
+
+.platform-card {
+  background: rgba($background-color, 0.6);
+  border: 1px solid rgba($primary-color, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+
+  &:hover {
+    border-color: rgba($primary-color, 0.5);
+    box-shadow: 0 4px 12px rgba($primary-color, 0.2);
+    transform: translateY(-2px);
+  }
+}
+
+.platform-card-header {
+  background: linear-gradient(
+    135deg,
+    rgba($primary-color, 0.15),
+    rgba($secondary-color, 0.15)
+  );
+  border-bottom: 1px solid rgba($primary-color, 0.2);
+
+  // 📱 MOBILE FIRST
+  padding: 0.875rem 1rem;
+
+  @include until('small-sm') {
+    padding: 0.75rem 0.875rem;
+  }
+
+  @include from('medium-sm') {
+    padding: 1rem 1.25rem;
+  }
+}
+
+.platform-card-name {
+  color: $primary-color;
+  font-weight: 700;
+  display: block;
+
+  // 📱 MOBILE FIRST
+  font-size: 1.05rem;
+
+  @include until('small-sm') {
+    font-size: 1rem;
+  }
+
+  @include from('medium-sm') {
+    font-size: 1.1rem;
+  }
+
+  @include from('large-xs') {
+    font-size: 1.15rem;
+  }
+}
+
+.platform-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  // 📱 MOBILE FIRST
+  padding: 1rem;
+
+  @include until('small-sm') {
+    padding: 0.875rem;
+    gap: 0.625rem;
+  }
+
+  @include from('medium-sm') {
+    padding: 1.25rem;
+    gap: 0.875rem;
+  }
+}
+
+.platform-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  // 📱 MOBILE - Stack vertical si texte long
+  @include small-screens {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  @include from('medium-sm') {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+
+.detail-label {
+  color: rgba($text-color, 0.7);
+  font-weight: 500;
+
+  // 📱 MOBILE FIRST
+  font-size: 0.9rem;
+
+  @include until('small-sm') {
+    font-size: 0.85rem;
+  }
+
+  @include from('medium-sm') {
+    font-size: 0.95rem;
+  }
+}
+
+.detail-value {
+  color: $text-color;
+  font-weight: 600;
+
+  // 📱 MOBILE FIRST
+  font-size: 0.95rem;
+
+  @include until('small-sm') {
+    font-size: 0.9rem;
+  }
+
+  @include from('medium-sm') {
+    font-size: 1rem;
+  }
+
+  &.account-number {
+    color: $secondary-color;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+
+    // 📱 MOBILE FIRST
+    font-size: 1rem;
+
+    @include until('small-sm') {
+      font-size: 0.95rem;
+    }
+
+    @include from('medium-sm') {
+      font-size: 1.05rem;
+    }
+  }
+}
+
+// =============================
+// NOTICE DE PAIEMENT
+// =============================
+
+.payment-notice {
+  background: rgba($secondary-color, 0.1);
+  border: 1px solid rgba($secondary-color, 0.3);
+  border-radius: 8px;
+  text-align: center;
+
+  // 📱 MOBILE FIRST
+  padding: 1rem;
+
+  @include until('small-sm') {
+    padding: 0.875rem;
+  }
+
+  @include from('medium-sm') {
+    padding: 1.25rem;
+  }
+
+  p {
+    color: $text-color;
+    margin: 0;
+    line-height: 1.6;
+
+    // 📱 MOBILE FIRST
+    font-size: 0.9rem;
+
+    @include until('small-sm') {
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    @include from('medium-sm') {
+      font-size: 0.95rem;
+    }
+  }
+
+  strong {
+    color: $secondary-color;
+    font-weight: 700;
+  }
+}
+
+// =============================
+// BOUTON FERMER (CLOSEBUTTON)
+// =============================
+
+.closeButton {
+  background: linear-gradient(
+    135deg,
+    $primary-color,
+    color.adjust($primary-color, $lightness: 10%)
+  );
+  color: $background-color;
+  box-shadow: 0 4px 8px rgba($primary-color, 0.3);
+  margin-top: 1.5rem;
+  width: 100%;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  // 📱 MOBILE FIRST
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  min-height: 48px;
+
+  @include until('small-sm') {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.95rem;
+    min-height: 44px;
+    margin-top: 1.25rem;
+  }
+
+  @include from('medium-sm') {
+    padding: 0.9rem 1.4rem;
+  }
+
+  @include from('large-xs') {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    min-height: auto;
+  }
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      color.adjust($primary-color, $lightness: 5%),
+      $secondary-color
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba($primary-color, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// =============================
+// ADAPTATIONS RESPONSIVE
+// =============================
+
+@include mobile-landscape {
+  .payment-platforms-section {
+    padding: 1.25rem 1rem;
+  }
+
+  .platforms-list {
+    gap: 0.875rem;
+  }
+
+  .platform-card-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .platform-card-details {
+    padding: 0.875rem 1rem;
+  }
+}
+
+@media (pointer: coarse) {
+  .platform-card {
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .closeButton {
+    min-height: 48px;
+
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+@include reduced-motion {
+  .platform-card,
+  .closeButton {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+@include dark-mode {
+  .payment-platforms-section {
+    background: rgba($primary-color, 0.08);
+  }
+
+  .platform-card {
+    background: rgba($background-color, 0.8);
+  }
+
+  .payment-notice {
+    background: rgba($secondary-color, 0.12);
+  }
+}
+
+@include high-density {
+  .platform-card {
+    &:hover {
+      box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+    }
+  }
+
+  .closeButton {
+    box-shadow: 0 4px 8px rgba($primary-color, 0.4);
+
+    &:hover {
+      box-shadow: 0 6px 12px rgba($primary-color, 0.5);
+    }
+  }
+}

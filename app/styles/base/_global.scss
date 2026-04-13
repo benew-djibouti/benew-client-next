@@ -1,0 +1,196 @@
+// app/styles/base/_global.scss
+@use '../abstracts' as *;
+
+// =============================
+// ❌ IMPORT GOOGLE FONTS SUPPRIMÉ
+// =============================
+// Polices maintenant gérées par next/font (voir app/fonts.js)
+//
+// SYSTÈME 2 POLICES UNIQUEMENT :
+// 1. Orbitron : local depuis public/fonts/ - Titres + UI (nav, boutons, liens)
+// 2. Inter : auto-hébergé par Next.js - Contenu (paragraphes, texte)
+//
+// Zero requête externe → Performance optimale
+
+// =============================
+// CONFIGURATION HTML/BODY
+// =============================
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: font-family('content'); // Inter par défaut
+  font-weight: 400;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+// =============================
+// ATTRIBUTION DES POLICES PAR ÉLÉMENT
+// =============================
+
+// ✅ TOUS LES TITRES = Orbitron (Display)
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: font-family(
+    'display'
+  ) !important; // Orbitron pour TOUS les titres
+  font-weight: 700; // Bold par défaut pour les titres
+  letter-spacing: 0.02em; // Espacement spatial
+}
+
+// Graisses spécifiques par niveau de titre
+h1 {
+  font-weight: 900; // Black pour h1 (impact maximal)
+}
+
+h2 {
+  font-weight: 700; // Bold pour h2
+}
+
+h3 {
+  font-weight: 600; // SemiBold pour h3
+}
+
+h4,
+h5,
+h6 {
+  font-weight: 500; // Medium pour h4-h6
+}
+
+// ✅ NAVIGATION, LIENS, BOUTONS = Orbitron (UI)
+a,
+.link {
+  font-family: font-family('ui'); // Orbitron
+  font-weight: 500;
+}
+
+button,
+.button,
+.btn {
+  font-family: font-family('ui'); // Orbitron
+  font-weight: 600; // SemiBold pour les boutons
+}
+
+// Navigation = Orbitron
+nav,
+.nav,
+.navbar,
+.menu {
+  font-family: font-family('ui');
+
+  a,
+  button,
+  span {
+    font-family: inherit;
+  }
+}
+
+// ✅ CONTENU = Inter (déjà par défaut)
+p,
+span,
+div,
+li,
+td,
+th {
+  font-family: font-family('content');
+  font-weight: 400;
+}
+
+// =============================
+// CLASSES UTILITAIRES
+// =============================
+.font-display {
+  font-family: font-family('display') !important; // Orbitron
+  font-weight: 700;
+}
+
+.font-parallax {
+  font-family: font-family('parallax') !important; // Alias Orbitron
+  font-weight: 700;
+}
+
+.font-ui {
+  font-family: font-family('ui') !important; // Orbitron
+}
+
+.font-content {
+  font-family: font-family('content') !important; // Inter
+}
+
+// =============================
+// STYLES GLOBAUX
+// =============================
+body {
+  background-color: css-var(background-color);
+  color: css-var(text-color-muted);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.first {
+  height: calc(100vh - 6.25rem);
+  scroll-snap-align: center;
+
+  .error {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    p {
+      font-size: 2.25rem;
+      color: css-var(primary-color);
+      font-weight: 500;
+
+      a {
+        color: css-var(text-color);
+      }
+    }
+  }
+}
+
+.others {
+  height: 100vh;
+  scroll-snap-align: center;
+}
+
+// =============================
+// NOTES D'UTILISATION - SYSTÈME 2 POLICES
+// =============================
+
+/*
+ATTRIBUTION AUTOMATIQUE DES POLICES :
+
+✅ Orbitron (Display + UI) :
+   - Tous les titres (h1, h2, h3, h4, h5, h6)
+   - Navigation (nav, .nav, .navbar, .menu)
+   - Liens (a, .link)
+   - Boutons (button, .button, .btn)
+
+✅ Inter (Contenu) :
+   - Paragraphes (p)
+   - Texte général (span, div)
+   - Listes (li)
+   - Tableaux (td, th)
+
+CLASSES UTILITAIRES :
+   .font-display  → Force Orbitron
+   .font-ui       → Force Orbitron
+   .font-content  → Force Inter
+*/

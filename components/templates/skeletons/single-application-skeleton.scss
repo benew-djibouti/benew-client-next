@@ -1,0 +1,1148 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 single-application-skeleton.scss
+// MIGRÉ : clamp() + 3 breakpoints max (base / medium-768 / large-1280)
+// ================================
+
+// =============================
+// ANIMATIONS SKELETON
+// =============================
+@keyframes skeletonPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes skeletonFloat {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes skeletonGlow {
+  0% {
+    box-shadow: 0 0 10px rgba($color-orange, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba($color-orange, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba($color-orange, 0.2);
+  }
+}
+
+// =============================
+// BASE
+// =============================
+.skeleton-animate {
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.08) 25%,
+    rgba($text-color, 0.15) 50%,
+    rgba($text-color, 0.08) 75%
+  );
+  background-size: 200px 100%;
+  animation: skeletonShimmer 2s infinite linear;
+  border-radius: 8px;
+}
+
+// =============================
+// CONTENEUR PRINCIPAL
+// =============================
+.single-application-skeleton-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+// =============================
+// SECTION PARALLAX SKELETON
+// =============================
+.skeleton-parallax-section {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgba($background-color, 0.95),
+    rgba($background-color, 0.85)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  // Titre : clamp 260px → 400px, height clamp 3rem → 4.5rem
+  .skeleton-parallax-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    border-radius: 12px;
+    background: linear-gradient(
+      90deg,
+      rgba($color-orange, 0.2) 25%,
+      rgba($color-orange, 0.3) 50%,
+      rgba($color-orange, 0.2) 75%
+    );
+    width: clamp(260px, 15.22vw + 205.2px, 400px);
+    height: clamp(3rem, 1.63vw + 2.41rem, 4.5rem);
+  }
+
+  // Planète : clamp 80px → 150px
+  .skeleton-parallax-planet {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(
+      135deg,
+      rgba($color-pink, 0.15) 0%,
+      rgba($color-orange, 0.15) 50%,
+      rgba($color-purple, 0.15) 100%
+    );
+    animation: skeletonFloat 4s ease-in-out infinite;
+    width: clamp(80px, 7.61vw + 52.6px, 150px);
+    height: clamp(80px, 7.61vw + 52.6px, 150px);
+    top: clamp(18%, -0.76vw + 20.7%, 25%);
+    right: clamp(5%, 0.76vw + 2.3%, 12%);
+    z-index: 1;
+  }
+}
+
+// =============================
+// SECTION GALERIE SKELETON
+// =============================
+.skeleton-gallery-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: clamp(1rem, 1.09vw + 0.61rem, 2rem)
+    clamp(0.75rem, 0.82vw + 0.45rem, 1.5rem);
+
+  @include tablet-up {
+    padding: clamp(1.5rem, 0.54vw + 1.3rem, 2rem)
+      clamp(1rem, 0.54vw + 0.8rem, 1.5rem);
+  }
+
+  @include desktop-up {
+    padding: 3rem;
+  }
+}
+
+.skeleton-gallery-swiper-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(1rem, 0.54vw + 0.8rem, 1.5rem);
+
+  @include tablet-up {
+    flex-direction: row;
+    height: 80vh;
+    gap: 2rem;
+  }
+
+  @include desktop-up {
+    gap: 3rem;
+  }
+}
+
+// =============================
+// IMAGES LATÉRALES SKELETON
+// =============================
+.skeleton-gallery-side-images {
+  display: none;
+
+  @include tablet-up {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+
+    &.skeleton-gallery-left {
+      order: 1;
+    }
+    &.skeleton-gallery-right {
+      order: 3;
+    }
+  }
+}
+
+.skeleton-gallery-side-image {
+  @include tablet-up {
+    width: clamp(160px, 2.17vw + 152.2px, 200px);
+    height: clamp(220px, 4.35vw + 204.3px, 280px);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    opacity: 0.6;
+    animation: skeletonPulse 3s infinite ease-in-out;
+    background: linear-gradient(
+      135deg,
+      rgba($color-purple, 0.1) 0%,
+      rgba($color-pink, 0.1) 50%,
+      rgba($color-purple, 0.1) 100%
+    );
+  }
+}
+
+.skeleton-side-image {
+  @include tablet-up {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba($color-purple, 0.15) 25%,
+      rgba($color-purple, 0.25) 50%,
+      rgba($color-purple, 0.15) 75%
+    );
+  }
+}
+
+// =============================
+// CONTENEUR PRINCIPAL GALERIE
+// =============================
+.skeleton-gallery-main-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  width: 95%;
+  height: 70%;
+  order: 1;
+
+  @include tablet-up {
+    order: 2;
+    flex: 1;
+    max-width: clamp(460px, 4.35vw + 426.7px, 600px);
+    height: 100%;
+    width: auto;
+  }
+}
+
+.skeleton-gallery-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(246, 160, 55, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba($color-orange, 0.1) 0%,
+    rgba($color-pink, 0.1) 50%,
+    rgba($color-purple, 0.1) 100%
+  );
+  animation: skeletonPulse 3s infinite ease-in-out;
+}
+
+.skeleton-gallery-main-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    rgba($color-orange, 0.2) 25%,
+    rgba($color-orange, 0.35) 50%,
+    rgba($color-orange, 0.2) 75%
+  );
+  animation: skeletonShimmer 2.5s infinite linear;
+}
+
+// =============================
+// COMPTEUR GALERIE
+// =============================
+.skeleton-gallery-counter {
+  position: absolute;
+  border-radius: 25px;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba($color-orange, 0.3);
+  top: clamp(0.75rem, 0.27vw + 0.65rem, 1rem);
+  right: clamp(0.75rem, 0.27vw + 0.65rem, 1rem);
+  padding: clamp(0.4rem, 0.16vw + 0.34rem, 0.5rem)
+    clamp(0.75rem, 0.27vw + 0.65rem, 1rem);
+  width: clamp(50px, 1.09vw + 46.1px, 60px);
+  height: clamp(18px, 0.22vw + 17.2px, 20px);
+  background: linear-gradient(
+    90deg,
+    rgba($color-orange, 0.2) 25%,
+    rgba($color-orange, 0.3) 50%,
+    rgba($color-orange, 0.2) 75%
+  );
+}
+
+// =============================
+// FLÈCHES NAVIGATION
+// =============================
+.skeleton-gallery-arrow {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 10;
+  width: clamp(48px, 1.74vw + 41.7px, 64px);
+  height: clamp(48px, 1.74vw + 41.7px, 64px);
+  top: 50%;
+  margin-top: calc(clamp(48px, 1.74vw + 41.7px, 64px) / -2);
+  background: linear-gradient(
+    135deg,
+    rgba($color-orange, 0.3) 0%,
+    rgba($color-pink, 0.3) 100%
+  );
+  animation: skeletonGlow 2s infinite ease-in-out;
+
+  &.skeleton-gallery-arrow-left {
+    left: clamp(0.75rem, 0.27vw + 0.65rem, 1rem);
+  }
+  &.skeleton-gallery-arrow-right {
+    right: clamp(0.75rem, 0.27vw + 0.65rem, 1rem);
+  }
+}
+
+// =============================
+// SECTION HEADER SKELETON
+// =============================
+.skeleton-app-header-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(1rem, 1.09vw + 0.61rem, 2rem);
+  gap: clamp(2.5rem, 0.54vw + 2.3rem, 3rem);
+
+  @include tablet-up {
+    gap: clamp(3rem, 0.54vw + 2.8rem, 3.5rem);
+  }
+
+  @include desktop-up {
+    gap: 2rem;
+    height: 100%;
+  }
+}
+
+// =============================
+// EN-TÊTE SKELETON
+// =============================
+.skeleton-app-header {
+  display: flex;
+  align-items: flex-start;
+  padding-bottom: clamp(1.75rem, 0.27vw + 1.65rem, 2rem);
+  border-bottom: 2px solid rgba($color-orange, 0.2);
+  flex-shrink: 0;
+  width: 100%;
+  flex-direction: column;
+  gap: clamp(1.75rem, 0.27vw + 1.65rem, 2rem);
+  text-align: center;
+
+  @include tablet-up {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.skeleton-title-block {
+  width: 100%;
+
+  @include tablet-up {
+    flex: 1;
+    width: auto;
+  }
+}
+
+.skeleton-app-title {
+  margin: 0 0 clamp(0.875rem, 0.14vw + 0.82rem, 1rem) 0;
+  border-radius: 8px;
+  height: clamp(2.25rem, 0.27vw + 2.15rem, 2.5rem);
+  width: 80%;
+  background: linear-gradient(
+    90deg,
+    rgba($color-orange, 0.25) 25%,
+    rgba($color-orange, 0.4) 50%,
+    rgba($color-orange, 0.25) 75%
+  );
+}
+
+// =============================
+// BADGES SKELETON
+// =============================
+.skeleton-app-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.75rem, 0.27vw + 0.65rem, 1rem);
+  justify-content: center;
+  width: 100%;
+
+  @include tablet-up {
+    justify-content: flex-end;
+    align-items: flex-start;
+    width: auto;
+  }
+}
+
+.skeleton-badge {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  border-radius: 12px;
+  border: 1px solid;
+  padding: clamp(0.375rem, 0.05vw + 0.36rem, 0.4rem)
+    clamp(0.6rem, 0.11vw + 0.56rem, 0.7rem);
+  animation: skeletonPulse 3s infinite ease-in-out;
+
+  &.skeleton-level-badge {
+    border-color: rgba($color-orange, 0.3);
+    background: rgba($color-orange, 0.1);
+  }
+
+  &.skeleton-category-badge {
+    border-color: rgba($color-purple, 0.3);
+    background: rgba($color-purple, 0.1);
+  }
+}
+
+.skeleton-badge-value {
+  width: 40px;
+  height: clamp(12px, 0.22vw + 11.2px, 14px);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.15) 25%,
+    rgba($text-color, 0.25) 50%,
+    rgba($text-color, 0.15) 75%
+  );
+}
+
+// =============================
+// CONTENU PRINCIPAL
+// =============================
+.skeleton-main-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
+
+  @include tablet-up {
+    gap: 0;
+  }
+}
+
+// =============================
+// BOUTONS TOGGLE MOBILE
+// =============================
+.skeleton-mobile-toggle-buttons,
+.skeleton-mobile-section-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+
+  @include tablet-up {
+    display: none;
+  }
+}
+
+.skeleton-toggle-btn,
+.skeleton-section-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: clamp(0.625rem, 0.14vw + 0.57rem, 0.75rem)
+    clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem);
+  border: 2px solid rgba($color-light, 0.2);
+  background: rgba($color-light, 0.05);
+  border-radius: 12px;
+  animation: skeletonPulse 3s infinite ease-in-out;
+
+  &.skeleton-active {
+    background: linear-gradient(
+      135deg,
+      rgba($color-orange, 0.15),
+      rgba($color-pink, 0.1)
+    );
+    border-color: rgba($color-orange, 0.4);
+    box-shadow: 0 4px 15px rgba($color-orange, 0.2);
+  }
+}
+
+.skeleton-toggle-icon,
+.skeleton-btn-icon {
+  width: clamp(16px, 0.22vw + 15.2px, 18px);
+  height: clamp(16px, 0.22vw + 15.2px, 18px);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($color-orange, 0.2) 25%,
+    rgba($color-orange, 0.3) 50%,
+    rgba($color-orange, 0.2) 75%
+  );
+}
+
+.skeleton-toggle-text,
+.skeleton-btn-text {
+  width: clamp(70px, 1.09vw + 66.1px, 80px);
+  height: clamp(12px, 0.22vw + 11.2px, 14px);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.15) 25%,
+    rgba($text-color, 0.25) 50%,
+    rgba($text-color, 0.15) 75%
+  );
+}
+
+// =============================
+// GRILLES DE CONTENU
+// =============================
+.skeleton-content-grid,
+.skeleton-purchase-grid {
+  display: grid;
+  gap: clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
+  width: 100%;
+  grid-template-columns: 1fr;
+
+  @include tablet-up {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(2rem, 1.09vw + 1.61rem, 3rem);
+  }
+
+  @include desktop-up {
+    gap: 4rem;
+  }
+}
+
+// =============================
+// SECTIONS COMMUNES
+// =============================
+.skeleton-description-section,
+.skeleton-technical-section,
+.skeleton-needs-section,
+.skeleton-pricing-section {
+  width: 100%;
+  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+
+  &.skeleton-active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @include tablet-up {
+    display: block !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+}
+
+// =============================
+// SECTION DESCRIPTION
+// =============================
+.skeleton-description-section {
+  background: rgba($color-light, 0.03);
+  border: 1px solid rgba($color-light, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  padding: clamp(2rem, 1.09vw + 1.61rem, 3rem)
+    clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
+  animation: skeletonPulse 3s infinite ease-in-out;
+}
+
+.skeleton-section-title {
+  margin: 0 0 clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem) 0;
+  border-radius: 6px;
+  height: clamp(1.3rem, 0.22vw + 1.22rem, 1.5rem);
+  width: 65%;
+  background: linear-gradient(
+    90deg,
+    rgba($color-orange, 0.2) 25%,
+    rgba($color-orange, 0.35) 50%,
+    rgba($color-orange, 0.2) 75%
+  );
+  margin-left: auto;
+  margin-right: auto;
+
+  @include tablet-up {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.skeleton-description-content {
+  .skeleton-description-text {
+    border-radius: 8px;
+    height: clamp(180px, 10.87vw + 140.9px, 300px);
+    width: 100%;
+    background: linear-gradient(
+      180deg,
+      rgba($text-color, 0.08) 0%,
+      rgba($text-color, 0.15) 50%,
+      rgba($text-color, 0.08) 100%
+    );
+    animation: skeletonShimmer 3s infinite linear;
+  }
+}
+
+// =============================
+// SECTION TECHNIQUE
+// =============================
+.skeleton-technical-section {
+  .skeleton-section-title {
+    background: linear-gradient(
+      90deg,
+      rgba($color-purple, 0.2) 25%,
+      rgba($color-purple, 0.35) 50%,
+      rgba($color-purple, 0.2) 75%
+    );
+  }
+}
+
+.skeleton-info-table-container {
+  background: rgba($color-light, 0.03);
+  border: 1px solid rgba($color-light, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  max-height: clamp(280px, 7.61vw + 252.6px, 350px);
+}
+
+.skeleton-info-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-info-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba($color-light, 0.08);
+  padding: clamp(0.875rem, 0.14vw + 0.82rem, 1rem)
+    clamp(1rem, 0.27vw + 0.9rem, 1.25rem);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.skeleton-info-label {
+  width: 45%;
+  height: clamp(12px, 0.33vw + 10.8px, 15px);
+  border-radius: 4px;
+  margin-right: 1rem;
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.1) 25%,
+    rgba($text-color, 0.15) 50%,
+    rgba($text-color, 0.1) 75%
+  );
+}
+
+.skeleton-info-value {
+  flex: 1;
+  height: clamp(12px, 0.33vw + 10.8px, 15px);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($color-light, 0.15) 25%,
+    rgba($color-light, 0.25) 50%,
+    rgba($color-light, 0.15) 75%
+  );
+}
+
+// =============================
+// SECTION DÉTAILS
+// =============================
+.skeleton-app-details-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(1rem, 1.09vw + 0.61rem, 2rem);
+  gap: clamp(2.5rem, 0.54vw + 2.3rem, 3rem);
+
+  @include tablet-up {
+    gap: clamp(3rem, 0.54vw + 2.8rem, 3.5rem);
+  }
+
+  @include desktop-up {
+    gap: 2rem;
+  }
+}
+
+// =============================
+// SECTION BESOINS
+// =============================
+.skeleton-needs-section {
+  background: rgba($color-light, 0.03);
+  border: 1px solid rgba($color-light, 0.1);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  padding: clamp(2rem, 1.09vw + 1.61rem, 3rem)
+    clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
+  animation: skeletonPulse 3s infinite ease-in-out;
+}
+
+.skeleton-needs-table-container {
+  background: rgba($color-light, 0.03);
+  border: 1px solid rgba($color-light, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  max-height: clamp(250px, 5.43vw + 230.4px, 300px);
+}
+
+.skeleton-needs-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-needs-row {
+  border-bottom: 1px solid rgba($color-light, 0.08);
+
+  &.skeleton-free-tools {
+    background: rgba($color-orange, 0.05);
+
+    .skeleton-needs-text {
+      background: linear-gradient(
+        90deg,
+        rgba($color-orange, 0.3) 25%,
+        rgba($color-orange, 0.4) 50%,
+        rgba($color-orange, 0.3) 75%
+      );
+    }
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.skeleton-needs-item {
+  padding: clamp(0.875rem, 0.14vw + 0.82rem, 1rem)
+    clamp(1rem, 0.27vw + 0.9rem, 1.25rem);
+  display: flex;
+  align-items: center;
+  gap: clamp(0.625rem, 0.14vw + 0.57rem, 0.75rem);
+}
+
+.skeleton-needs-icon {
+  width: clamp(18px, 0.22vw + 17.2px, 20px);
+  height: clamp(18px, 0.22vw + 17.2px, 20px);
+  border-radius: 4px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    90deg,
+    rgba($color-orange, 0.2) 25%,
+    rgba($color-orange, 0.3) 50%,
+    rgba($color-orange, 0.2) 75%
+  );
+}
+
+.skeleton-needs-text {
+  flex: 1;
+  height: clamp(14px, 0.33vw + 12.8px, 17px);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($color-light, 0.15) 25%,
+    rgba($color-light, 0.25) 50%,
+    rgba($color-light, 0.15) 75%
+  );
+}
+
+// =============================
+// SECTION TARIFICATION
+// =============================
+.skeleton-pricing-section {
+  width: 100%;
+}
+
+.skeleton-pricing-table-container {
+  background: rgba($color-light, 0.03);
+  border: 1px solid rgba($color-light, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  max-height: clamp(250px, 5.43vw + 230.4px, 300px);
+}
+
+.skeleton-pricing-table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-pricing-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba($color-light, 0.08);
+  padding: clamp(0.875rem, 0.14vw + 0.82rem, 1rem)
+    clamp(1rem, 0.27vw + 0.9rem, 1.25rem);
+
+  &.skeleton-total-row {
+    background: rgba($color-orange, 0.05);
+    border-top: 2px solid rgba($color-orange, 0.3);
+
+    .skeleton-pricing-label,
+    .skeleton-pricing-value {
+      height: clamp(16px, 0.22vw + 15.2px, 18px);
+      background: linear-gradient(
+        90deg,
+        rgba($color-orange, 0.3) 25%,
+        rgba($color-orange, 0.4) 50%,
+        rgba($color-orange, 0.3) 75%
+      );
+    }
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.skeleton-pricing-label {
+  width: 60%;
+  height: clamp(12px, 0.33vw + 10.8px, 15px);
+  border-radius: 4px;
+  margin-right: 1rem;
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.1) 25%,
+    rgba($text-color, 0.15) 50%,
+    rgba($text-color, 0.1) 75%
+  );
+}
+
+.skeleton-pricing-value {
+  flex: 1;
+  height: clamp(14px, 0.33vw + 12.8px, 17px);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($color-light, 0.15) 25%,
+    rgba($color-light, 0.25) 50%,
+    rgba($color-light, 0.15) 75%
+  );
+}
+
+.skeleton-pricing-note {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  background: rgba($color-light, 0.02);
+  display: flex;
+  justify-content: center;
+}
+
+.skeleton-note-text {
+  width: clamp(160px, 4.35vw + 144.3px, 200px);
+  height: clamp(10px, 0.22vw + 9.2px, 12px);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.08) 25%,
+    rgba($text-color, 0.12) 50%,
+    rgba($text-color, 0.08) 75%
+  );
+}
+
+// =============================
+// BOUTON COMMANDER
+// =============================
+.skeleton-order-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
+  border-top: 1px solid rgba($color-light, 0.1);
+  margin-top: clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
+}
+
+.skeleton-purchase-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.375rem, 0.14vw + 1.32rem, 1.5rem)
+    clamp(1.75rem, 0.54vw + 1.55rem, 2.25rem);
+  min-height: clamp(52px, 0.43vw + 50.4px, 56px);
+  width: 100%;
+  max-width: clamp(300px, 10.87vw + 260.9px, 400px);
+  background: linear-gradient(
+    135deg,
+    rgba($color-orange, 0.3),
+    rgba($color-orange, 0.2)
+  );
+  border: 2px solid rgba($color-orange, 0.4);
+  box-shadow: 0 8px 25px rgba($color-orange, 0.3);
+  animation: skeletonGlow 3s infinite ease-in-out;
+
+  @include desktop-up {
+    max-width: 300px;
+    padding: 0.75rem 1.5rem;
+    min-height: 44px;
+  }
+
+  .skeleton-btn-icon {
+    width: clamp(18px, 0.22vw + 17.2px, 20px);
+    height: clamp(18px, 0.22vw + 17.2px, 20px);
+    border-radius: 4px;
+    background: linear-gradient(
+      90deg,
+      rgba($color-dark, 0.3) 25%,
+      rgba($color-dark, 0.4) 50%,
+      rgba($color-dark, 0.3) 75%
+    );
+  }
+
+  .skeleton-btn-text {
+    width: clamp(120px, 2.17vw + 112.2px, 140px);
+    height: clamp(14px, 0.22vw + 13.2px, 16px);
+    border-radius: 4px;
+    background: linear-gradient(
+      90deg,
+      rgba($color-dark, 0.3) 25%,
+      rgba($color-dark, 0.4) 50%,
+      rgba($color-dark, 0.3) 75%
+    );
+  }
+}
+
+// =============================
+// CAS SPÉCIAUX
+// =============================
+
+@include mobile-landscape {
+  .skeleton-gallery-container {
+    padding: 0.75rem 1rem;
+  }
+  .skeleton-gallery-swiper-wrapper {
+    height: 90vh;
+    gap: 1rem;
+  }
+  .skeleton-gallery-main-container {
+    height: 80%;
+  }
+  .skeleton-gallery-arrow {
+    width: 48px;
+    height: 48px;
+    margin-top: -24px;
+  }
+  .skeleton-app-header-container,
+  .skeleton-app-details-container {
+    padding: 1rem 0.75rem;
+  }
+  .skeleton-app-header {
+    gap: 1.5rem;
+  }
+  .skeleton-app-title {
+    height: 2rem;
+  }
+  .skeleton-badge {
+    padding: 0.375rem 0.625rem;
+  }
+}
+
+@include tall-screen {
+  .skeleton-gallery-main-container {
+    @include below-desktop {
+      height: 75%;
+    }
+  }
+  .skeleton-app-header-container,
+  .skeleton-app-details-container {
+    @include below-desktop {
+      gap: 3rem;
+    }
+  }
+  .skeleton-description-content .skeleton-description-text {
+    @include below-desktop {
+      height: 220px;
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .skeleton-gallery-container {
+    padding: 0.5rem 0.25rem;
+  }
+  .skeleton-gallery-arrow {
+    width: 40px;
+    height: 40px;
+    margin-top: -20px;
+  }
+  .skeleton-app-header-container,
+  .skeleton-app-details-container {
+    padding: 0 0.75rem;
+    gap: 2rem;
+  }
+  .skeleton-app-title {
+    height: 2rem;
+  }
+  .skeleton-badge {
+    padding: 0.25rem 0.5rem;
+  }
+  .skeleton-purchase-btn {
+    padding: 1.25rem 1.5rem;
+  }
+  .skeleton-parallax-section {
+    .skeleton-parallax-title {
+      width: 200px;
+      height: 2.8rem;
+    }
+    .skeleton-parallax-planet {
+      width: 60px;
+      height: 60px;
+    }
+  }
+}
+
+@include from('large-1920') {
+  .skeleton-gallery-container {
+    padding: 3rem 2rem;
+  }
+  .skeleton-gallery-main-container {
+    max-width: 800px;
+  }
+  .skeleton-app-header-container,
+  .skeleton-app-details-container {
+    max-width: 1600px;
+  }
+  .skeleton-app-title {
+    height: 3rem;
+  }
+  .skeleton-parallax-section {
+    .skeleton-parallax-title {
+      width: 480px;
+      height: 5rem;
+    }
+    .skeleton-parallax-planet {
+      width: 180px;
+      height: 180px;
+    }
+  }
+}
+
+@media (pointer: coarse) {
+  .skeleton-gallery-arrow {
+    min-width: 48px;
+    min-height: 48px;
+  }
+  .skeleton-purchase-btn {
+    min-height: 48px;
+  }
+  .skeleton-badge {
+    min-width: 48px;
+    min-height: 48px;
+  }
+}
+
+@include reduced-motion {
+  .skeleton-animate,
+  .skeleton-gallery-image-wrapper,
+  .skeleton-gallery-counter,
+  .skeleton-gallery-arrow,
+  .skeleton-badge,
+  .skeleton-toggle-btn,
+  .skeleton-section-btn,
+  .skeleton-description-section,
+  .skeleton-needs-section,
+  .skeleton-purchase-btn {
+    animation: skeletonPulse 2s infinite ease-in-out;
+  }
+  .skeleton-parallax-planet {
+    animation: none;
+  }
+  .skeleton-gallery-main-image {
+    animation: skeletonPulse 2s infinite ease-in-out;
+  }
+}
+
+@include high-density {
+  .skeleton-gallery-image-wrapper,
+  .skeleton-purchase-btn {
+    box-shadow:
+      0 20px 60px rgba(246, 160, 55, 0.3),
+      0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@include high-contrast {
+  .skeleton-description-section,
+  .skeleton-needs-section,
+  .skeleton-info-table-container,
+  .skeleton-needs-table-container,
+  .skeleton-pricing-table-container {
+    border-color: rgba($color-orange, 0.3);
+  }
+  .skeleton-animate {
+    background: linear-gradient(
+      90deg,
+      rgba($text-color, 0.2) 25%,
+      rgba($text-color, 0.3) 50%,
+      rgba($text-color, 0.2) 75%
+    );
+  }
+}
+
+@include dark-mode {
+  .skeleton-description-section,
+  .skeleton-needs-section,
+  .skeleton-info-table-container,
+  .skeleton-needs-table-container,
+  .skeleton-pricing-table-container {
+    background: rgba($text-color, 0.01);
+    border-color: rgba($color-orange, 0.12);
+  }
+  .skeleton-gallery-image-wrapper {
+    background: linear-gradient(
+      135deg,
+      rgba($color-orange, 0.05),
+      rgba($color-pink, 0.05)
+    );
+  }
+}

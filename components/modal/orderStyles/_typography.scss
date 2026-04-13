@@ -1,0 +1,44 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _typography.scss
+// ================================
+
+// clamp : 1.25rem (360px) → 1.5rem (1280px)
+.modal h2,
+.step h2 {
+  color: $primary-color;
+  border-bottom: 1px solid rgba($primary-color, 0.4);
+  text-shadow: 0 2px 4px rgba($background-color, 0.5);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+
+  font-size: clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem);
+}
+
+.confirmationStep {
+  text-align: center;
+
+  p {
+    color: $text-color;
+    line-height: 1.6;
+    margin-bottom: clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem);
+    opacity: 0.9;
+    font-size: clamp(0.95rem, 0.05vw + 0.93rem, 1rem);
+  }
+}
+
+.errorMessage {
+  background-color: rgba(220, 38, 38, 0.15);
+  color: color.adjust(#ef4444, $lightness: 10%);
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  border-radius: 6px;
+  backdrop-filter: blur(10px);
+  margin-bottom: 1rem;
+
+  // clamp : 0.875rem (360px) → 1rem (768px)
+  padding: clamp(0.875rem, 0.3vw + 0.77rem, 1rem);
+  font-size: clamp(0.9rem, 0.12vw + 0.86rem, 0.95rem);
+}

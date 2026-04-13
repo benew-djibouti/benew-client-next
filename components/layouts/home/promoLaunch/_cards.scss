@@ -1,0 +1,294 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _cards.scss
+// ================================
+
+.promo-cards {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+
+  // Mobile : pas de gap (slider)
+  gap: 0;
+
+  @include tablet-up {
+    gap: clamp(1.25rem, 0.82vw + 0.95rem, 2rem);
+  }
+
+  @include desktop-up {
+    max-width: clamp(1100px, 21.74vw + 921.7px, 1300px);
+  }
+}
+
+// =============================
+// CARTE INDIVIDUELLE
+// =============================
+.promo-card {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: rgba($color-light, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: clamp(20px, 0.87vw + 16.9px, 28px);
+  border: 1px solid rgba($color-light, 0.1);
+  box-shadow:
+    0 15px 40px rgba($color-dark, 0.3),
+    inset 0 1px 0 rgba($color-light, 0.08);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.4s ease;
+
+  padding: clamp(1.1rem, 0.98vw + 0.74rem, 2rem)
+    clamp(0.9rem, 0.76vw + 0.62rem, 1.5rem);
+  gap: clamp(0.55rem, 0.38vw + 0.41rem, 0.9rem);
+
+  // Mobile : une seule carte pleine largeur
+  @include mobile-only {
+    flex: 0 0 clamp(80%, 4.35vw + 64.3%, 88%);
+    max-width: clamp(80%, 4.35vw + 64.3%, 88%);
+    margin: 0 auto;
+  }
+
+  @include tablet-up {
+    flex: 1;
+    max-width: none;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+
+    @include mobile-only {
+      transform: none;
+    }
+  }
+}
+
+.promo-card--hidden {
+  @include mobile-only {
+    display: none;
+  }
+}
+
+// =============================
+// DOTS NAVIGATION MOBILE
+// =============================
+.promo-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.4rem, 0.11vw + 0.36rem, 0.5rem);
+}
+
+.promo-dot {
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba($color-light, 0.2);
+  width: clamp(6px, 0.11vw + 5.6px, 7px);
+  height: clamp(6px, 0.11vw + 5.6px, 7px);
+  padding: 0;
+
+  &--active {
+    transform: scale(1.4);
+  }
+  &--orange.promo-dot--active {
+    background: $color-orange;
+    box-shadow: 0 0 6px rgba($color-orange, 0.6);
+  }
+  &--pink.promo-dot--active {
+    background: $color-pink;
+    box-shadow: 0 0 6px rgba($color-pink, 0.6);
+  }
+  &--purple.promo-dot--active {
+    background: $color-purple;
+    box-shadow: 0 0 6px rgba($color-purple, 0.6);
+  }
+}
+
+// =============================
+// VARIANTES COULEURS
+// =============================
+.promo-card--orange {
+  border-color: rgba($color-orange, 0.35);
+  box-shadow:
+    0 15px 40px rgba($color-dark, 0.3),
+    0 0 30px rgba($color-orange, 0.1),
+    inset 0 1px 0 rgba($color-orange, 0.1);
+  &:hover {
+    @include tablet-up {
+      box-shadow:
+        0 20px 50px rgba($color-dark, 0.35),
+        0 0 40px rgba($color-orange, 0.2),
+        inset 0 1px 0 rgba($color-orange, 0.15);
+    }
+  }
+  .promo-card__badge {
+    background: linear-gradient(
+      135deg,
+      $color-orange,
+      color.adjust($color-orange, $lightness: 10%)
+    );
+    color: $color-dark;
+  }
+  .promo-card__icon {
+    color: $color-orange;
+    filter: drop-shadow(0 0 8px rgba($color-orange, 0.5));
+  }
+  .promo-card__months-number {
+    color: $color-orange;
+    text-shadow:
+      0 0 20px rgba($color-orange, 0.5),
+      0 0 40px rgba($color-orange, 0.3);
+  }
+  .promo-card__rank {
+    color: rgba($color-orange, 0.9);
+  }
+}
+
+.promo-card--pink {
+  border-color: rgba($color-pink, 0.35);
+  box-shadow:
+    0 15px 40px rgba($color-dark, 0.3),
+    0 0 30px rgba($color-pink, 0.1),
+    inset 0 1px 0 rgba($color-pink, 0.1);
+  &:hover {
+    @include tablet-up {
+      box-shadow:
+        0 20px 50px rgba($color-dark, 0.35),
+        0 0 40px rgba($color-pink, 0.2),
+        inset 0 1px 0 rgba($color-pink, 0.15);
+    }
+  }
+  .promo-card__badge {
+    background: linear-gradient(
+      135deg,
+      $color-pink,
+      color.adjust($color-pink, $lightness: 10%)
+    );
+    color: $color-dark;
+  }
+  .promo-card__icon {
+    color: $color-pink;
+    filter: drop-shadow(0 0 8px rgba($color-pink, 0.5));
+  }
+  .promo-card__months-number {
+    color: $color-pink;
+    text-shadow:
+      0 0 20px rgba($color-pink, 0.5),
+      0 0 40px rgba($color-pink, 0.3);
+  }
+  .promo-card__rank {
+    color: rgba($color-pink, 0.9);
+  }
+}
+
+.promo-card--purple {
+  border-color: rgba($color-purple, 0.35);
+  box-shadow:
+    0 15px 40px rgba($color-dark, 0.3),
+    0 0 30px rgba($color-purple, 0.1),
+    inset 0 1px 0 rgba($color-purple, 0.1);
+  &:hover {
+    @include tablet-up {
+      box-shadow:
+        0 20px 50px rgba($color-dark, 0.35),
+        0 0 40px rgba($color-purple, 0.2),
+        inset 0 1px 0 rgba($color-purple, 0.15);
+    }
+  }
+  .promo-card__badge {
+    background: linear-gradient(
+      135deg,
+      $color-purple,
+      color.adjust($color-purple, $lightness: 15%)
+    );
+    color: $color-light;
+  }
+  .promo-card__icon {
+    color: $color-purple;
+    filter: drop-shadow(0 0 8px rgba($color-purple, 0.5));
+  }
+  .promo-card__months-number {
+    color: $color-purple;
+    text-shadow:
+      0 0 20px rgba($color-purple, 0.5),
+      0 0 40px rgba($color-purple, 0.3);
+  }
+  .promo-card__rank {
+    color: rgba($color-purple, 0.9);
+  }
+}
+
+// =============================
+// ÉLÉMENTS INTERNES
+// clamp : mobile (360px) → desktop (1280px)
+// =============================
+.promo-card__badge {
+  font-family: font-family('ui');
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 50px;
+  font-size: clamp(0.55rem, 0.11vw + 0.51rem, 0.65rem);
+  padding: clamp(0.2rem, 0.11vw + 0.16rem, 0.3rem)
+    clamp(0.5rem, 0.27vw + 0.4rem, 0.75rem);
+}
+
+.promo-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.75rem, 1.36vw + 1.26rem, 3rem);
+}
+
+.promo-card__rank {
+  font-family: font-family('ui');
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+  font-size: clamp(0.68rem, 0.13vw + 0.63rem, 0.8rem);
+  letter-spacing: clamp(0.5px, 0.05vw + 0.32px, 1px);
+}
+
+.promo-card__months {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+}
+
+// clamp : 3.25rem (360px) → 5rem (1280px)
+.promo-card__months-number {
+  font-family: font-family('display') !important;
+  font-weight: 900;
+  line-height: 1;
+  font-size: clamp(3.25rem, 1.9vw + 2.57rem, 5rem);
+}
+
+.promo-card__months-label {
+  font-family: font-family('content');
+  font-weight: 500;
+  color: rgba($color-light, 0.8);
+  font-size: clamp(0.7rem, 0.11vw + 0.66rem, 0.8rem);
+}
+
+.promo-card__description {
+  font-family: font-family('content');
+  font-weight: 400;
+  color: rgba($color-light, 0.6);
+  margin: 0;
+  line-height: 1.4;
+  font-size: clamp(0.65rem, 0.11vw + 0.61rem, 0.75rem);
+}

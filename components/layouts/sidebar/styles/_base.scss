@@ -1,0 +1,19 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _base.scss
+// ================================
+
+// =============================
+// SIDEBAR - BASE STRUCTURE
+// =============================
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: $text-color;
+  color: $background-color;
+}

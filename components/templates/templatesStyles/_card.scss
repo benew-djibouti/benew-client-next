@@ -1,0 +1,52 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _card.scss
+// ================================
+
+.minimalCard {
+  display: block;
+  color: inherit;
+
+  // clamp : 85% (360px) → 65% (1280px)
+  width: clamp(65%, 2.17vw + 57.2%, 85%);
+  max-width: clamp(400px, 8.7vw + 368.7px, 480px);
+}
+
+.minimalCardInner {
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba($background-color, 0.8),
+    rgba(color.adjust($background-color, $lightness: 5%), 0.8)
+  );
+  backdrop-filter: blur(2px);
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+
+  @include below-desktop {
+    border: 0.2px solid $primary-color;
+  }
+
+  @media (pointer: coarse) {
+    &:active {
+      transform: translateY(-4px) scale(0.98);
+    }
+  }
+}
+
+.minimalCard:hover .minimalCardInner {
+  transform: translateY(-12px) scale(1.02);
+
+  @include below-desktop {
+    border-color: $secondary-color;
+    border-width: 0.3px;
+  }
+}

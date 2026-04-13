@@ -1,0 +1,327 @@
+// app/templates/[id]/not-found.scss
+@use '../../styles/abstracts' as *;
+
+.not-found-container {
+  min-height: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  // 📱 MOBILE FIRST - Padding avec nouveaux breakpoints
+  padding: 1rem;
+
+  @include from('small-sm') {
+    padding: 1.5rem;
+  }
+
+  @include from('small-lg') {
+    padding: 2rem;
+  }
+
+  // 📟 MOYENS ÉCRANS
+  @include from('medium-sm') {
+    padding: 2.5rem;
+  }
+
+  // 🖥️ GRANDS ÉCRANS
+  @include from('large-xs') {
+    padding: 3rem;
+  }
+
+  // Arrière-plan dégradé avec les couleurs du projet
+  background: linear-gradient(
+    135deg,
+    $background-color 0%,
+    rgba($background-color, 0.8) 100%
+  );
+}
+
+/* ==========================================
+   CONTENEUR PRINCIPAL
+========================================== */
+.content-wrapper {
+  width: 100%;
+  background: rgba($text-color, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  text-align: center;
+  border: 1px solid rgba($primary-color, 0.2);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba($text-color, 0.1);
+  position: relative;
+  z-index: 1;
+  animation: slideIn 0.6s ease-out;
+
+  // 📱 MOBILE FIRST - Padding et max-width
+  padding: 2rem 1.5rem;
+  max-width: 90%;
+
+  @include from('small-sm') {
+    padding: 2.5rem 1.8rem;
+    max-width: 500px;
+  }
+
+  @include from('small-lg') {
+    padding: 3rem 2rem;
+    max-width: 550px;
+  }
+
+  @include from('small-xl') {
+    padding: 3.2rem 2.2rem;
+    max-width: 600px;
+  }
+
+  // 📟 MOYENS ÉCRANS
+  @include from('medium-sm') {
+    padding: 3.5rem 2.5rem;
+    max-width: 650px;
+  }
+
+  @include from('medium-lg') {
+    padding: 4rem;
+    max-width: 700px;
+  }
+
+  @include from('medium-xxl') {
+    max-width: 750px;
+  }
+
+  // 🖥️ GRANDS ÉCRANS
+  @include from('large-xs') {
+    max-width: 800px;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==========================================
+   TYPOGRAPHIE
+========================================== */
+.error-title {
+  color: $primary-color;
+  font-weight: bold;
+  margin: 1rem 0;
+  letter-spacing: -1px;
+
+  // 📱 MOBILE FIRST
+  font-size: 1.8rem;
+
+  @include from('small-sm') {
+    font-size: 2rem;
+  }
+
+  @include from('small-lg') {
+    font-size: 2.2rem;
+  }
+
+  // 📟 MOYENS ÉCRANS
+  @include from('medium-sm') {
+    font-size: 2.4rem;
+  }
+
+  // 🖥️ GRANDS ÉCRANS
+  @include from('large-xs') {
+    font-size: 2.5rem;
+  }
+}
+
+.error-message {
+  color: $text-color-muted;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+
+  // 📱 MOBILE FIRST
+  font-size: 1rem;
+
+  @include from('small-lg') {
+    font-size: 1.1rem;
+  }
+
+  // 📟 MOYENS ÉCRANS
+  @include from('medium-sm') {
+    font-size: 1.2rem;
+  }
+}
+
+/* ==========================================
+   BOUTONS - STYLE ORDERMODAL (CORRIGÉ)
+========================================== */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+
+  // 📱 MOBILE - Stack vertical
+  @include small-screens {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  @include from('medium-sm') {
+    flex-direction: row;
+  }
+}
+
+.retry-button,
+.home-button {
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  // 📱 MOBILE FIRST - Zone tactile optimale
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  min-height: 48px;
+
+  @include until('small-sm') {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.95rem;
+    min-height: 44px;
+  }
+
+  // 📱 MOBILE - Largeur complète
+  @include small-screens {
+    width: 100%;
+    justify-content: center;
+  }
+
+  // 📟 MOYENS ÉCRANS - Transition
+  @include from('medium-sm') {
+    width: auto;
+    flex: 1;
+    padding: 0.9rem 1.4rem;
+  }
+
+  @include from('medium-lg') {
+    padding: 0.85rem 1.35rem;
+  }
+
+  // 🖥️ DESKTOP - Valeurs optimales
+  @include from('large-xs') {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    min-height: auto;
+    width: auto;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// STYLE ORDERMODAL - Bouton Principal ("Voir tous les templates")
+.retry-button {
+  // ✅ CORRIGÉ : Utilise l'approche d'OrderModal
+  background: linear-gradient(135deg, $primary-color, $secondary-color);
+  color: $background-color;
+  box-shadow: 0 4px 8px rgba($primary-color, 0.3);
+
+  &:hover:not(:disabled) {
+    // ✅ CORRIGÉ : Même approche que OrderModal
+    background: linear-gradient(135deg, $secondary-color, $accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba($primary-color, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// STYLE ORDERMODAL - Bouton Secondaire ("Retour à l'accueil")
+.home-button {
+  background-color: transparent;
+  color: $primary-color;
+  border: 1px solid $primary-color;
+
+  &:hover:not(:disabled) {
+    // ✅ CORRIGÉ : Utilise l'interpolation de string comme OrderModal
+    background-color: rgba($primary-color, 0.1);
+    border-color: $secondary-color;
+  }
+}
+
+/* ==========================================
+   OPTIMISATIONS POUR L'ACCESSIBILITÉ
+========================================== */
+
+// Réduction de mouvement
+@include reduced-motion {
+  .content-wrapper {
+    animation: none !important;
+  }
+
+  .retry-button,
+  .home-button {
+    &:hover {
+      transform: none !important;
+    }
+  }
+}
+
+// Support pour écrans tactiles
+@media (pointer: coarse) {
+  .retry-button,
+  .home-button {
+    min-height: 48px;
+    min-width: 44px;
+
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+// Mode sombre
+@include dark-mode {
+  .content-wrapper {
+    background: rgba($text-color, 0.03);
+    border-color: rgba($primary-color, 0.3);
+  }
+}
+
+// Écrans haute densité
+@include high-density {
+  .content-wrapper {
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba($text-color, 0.15);
+  }
+
+  .retry-button {
+    box-shadow: 0 4px 8px rgba($primary-color, 0.4);
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 6px 12px rgba($primary-color, 0.5);
+    }
+  }
+}

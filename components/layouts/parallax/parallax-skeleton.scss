@@ -1,0 +1,604 @@
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 parallax-skeleton.scss
+// ================================
+
+@keyframes skeletonPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes skeletonFloat {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes skeletonTwinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+// =============================
+// BASE
+// =============================
+.skeleton-animate {
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.08) 25%,
+    rgba($text-color, 0.15) 50%,
+    rgba($text-color, 0.08) 75%
+  );
+  background-size: 200px 100%;
+  animation: skeletonShimmer 2s infinite linear;
+  border-radius: 8px;
+}
+
+// =============================
+// CONTENEUR PRINCIPAL
+// =============================
+.parallax-skeleton {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba($background-color, 0.9) 0%,
+    rgba($color-purple, 0.1) 50%,
+    rgba($background-color, 0.95) 100%
+  );
+}
+
+// =============================
+// SKELETON TITRE
+// height : 2.2rem (360px) → 5rem (1920px)
+// formule : clamp(2.2rem, 1.97vw + 1.49rem, 5rem)
+// =============================
+.skeleton-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  border-radius: 12px;
+  background: linear-gradient(
+    45deg,
+    rgba($text-color, 0.15) 0%,
+    rgba($color-orange, 0.25) 25%,
+    rgba($color-pink, 0.25) 50%,
+    rgba($color-purple, 0.25) 75%,
+    rgba($text-color, 0.15) 100%
+  );
+  background-size: 300px 100%;
+  animation: skeletonShimmer 3s infinite linear;
+
+  // height : 2.2rem (360px) → 5rem (1920px)
+  height: clamp(2.2rem, 1.81vw + 1.55rem, 5rem);
+
+  // ---- VARIANTE SMALL ----
+  // width : 140px (360px) → 200px (1920px)
+  &.skeleton-title-small {
+    width: clamp(140px, 3.75vw + 126.5px, 200px);
+  }
+
+  // ---- VARIANTE MEDIUM ----
+  // width : 220px (360px) → 350px (1920px)
+  &.skeleton-title-medium {
+    width: clamp(220px, 8.13vw + 190.7px, 350px);
+  }
+
+  // ---- VARIANTE LARGE ----
+  // width : 280px (360px) → 500px (1920px)
+  &.skeleton-title-large {
+    width: clamp(280px, 13.75vw + 230.5px, 500px);
+  }
+}
+
+// =============================
+// SKELETON MONTAGNES
+// =============================
+.skeleton-mountains {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 3;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba($text-color, 0.15) 0%,
+    rgba($text-color, 0.12) 20%,
+    rgba($text-color, 0.08) 40%,
+    rgba($text-color, 0.05) 60%,
+    transparent 80%
+  );
+  mask: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  animation: skeletonPulse 4s infinite ease-in-out;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60%;
+    background: linear-gradient(
+      to top,
+      rgba($text-color, 0.1) 0%,
+      rgba($text-color, 0.06) 50%,
+      transparent 100%
+    );
+  }
+
+  &::before {
+    left: -20%;
+    transform: skewX(-5deg);
+    z-index: 1;
+  }
+  &::after {
+    right: -20%;
+    transform: skewX(5deg);
+    z-index: 1;
+  }
+}
+
+// =============================
+// SKELETON PLANÈTES
+// Planète principale : 80px (360px) → 150px (1280px)
+// Planète secondaire : 40px (360px) → 60px (768px)
+// =============================
+.skeleton-planets {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 2;
+  animation: skeletonFloat 6s ease-in-out infinite;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(
+      135deg,
+      rgba($color-orange, 0.15) 0%,
+      rgba($color-pink, 0.12) 50%,
+      rgba($color-purple, 0.1) 100%
+    );
+    animation: skeletonPulse 5s infinite ease-in-out;
+  }
+
+  // Planète principale : 80px → 150px (taille) sur 360px → 1280px
+  &::before {
+    width: clamp(80px, 7.61vw + 52.6px, 150px);
+    height: clamp(80px, 7.61vw + 52.6px, 150px);
+    top: clamp(12%, -0.33vw + 13.2%, 20%);
+    right: clamp(5%, 0.76vw + 2.3%, 12%);
+    animation-delay: 0s;
+  }
+
+  // Planète secondaire : 40px → 60px (taille) sur 360px → 768px
+  &::after {
+    width: clamp(40px, 4.9vw + 22.3px, 60px);
+    height: clamp(40px, 4.9vw + 22.3px, 60px);
+    top: clamp(55%, 1.08vw + 51.1%, 60%);
+    left: clamp(10%, 1.22vw + 5.6%, 15%);
+    animation-delay: 1s;
+    opacity: 0.6;
+
+    @include from('large-1280') {
+      width: 80px;
+      height: 80px;
+      top: 55%;
+      left: 18%;
+    }
+  }
+}
+
+// =============================
+// SKELETON ÉTOILES
+// =============================
+.skeleton-stars {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  background:
+    radial-gradient(
+      circle at 20% 80%,
+      rgba($color-light, 0.15) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba($color-light, 0.12) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba($color-light, 0.1) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 60% 90%,
+      rgba($color-light, 0.08) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 90% 60%,
+      rgba($color-light, 0.06) 1px,
+      transparent 1px
+    );
+  // background-size scalé par palier (pas scalable avec clamp)
+  background-size:
+    100px 100px,
+    150px 150px,
+    120px 120px,
+    80px 80px,
+    200px 200px;
+  animation: skeletonTwinkle 3s infinite ease-in-out;
+
+  @include mobile-only {
+    background-size:
+      80px 80px,
+      120px 120px,
+      100px 100px,
+      60px 60px,
+      160px 160px;
+  }
+
+  @include from('medium-768') {
+    background-size:
+      120px 120px,
+      180px 180px,
+      140px 140px,
+      100px 100px,
+      240px 240px;
+  }
+
+  @include from('large-1280') {
+    background-size:
+      140px 140px,
+      200px 200px,
+      160px 160px,
+      120px 120px,
+      280px 280px;
+  }
+}
+
+// =============================
+// CAS SPÉCIAUX
+// =============================
+
+@media (max-width: 360px) {
+  .parallax-skeleton {
+    .skeleton-title {
+      &.skeleton-title-small {
+        height: 2rem;
+        width: 120px;
+      }
+      &.skeleton-title-medium {
+        height: 2rem;
+        width: 180px;
+      }
+      &.skeleton-title-large {
+        height: 2.2rem;
+        width: 240px;
+      }
+    }
+    .skeleton-planets {
+      &::before {
+        width: 60px;
+        height: 60px;
+        top: 25%;
+        right: 3%;
+      }
+      &::after {
+        width: 30px;
+        height: 30px;
+        top: 70%;
+        left: 5%;
+      }
+    }
+    .skeleton-stars {
+      background-size:
+        60px 60px,
+        90px 90px,
+        80px 80px,
+        50px 50px,
+        120px 120px;
+    }
+  }
+}
+
+@include mobile-landscape {
+  .parallax-skeleton {
+    .skeleton-title {
+      &.skeleton-title-small {
+        height: 1.8rem;
+        width: 120px;
+      }
+      &.skeleton-title-medium {
+        height: 2rem;
+        width: 180px;
+      }
+      &.skeleton-title-large {
+        height: 2.2rem;
+        width: 220px;
+      }
+    }
+    .skeleton-planets {
+      &::before {
+        width: 60px;
+        height: 60px;
+        top: 10%;
+        right: 5%;
+      }
+      &::after {
+        width: 30px;
+        height: 30px;
+        top: 70%;
+        left: 5%;
+      }
+    }
+    .skeleton-stars {
+      background-size:
+        60px 60px,
+        90px 90px,
+        80px 80px,
+        50px 50px,
+        120px 120px;
+    }
+  }
+}
+
+@include tall-screen {
+  .parallax-skeleton {
+    .skeleton-title {
+      @include until('large-1280') {
+        &.skeleton-title-small {
+          height: 2.2rem;
+          width: 160px;
+        }
+        &.skeleton-title-medium {
+          height: 3.2rem;
+          width: 300px;
+        }
+        &.skeleton-title-large {
+          height: 3.8rem;
+          width: 420px;
+        }
+      }
+    }
+  }
+}
+
+@include reduced-motion {
+  .parallax-skeleton {
+    .skeleton-title,
+    .skeleton-mountains,
+    .skeleton-planets,
+    .skeleton-stars {
+      animation: skeletonPulse 2s infinite ease-in-out !important;
+    }
+    .skeleton-planets {
+      &::before,
+      &::after {
+        animation: none !important;
+      }
+    }
+  }
+}
+
+@include high-density {
+  .parallax-skeleton {
+    .skeleton-mountains {
+      background: linear-gradient(
+        to top,
+        rgba($text-color, 0.2) 0%,
+        rgba($text-color, 0.15) 20%,
+        rgba($text-color, 0.1) 40%,
+        rgba($text-color, 0.08) 60%,
+        transparent 80%
+      );
+    }
+    .skeleton-planets {
+      &::before,
+      &::after {
+        box-shadow:
+          0 0 20px rgba($color-orange, 0.2),
+          inset 0 0 20px rgba($color-pink, 0.1);
+      }
+    }
+  }
+}
+
+@include high-contrast {
+  .parallax-skeleton {
+    .skeleton-title {
+      background: linear-gradient(
+        45deg,
+        rgba($text-color, 0.3) 0%,
+        rgba($color-orange, 0.4) 25%,
+        rgba($color-pink, 0.4) 50%,
+        rgba($color-purple, 0.4) 75%,
+        rgba($text-color, 0.3) 100%
+      );
+    }
+    .skeleton-mountains {
+      background: linear-gradient(
+        to top,
+        rgba($text-color, 0.25) 0%,
+        rgba($text-color, 0.2) 20%,
+        rgba($text-color, 0.15) 40%,
+        rgba($text-color, 0.1) 60%,
+        transparent 80%
+      );
+    }
+    .skeleton-planets {
+      &::before,
+      &::after {
+        background: linear-gradient(
+          135deg,
+          rgba($color-orange, 0.25) 0%,
+          rgba($color-pink, 0.22) 50%,
+          rgba($color-purple, 0.2) 100%
+        );
+      }
+    }
+    .skeleton-stars {
+      background:
+        radial-gradient(
+          circle at 20% 80%,
+          rgba($color-light, 0.25) 1px,
+          transparent 1px
+        ),
+        radial-gradient(
+          circle at 80% 20%,
+          rgba($color-light, 0.22) 1px,
+          transparent 1px
+        ),
+        radial-gradient(
+          circle at 40% 40%,
+          rgba($color-light, 0.2) 1px,
+          transparent 1px
+        ),
+        radial-gradient(
+          circle at 60% 90%,
+          rgba($color-light, 0.18) 1px,
+          transparent 1px
+        ),
+        radial-gradient(
+          circle at 90% 60%,
+          rgba($color-light, 0.16) 1px,
+          transparent 1px
+        );
+    }
+  }
+}
+
+@include dark-mode {
+  .parallax-skeleton {
+    background: linear-gradient(
+      135deg,
+      rgba($background-color, 0.95) 0%,
+      rgba($color-purple, 0.05) 50%,
+      rgba($background-color, 0.98) 100%
+    );
+    .skeleton-title {
+      background: linear-gradient(
+        45deg,
+        rgba($text-color, 0.1) 0%,
+        rgba($color-orange, 0.2) 25%,
+        rgba($color-pink, 0.2) 50%,
+        rgba($color-purple, 0.2) 75%,
+        rgba($text-color, 0.1) 100%
+      );
+    }
+    .skeleton-mountains {
+      background: linear-gradient(
+        to top,
+        rgba($text-color, 0.08) 0%,
+        rgba($text-color, 0.06) 20%,
+        rgba($text-color, 0.04) 40%,
+        rgba($text-color, 0.02) 60%,
+        transparent 80%
+      );
+    }
+    .skeleton-planets {
+      &::before,
+      &::after {
+        background: linear-gradient(
+          135deg,
+          rgba($color-orange, 0.08) 0%,
+          rgba($color-pink, 0.06) 50%,
+          rgba($color-purple, 0.05) 100%
+        );
+      }
+    }
+  }
+}
+
+@media (pointer: coarse) {
+  .parallax-skeleton {
+    pointer-events: none;
+  }
+}
+
+@include from('large-1920') {
+  .parallax-skeleton {
+    .skeleton-title {
+      &.skeleton-title-small {
+        height: 5.8rem;
+        width: 250px;
+      }
+      &.skeleton-title-medium {
+        height: 5.5rem;
+        width: 400px;
+      }
+      &.skeleton-title-large {
+        height: 5.2rem;
+        width: 550px;
+      }
+    }
+    .skeleton-planets {
+      &::before {
+        width: 180px;
+        height: 180px;
+        top: 10%;
+        right: 15%;
+      }
+      &::after {
+        width: 100px;
+        height: 100px;
+        top: 50%;
+        left: 20%;
+      }
+    }
+    .skeleton-stars {
+      background-size:
+        160px 160px,
+        240px 240px,
+        200px 200px,
+        140px 140px,
+        320px 320px;
+    }
+  }
+}

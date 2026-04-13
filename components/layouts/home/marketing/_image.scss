@@ -1,0 +1,64 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _image.scss
+// ================================
+
+// Desktop
+@include desktop-up {
+  .profit-image {
+    max-height: 90vh;
+    height: auto;
+    width: auto;
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    opacity: 0.9;
+    filter: none;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 5;
+    border-radius: 28px;
+  }
+}
+
+// Tablette
+@include between('medium-768', 'large-1280') {
+  .profit-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -58%);
+    z-index: 1;
+    opacity: 1;
+    filter: none;
+    transition: all 0.4s ease;
+    height: clamp(58vh, 1.56vw + 56vh, 62vh);
+    width: auto;
+  }
+}
+
+// Mobile
+@include mobile-only {
+  .profit-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    height: clamp(80vh, 2vw + 75vh, 85vh);
+    width: clamp(80%, 1.5vw + 76%, 85%);
+    object-fit: contain;
+    opacity: 1;
+    filter: none;
+    transition: all 0.4s ease;
+  }
+}
+
+// Transition tablette → desktop
+@include between('medium-1024', 'large-1280') {
+  .profit-image {
+    max-height: 85vh;
+  }
+}

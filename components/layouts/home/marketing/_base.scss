@@ -1,0 +1,54 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _base.scss
+// ================================
+
+@include tablet-up {
+  .main-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    gap: clamp(2rem, 1.09vw + 1.61rem, 3rem);
+    box-sizing: border-box;
+  }
+}
+
+@include mobile-only {
+  .main-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    box-sizing: border-box;
+  }
+}
+
+// Wrapper mobile — visible uniquement sur mobile
+.mobile-marketing-wrapper {
+  display: none;
+
+  @include mobile-only {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Contenu tablette/desktop — masqué sur mobile
+.desktop-tablet-content {
+  @include mobile-only {
+    display: none !important;
+  }
+}

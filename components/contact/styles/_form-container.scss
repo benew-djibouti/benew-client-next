@@ -1,0 +1,54 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _form-container.scss
+// ================================
+
+.formContainer {
+  // 📱 MOBILE/TABLETTE - Largeur contrôlée, centré par le parent
+  @include until('large-xs') {
+    width: 100%;
+    max-width: 600px; // ✅ Largeur maximale pour ne pas être trop large
+    height: auto;
+    min-height: auto;
+  }
+
+  @include until('small-sm') {
+    max-width: 100%; // Pleine largeur sur très petits écrans
+  }
+
+  @include from('small-sm') {
+    max-width: 500px;
+  }
+
+  @include from('small-lg') {
+    max-width: 520px;
+  }
+
+  @include from('small-xl') {
+    max-width: 540px;
+  }
+
+  @include from('medium-sm') {
+    max-width: 560px;
+  }
+
+  @include from('medium-lg') {
+    max-width: 580px;
+  }
+
+  @include from('medium-xl') {
+    max-width: 600px;
+  }
+
+  // 🖥️ DESKTOP - Retour au layout original (50% à droite)
+  @include from('large-xs') {
+    flex: 1;
+    width: 50%;
+    max-width: none; // ✅ Pas de limite sur desktop
+    height: 100%;
+    order: 2;
+    min-height: auto;
+  }
+}

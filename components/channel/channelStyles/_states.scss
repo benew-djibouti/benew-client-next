@@ -1,0 +1,74 @@
+// components/channel/channelStyles/_states.scss
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// =============================
+// ÉTAT VIDE
+// =============================
+
+.channel-empty {
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.channel-empty__inner {
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.channel-empty__icon {
+  font-size: 3.5rem;
+  opacity: 0.4;
+}
+
+.channel-empty__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgba($text-color, 0.6);
+  margin: 0;
+
+  @include from('medium-sm') {
+    font-size: 1.2rem;
+  }
+}
+
+.channel-empty__reset {
+  background: rgba($primary-color, 0.1);
+  border: 1px solid rgba($primary-color, 0.25);
+  color: $primary-color;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba($primary-color, 0.18);
+    border-color: rgba($primary-color, 0.4);
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 3px;
+  }
+}
+
+// =============================
+// ACCESSIBILITÉ
+// =============================
+
+@include reduced-motion {
+  .channel-empty__reset {
+    transition: none;
+    &:hover {
+      transform: none;
+    }
+  }
+}

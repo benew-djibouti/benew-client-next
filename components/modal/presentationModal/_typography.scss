@@ -1,0 +1,134 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _typography.scss
+// ================================
+
+.modalContent h2 {
+  color: $primary-color;
+  font-size: 1.8rem;
+  text-align: center;
+  border-bottom: 1px solid rgba($primary-color, 0.4);
+  padding-bottom: 1rem;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba($primary-color, 0.5);
+
+  // 📱 PETITS ÉCRANS - Tailles réduites
+  @include until('small-sm') {
+    font-size: 1.3rem;
+    padding-bottom: 0.75rem;
+  }
+
+  @include from('small-sm') {
+    font-size: 1.35rem;
+    padding-bottom: 0.8rem;
+  }
+
+  @include from('small-lg') {
+    font-size: 1.4rem;
+    padding-bottom: 0.85rem;
+  }
+
+  @include from('small-xl') {
+    font-size: 1.45rem;
+    padding-bottom: 0.9rem;
+  }
+
+  // 📟 MOYENS ÉCRANS - Progression
+  @include from('medium-sm') {
+    font-size: 1.5rem;
+    padding-bottom: 0.95rem;
+  }
+
+  @include from('medium-lg') {
+    font-size: 1.6rem;
+  }
+
+  @include from('medium-xl') {
+    font-size: 1.7rem;
+  }
+
+  // 🖥️ GRANDS ÉCRANS - Taille optimale
+  @include from('large-xs') {
+    font-size: 1.8rem;
+    padding-bottom: 1rem;
+  }
+}
+
+.modalText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  @include until('small-sm') {
+    gap: 0.6rem;
+  }
+
+  @include from('small-sm') {
+    gap: 0.65rem;
+  }
+
+  @include from('small-lg') {
+    gap: 0.7rem;
+  }
+
+  @include from('medium-sm') {
+    gap: 0.75rem;
+  }
+
+  @include from('large-xs') {
+    gap: 0.8rem;
+  }
+
+  p {
+    color: $text-color;
+    line-height: 1.7;
+    font-size: 1rem;
+    margin: 0;
+    text-align: left; // ← CHANGÉ de justify à left pour meilleure lisibilité
+    opacity: 0.95;
+
+    // 📱 PETITS ÉCRANS - Tailles réduites
+    @include until('small-sm') {
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    @include from('small-sm') {
+      font-size: 0.87rem;
+      line-height: 1.62;
+    }
+
+    @include from('small-lg') {
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    @include from('small-xl') {
+      font-size: 0.93rem;
+      line-height: 1.67;
+    }
+
+    // 📟 MOYENS ÉCRANS - Progression
+    @include from('medium-sm') {
+      font-size: 0.95rem;
+      line-height: 1.68;
+    }
+
+    @include from('medium-lg') {
+      font-size: 0.97rem;
+      line-height: 1.69;
+    }
+
+    @include from('medium-xl') {
+      font-size: 0.98rem;
+    }
+
+    // 🖥️ GRANDS ÉCRANS - Taille optimale
+    @include from('large-xs') {
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+  }
+}

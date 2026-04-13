@@ -1,0 +1,11 @@
+// ================================
+// 📄 index.scss (fichier principal)
+// ================================
+@forward 'contact-section-wrapper'; // 🆕 Nouveau wrapper
+@forward 'base';
+@forward 'text-container';
+@forward 'contact-items';
+@forward 'form-container';
+@forward 'contact-info-button';
+@forward 'contact-info-modal';
+@forward 'responsive';

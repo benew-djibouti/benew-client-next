@@ -1,0 +1,247 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// =============================
+// 📄 _gallery_app.scss - CAROUSEL OPTIMISÉ
+// =============================
+// ✅ SANS FLÈCHES
+// ✅ Dots VISIBLES (toutes les dots)
+// ✅ Dots RESPONSIVE (progression mobile → tablette → laptop → desktop)
+// ✅ Overflow hidden pour éviter scroll horizontal
+// ✅ BACKGROUND STARS ajouté
+
+.gallery-section {
+  background: linear-gradient(to bottom, #0c0c1d, #151528);
+  background-image: url('/stars.png');
+  background-repeat: repeat;
+  background-size: auto;
+  background-position: center;
+  overflow: hidden;
+}
+
+// =============================
+// CONTENEUR CAROUSEL
+// =============================
+
+.gallery-carousel-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  // clamp : 1.5rem (360px) → 2rem (768px), 1rem → 1rem horizontal
+  padding: clamp(1.5rem, 0.54vw + 1.3rem, 2rem)
+    clamp(0.75rem, 0.27vw + 0.65rem, 1rem);
+
+  @include desktop-up {
+    padding: 3rem 2rem;
+  }
+}
+
+.gallery-carousel-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: clamp(100%, 0vw + 100%, 900px);
+  max-height: clamp(500px, 21.74vw + 421.7px, 700px);
+  overflow: hidden;
+
+  @include desktop-up {
+    max-width: 1000px;
+    max-height: 800px;
+  }
+}
+
+// =============================
+// SLIDES ANIMATION
+// =============================
+
+.gallery-carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.hidden-right {
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &.hidden-left {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &.entering {
+    transform: translateX(0);
+    opacity: 1;
+    transition:
+      transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &.exiting {
+    transform: translateX(-100%);
+    opacity: 0;
+    transition:
+      transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &.active {
+    transform: translateX(0);
+    opacity: 1;
+    transition: none;
+  }
+}
+
+.gallery-carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+// =============================
+// DOTS INDICATORS
+// =============================
+
+.gallery-carousel-indicators {
+  position: absolute;
+  bottom: clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+
+  @include tablet-up {
+    bottom: 2.5rem;
+  }
+
+  @include desktop-up {
+    bottom: 3rem;
+  }
+}
+
+.gallery-carousel-dot {
+  border-color: grey;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+  border-radius: 50%;
+  // clamp : 6px (360px) → 9px (768px) mobile
+  width: clamp(6px, 0.33vw + 4.8px, 9px);
+  height: clamp(6px, 0.33vw + 4.8px, 9px);
+
+  @include tablet-up {
+    // clamp : 9px (768px) → 12px (1280px)
+    width: clamp(9px, 0.59vw + 4.5px, 12px);
+    height: clamp(9px, 0.59vw + 4.5px, 12px);
+  }
+
+  @include desktop-up {
+    // clamp : 12px (1280px) → 16px (1920px)
+    width: clamp(12px, 0.63vw + 3.9px, 16px);
+    height: clamp(12px, 0.63vw + 3.9px, 16px);
+  }
+
+  &.active {
+    background: $color-orange;
+    border-color: $color-orange;
+    box-shadow: 0 2px 8px rgba($color-orange, 0.5);
+  }
+}
+
+// =============================
+// COUNTER
+// =============================
+
+.gallery-carousel-counter {
+  position: absolute;
+  top: clamp(1rem, 0.54vw + 0.8rem, 1.5rem);
+  right: clamp(1rem, 0.54vw + 0.8rem, 1.5rem);
+  z-index: 10;
+  background: rgba($color-dark, 0.8);
+  color: $color-light;
+  padding: clamp(0.4rem, 0.11vw + 0.36rem, 0.5rem)
+    clamp(0.8rem, 0.22vw + 0.72rem, 1rem);
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: clamp(0.85rem, 0.05vw + 0.83rem, 0.9rem);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba($color-orange, 0.3);
+}
+
+// =============================
+// IMAGE SEULE
+// =============================
+
+.gallery-single-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
+}
+
+.gallery-image-solo {
+  width: 100%;
+  height: auto;
+  max-width: clamp(100%, 0vw + 100%, 900px);
+  max-height: clamp(500px, 21.74vw + 421.7px, 700px);
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+  @include desktop-up {
+    max-width: 900px;
+    max-height: 700px;
+  }
+}
+
+// =============================
+// CAS SPÉCIAUX
+// =============================
+
+@include mobile-landscape {
+  .gallery-carousel-container {
+    padding: 1rem;
+  }
+
+  .gallery-carousel-track {
+    max-height: 80vh;
+  }
+}
+
+@include reduced-motion {
+  .gallery-carousel-slide {
+    &.entering,
+    &.exiting {
+      transition: opacity 0.3s ease !important;
+      transform: translateX(0) !important;
+    }
+  }
+
+  .gallery-carousel-dot {
+    transition: none !important;
+  }
+}
+
+@media (pointer: coarse) {
+  button.gallery-carousel-dot {
+    min-width: unset;
+    min-height: unset;
+  }
+}

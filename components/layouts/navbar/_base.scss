@@ -1,0 +1,53 @@
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _base.scss
+// ================================
+
+.navbar {
+  // clamp : 5rem (360px) → 6.25rem (1280px)
+  height: clamp(5rem, 0.14vw + 4.95rem, 5.5rem);
+  scroll-snap-align: start;
+  z-index: 999;
+  position: relative;
+
+  @include desktop-up {
+    height: 6.25rem;
+  }
+
+  .wrapper {
+    max-width: 100%;
+    height: 100%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    position: relative;
+
+    @include mobile-only {
+      justify-content: flex-end;
+      padding: 1rem;
+    }
+
+    @include tablet-up {
+      width: 55%;
+      max-width: 65%;
+      padding: 1.25rem;
+      margin-left: auto;
+      margin-right: 0;
+    }
+
+    @include from('medium-1024') {
+      width: 65%;
+    }
+
+    @include desktop-up {
+      width: 65%;
+      max-width: 65%;
+      padding: 1rem;
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+}

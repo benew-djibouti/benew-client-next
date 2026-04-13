@@ -1,0 +1,42 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts/' as *;
+
+// ================================
+// 📄 _services-section.scss
+// ================================
+
+.services-section {
+  width: 100%;
+  height: 100vh;
+  max-height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
+
+  padding: clamp(1.5rem, 1.09vw + 1.11rem, 2.5rem)
+    clamp(0.25rem, 0.82vw + -0.05rem, 1rem) clamp(1rem, 0.54vw + 0.8rem, 1.5rem);
+
+  // Desktop : grille deux zones (titre au-dessus, vidéo en dessous)
+  @include from('large-xs') {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'title'
+      'cards';
+  }
+
+  // Mobile/tablette : flex simple, tout dans services-video-block
+  @include until('large-xs') {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 2vw + 0.4rem, 1.5rem)
+      clamp(0.25rem, 0.82vw + -0.05rem, 1rem);
+  }
+
+  @include desktop-up {
+    padding: 2.5rem 1rem 2rem;
+  }
+}

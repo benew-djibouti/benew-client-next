@@ -1,0 +1,271 @@
+// app/templates/[id]/applications/[appID]/not-found.scss
+// ✅ VERSION OPTIMISÉE - Cohérent avec l'architecture
+@use '../../../../styles/abstracts' as *;
+
+.app-not-found-container {
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  padding: 1rem;
+
+  @include from('small-sm') {
+    padding: 1.5rem;
+  }
+
+  @include from('medium-sm') {
+    padding: 2rem;
+  }
+
+  @include from('large-xs') {
+    padding: 3rem;
+  }
+
+  background: linear-gradient(to bottom, #0c0c1d, #151528);
+}
+
+/* ==========================================
+   CONTENEUR PRINCIPAL
+========================================== */
+.content-wrapper {
+  width: 100%;
+  background: rgba($color-light, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  text-align: center;
+  border: 1px solid rgba($color-orange, 0.2);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba($color-light, 0.1);
+  position: relative;
+  z-index: 1;
+  animation: slideIn 0.6s ease-out;
+
+  padding: 2rem 1.5rem;
+  max-width: 90%;
+
+  @include from('small-sm') {
+    padding: 2.5rem 1.8rem;
+    max-width: 520px;
+  }
+
+  @include from('medium-sm') {
+    padding: 3rem 2rem;
+    max-width: 600px;
+  }
+
+  @include from('large-xs') {
+    padding: 3.5rem 2.5rem;
+    max-width: 680px;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==========================================
+   TYPOGRAPHIE
+========================================== */
+.error-title {
+  color: $color-orange;
+  font-weight: bold;
+  margin: 1rem 0;
+  letter-spacing: -1px;
+
+  font-size: 1.8rem;
+
+  @include from('small-sm') {
+    font-size: 2rem;
+  }
+
+  @include from('medium-sm') {
+    font-size: 2.2rem;
+  }
+
+  @include from('large-xs') {
+    font-size: 2.5rem;
+  }
+}
+
+/* ==========================================
+   BADGES IDS
+========================================== */
+
+.error-message {
+  color: $text-color-muted;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+
+  font-size: 1rem;
+
+  @include from('small-lg') {
+    font-size: 1.1rem;
+  }
+
+  @include from('medium-sm') {
+    font-size: 1.2rem;
+  }
+}
+
+/* ==========================================
+   BOUTONS - OPTIMISÉS POUR 3 BOUTONS
+========================================== */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+
+  @include until('small-sm') {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  @include from('medium-sm') {
+    flex-direction: row;
+  }
+}
+
+.retry-button,
+.templates-button,
+.home-button {
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  min-height: 48px;
+
+  @include until('small-sm') {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.95rem;
+    min-height: 44px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  @include from('medium-sm') {
+    width: auto;
+    flex: 1;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  @include from('large-xs') {
+    padding: 0.85rem 1.3rem;
+    font-size: 0.95rem;
+    min-height: auto;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.retry-button {
+  background: linear-gradient(135deg, $color-orange, $color-pink);
+  color: $color-dark;
+  box-shadow: 0 4px 8px rgba($color-orange, 0.3);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, $color-pink, $color-orange);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba($color-orange, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.templates-button,
+.home-button {
+  background-color: transparent;
+  color: $color-orange;
+  border: 1px solid $color-orange;
+
+  &:hover:not(:disabled) {
+    background-color: rgba($color-orange, 0.1);
+    border-color: $color-pink;
+  }
+}
+
+.templates-button {
+  &:hover:not(:disabled) {
+    color: $color-pink;
+  }
+}
+
+/* ==========================================
+   ACCESSIBILITÉ
+========================================== */
+
+@include reduced-motion {
+  .content-wrapper {
+    animation: none !important;
+  }
+
+  .retry-button,
+  .templates-button,
+  .home-button {
+    &:hover {
+      transform: none !important;
+    }
+  }
+}
+
+@media (pointer: coarse) {
+  .retry-button,
+  .templates-button,
+  .home-button {
+    min-height: 48px;
+
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+@include high-density {
+  .content-wrapper {
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba($color-light, 0.15);
+  }
+
+  .retry-button {
+    box-shadow: 0 4px 8px rgba($color-orange, 0.4);
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 6px 12px rgba($color-orange, 0.5);
+    }
+  }
+}

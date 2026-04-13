@@ -1,0 +1,223 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _responsive.scss
+// ================================
+
+// =============================
+// ÉCRANS TRÈS PETITS
+// =============================
+@media (max-width: 360px) {
+  .services-title-block .section-main-title {
+    font-size: 0.9rem;
+
+    &::after {
+      width: 28px;
+      height: 1.5px;
+    }
+  }
+
+  .video-wrapper {
+    border-radius: 10px;
+  }
+
+  .video-play-btn {
+    width: 40px;
+    height: 40px;
+
+    &__icon {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+// =============================
+// MODE PAYSAGE MOBILE
+// =============================
+@include mobile-landscape {
+  .services-title-block .section-main-title {
+    font-size: 0.9rem;
+  }
+
+  .services-video-block {
+    padding: 0 0.5rem;
+  }
+
+  .video-wrapper {
+    max-width: 85vw;
+    border-radius: 10px;
+  }
+
+  .video-play-btn {
+    width: 40px;
+    height: 40px;
+
+    &__icon {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+// =============================
+// ÉCRANS HAUTS
+// =============================
+@include tall-screen {
+  .services-video-block {
+    @include until('large-xs') {
+      padding: 0 1rem;
+    }
+  }
+
+  .video-wrapper {
+    @include until('large-xs') {
+      max-width: 95%;
+    }
+  }
+}
+
+// =============================
+// ÉCRANS COURTS
+// =============================
+@include short-screen {
+  .services-title-block .section-main-title {
+    font-size: 0.95rem;
+
+    @include from('medium-sm') {
+      font-size: 1.2rem;
+    }
+  }
+
+  .video-wrapper {
+    max-width: 80%;
+
+    @include from('medium-sm') {
+      max-width: 600px;
+    }
+
+    @include from('large-xs') {
+      max-width: 750px;
+    }
+  }
+}
+
+// =============================
+// ACCESSIBILITÉ - REDUCED MOTION
+// =============================
+@include reduced-motion {
+  .video-overlay {
+    transition: none;
+  }
+
+  .video-play-btn {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: none;
+    }
+  }
+
+  .video-overlay--playing:hover .video-play-btn {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// =============================
+// SUPPORT TACTILE
+// =============================
+@media (pointer: coarse) {
+  .video-play-btn {
+    min-width: 48px;
+    min-height: 48px;
+
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      opacity: 0.85;
+      transform: scale(0.95);
+    }
+  }
+
+  // Sur tactile, toujours montrer le bouton même quand la vidéo joue
+  .video-overlay--playing .video-play-btn {
+    opacity: 0.7;
+    transform: scale(0.9);
+  }
+}
+
+// =============================
+// CONTRASTE ÉLEVÉ
+// =============================
+@include high-contrast {
+  .video-wrapper {
+    border-width: 2px;
+    border-color: rgba($color-pink, 0.6);
+  }
+
+  .video-play-btn {
+    border-width: 3px;
+    border-color: rgba($color-pink, 0.8);
+  }
+}
+
+// =============================
+// TRÈS GRANDS ÉCRANS
+// =============================
+@include from('large-xxxl') {
+  .services-title-block .section-main-title {
+    font-size: 2.2rem;
+
+    &::after {
+      width: 80px;
+      height: 3px;
+    }
+  }
+
+  .video-wrapper {
+    max-width: 1300px;
+    border-radius: 28px;
+  }
+
+  .video-play-btn {
+    width: 96px;
+    height: 96px;
+
+    &__icon {
+      font-size: 3rem;
+    }
+  }
+}
+
+// =============================
+// ORIENTATION PAYSAGE TABLETTES
+// =============================
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .services-title-block .section-main-title {
+    font-size: 1.2rem;
+  }
+
+  .services-video-block {
+    padding: 0 1rem;
+  }
+
+  .video-wrapper {
+    max-width: 650px;
+    border-radius: 14px;
+  }
+
+  .video-play-btn {
+    width: 52px;
+    height: 52px;
+
+    &__icon {
+      font-size: 1.6rem;
+    }
+  }
+}

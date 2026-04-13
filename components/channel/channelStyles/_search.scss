@@ -1,0 +1,188 @@
+// components/channel/channelStyles/_search.scss
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// =============================
+// TOOLBAR (search + compteur)
+// =============================
+
+.channel-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+
+  @include from('medium-sm') {
+    margin-bottom: 2rem;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+}
+
+.channel-toolbar__count {
+  font-size: 0.85rem;
+  color: rgba($text-color, 0.45);
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// =============================
+// BARRE DE RECHERCHE
+// =============================
+
+.channel-search {
+  flex: 1;
+  min-width: 0;
+}
+
+.channel-search__wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 480px;
+}
+
+.channel-search__icon {
+  position: absolute;
+  left: 0.875rem;
+  font-size: 1rem;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.channel-search__input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 2.75rem;
+  background: rgba($text-color, 0.04);
+  border: 1px solid rgba($primary-color, 0.12);
+  border-radius: 12px;
+  color: $text-color;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: rgba($text-color, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba($primary-color, 0.4);
+    background: rgba($text-color, 0.06);
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.08);
+  }
+
+  // Supprimer l'icône native de type="search"
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    display: none;
+  }
+
+  @include from('medium-sm') {
+    padding: 0.875rem 2.75rem 0.875rem 3rem;
+    font-size: 0.95rem;
+    border-radius: 14px;
+  }
+}
+
+// Spinner de chargement
+.channel-search__spinner {
+  position: absolute;
+  right: 0.875rem;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba($primary-color, 0.2);
+  border-top-color: $primary-color;
+  border-radius: 50%;
+  animation: searchSpin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes searchSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Bouton clear
+.channel-search__clear {
+  position: absolute;
+  right: 0.875rem;
+  background: rgba($text-color, 0.08);
+  border: none;
+  color: rgba($text-color, 0.5);
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background: rgba($secondary-color, 0.2);
+    color: $secondary-color;
+    transform: scale(1.15);
+  }
+}
+
+// Message résultats de recherche
+.channel-search__results {
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: rgba($text-color, 0.45);
+  padding-left: 0.25rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Erreur de recherche
+.channel-search-error {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba($secondary-color, 0.08);
+  border: 1px solid rgba($secondary-color, 0.2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: $secondary-color;
+}
+
+// =============================
+// ACCESSIBILITÉ
+// =============================
+
+@include reduced-motion {
+  .channel-search__spinner {
+    animation: none;
+  }
+  .channel-search__clear {
+    transition: none;
+    &:hover {
+      transform: none;
+    }
+  }
+  .channel-search__results {
+    animation: none;
+  }
+}

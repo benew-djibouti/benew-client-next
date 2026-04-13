@@ -1,0 +1,56 @@
+// components/channel/channelStyles/_category.scss
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+%category-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 1px solid transparent;
+  line-height: 1;
+}
+
+// Couleur 1 — orange (couleur primaire Benew)
+.category-color-1 {
+  @extend %category-badge;
+  background: rgba($primary-color, 0.15);
+  color: $primary-color;
+  border-color: rgba($primary-color, 0.25);
+}
+
+// Couleur 2 — rose/magenta (couleur secondaire Benew)
+.category-color-2 {
+  @extend %category-badge;
+  background: rgba($secondary-color, 0.15);
+  color: $secondary-color;
+  border-color: rgba($secondary-color, 0.25);
+}
+
+// Couleur 3 — violet (couleur accent Benew)
+.category-color-3 {
+  @extend %category-badge;
+  background: rgba($accent-color, 0.15);
+  color: $accent-color;
+  border-color: rgba($accent-color, 0.25);
+}
+
+// Couleur 4 — bleu électrique
+.category-color-4 {
+  @extend %category-badge;
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+// Couleur 5 — vert émeraude
+.category-color-5 {
+  @extend %category-badge;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.25);
+}

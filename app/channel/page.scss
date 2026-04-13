@@ -1,0 +1,165 @@
+// app/channel/page.scss
+// Styles pour les états server-side de ChannelPage :
+// erreur DB, empty state, et debug.
+// Importé directement dans page.jsx (Server Component)
+// pour garantir le chargement indépendamment de ChannelList.
+
+@use '../styles/abstracts' as *;
+
+// =============================
+// WRAPPERS PLEINE PAGE
+// =============================
+
+.channel-error-page,
+.channel-empty-state {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.channel-error-content,
+.empty-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+// =============================
+// CARTE D'ERREUR / EMPTY STATE
+// =============================
+
+.server-error,
+.empty-card {
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  padding: 2.5rem 2rem;
+  background: rgba($text-color, 0.03);
+  border: 1px solid rgba($primary-color, 0.12);
+  border-radius: 16px;
+
+  .error-icon,
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+
+  .error-code {
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba($primary-color, 0.3);
+    line-height: 1;
+    margin: 0 0 0.5rem;
+  }
+
+  .error-title,
+  .empty-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: $text-color;
+    margin: 0 0 0.75rem;
+  }
+
+  .error-message,
+  .empty-message {
+    font-size: 0.95rem;
+    color: rgba($text-color, 0.55);
+    line-height: 1.6;
+    margin: 0 0 0.5rem;
+  }
+
+  .empty-submessage {
+    font-size: 0.875rem;
+    color: rgba($text-color, 0.4);
+    line-height: 1.5;
+    margin: 0 0 1.5rem;
+  }
+
+  .error-actions,
+  .empty-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+}
+
+// =============================
+// BOUTONS CTA
+// =============================
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+
+  &.primary {
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    color: $background-color;
+    box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba($primary-color, 0.4);
+    }
+  }
+
+  &.secondary {
+    background: transparent;
+    color: $primary-color;
+    border: 1px solid rgba($primary-color, 0.3);
+
+    &:hover {
+      background: rgba($primary-color, 0.08);
+    }
+  }
+
+  @include reduced-motion {
+    transition: none;
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// =============================
+// DEBUG (dev uniquement)
+// =============================
+
+.debug-details {
+  margin-top: 1.5rem;
+  text-align: left;
+  padding: 1rem;
+  background: rgba($primary-color, 0.04);
+  border: 1px solid rgba($primary-color, 0.15);
+  border-radius: 8px;
+  font-size: 0.8rem;
+
+  summary {
+    color: $primary-color;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .debug-content {
+    margin-top: 0.5rem;
+    color: rgba($text-color, 0.7);
+
+    p {
+      margin: 0.2rem 0;
+    }
+  }
+}

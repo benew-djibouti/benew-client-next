@@ -1,0 +1,331 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _carousel_applications.scss - CAROUSEL AVEC FLÈCHES (PC) ET DOTS (MOBILE/TABLETTE)
+// ================================
+
+// =============================
+// CONTAINER
+// =============================
+
+.applications-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+// =============================
+// TRACK
+// =============================
+
+.applications-carousel-track {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  // clamp : 1rem (360px) → 1.25rem (768px)
+  padding: clamp(1rem, 0.27vw + 0.9rem, 1.25rem) 0;
+
+  @include tablet-up {
+    // clamp : 1.25rem (768px) → 2rem (1280px)
+    padding: clamp(1.25rem, 0.49vw + 0.87rem, 2rem) 0;
+  }
+
+  @include desktop-up {
+    // clamp : 2rem (1280px) → 2.5rem (1920px)
+    padding: clamp(2rem, 0.78vw + 1rem, 2.5rem) 0;
+  }
+}
+
+// =============================
+// ANIMATION SLIDE
+// =============================
+
+.applications-carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.hidden {
+    transform: translateX(100%);
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  &.entering {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    transition:
+      transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &.exiting {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition:
+      transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &.active {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    transition: none;
+  }
+}
+
+// =============================
+// FLÈCHES - PC UNIQUEMENT
+// =============================
+
+.applications-carousel-arrow {
+  display: none;
+
+  @include desktop-up {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 15;
+    background: rgba($text-color, 0.15);
+    color: $primary-color;
+    border: 1px solid rgba($primary-color, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    // clamp : 3rem (1280px) → 4rem (1920px)
+    width: clamp(3rem, 1.56vw + 0.5rem, 4rem);
+    height: clamp(3rem, 1.56vw + 0.5rem, 4rem);
+    font-size: clamp(1.2rem, 0.63vw + -0.9rem, 1.6rem);
+
+    svg {
+      width: clamp(1.2rem, 0.63vw + -0.9rem, 1.6rem);
+      height: clamp(1.2rem, 0.63vw + -0.9rem, 1.6rem);
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba($primary-color, 0.9);
+      color: $background-color;
+      border-color: $primary-color;
+      transform: translateY(-50%) scale(1.15);
+      box-shadow: 0 8px 25px rgba($primary-color, 0.5);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+
+      &:hover {
+        transform: translateY(-50%);
+      }
+    }
+
+    &:focus {
+      outline: 2px solid $primary-color;
+      outline-offset: 4px;
+    }
+  }
+}
+
+// Position des flèches
+.applications-carousel-arrow-left {
+  @include desktop-up {
+    // clamp : 1rem (1280px) → 2rem (1920px)
+    left: clamp(1rem, 1.56vw + -1rem, 2rem);
+  }
+}
+
+.applications-carousel-arrow-right {
+  @include desktop-up {
+    right: clamp(1rem, 1.56vw + -1rem, 2rem);
+  }
+}
+
+// =============================
+// DOTS - MOBILE/TABLETTE UNIQUEMENT
+// =============================
+
+.applications-carousel-indicators {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  z-index: 10;
+  // base mobile : clamp padding-bottom 1.25rem → 1.75rem
+  padding: 1rem 1rem clamp(1.25rem, 0.54vw + 1.05rem, 1.75rem) 1rem;
+
+  @include tablet-up {
+    padding: 1rem 1rem 2rem 1rem;
+    gap: 0.5rem;
+  }
+
+  @include desktop-up {
+    display: none;
+  }
+}
+
+.applications-carousel-dot {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+  border-radius: 50%;
+  background: grey;
+  border: none;
+  min-width: unset;
+  min-height: unset;
+  // clamp : 6px (360px) → 9px (768px)
+  width: clamp(6px, 0.33vw + 4.8px, 9px);
+  height: clamp(6px, 0.33vw + 4.8px, 9px);
+
+  @include tablet-up {
+    // clamp : 9px (768px) → 11px (1280px)
+    width: clamp(9px, 0.39vw + 6px, 11px);
+    height: clamp(9px, 0.39vw + 6px, 11px);
+  }
+
+  &.active {
+    background: $color-orange;
+    border: none;
+    box-shadow: 0 2px 8px rgba($color-orange, 0.5);
+  }
+
+  &:hover:not(:disabled) {
+    background: rgba($primary-color, 0.7);
+    transform: scale(1.2);
+  }
+
+  &:focus {
+    outline: 2px solid $primary-color;
+    outline-offset: 4px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+// =============================
+// CAS SPÉCIAUX
+// =============================
+
+@include mobile-landscape {
+  .applications-carousel-track {
+    padding: 0.75rem 0;
+  }
+
+  .applications-carousel-indicators {
+    padding: 0.75rem 1rem 1rem 1rem;
+    gap: 0.4rem;
+  }
+
+  .applications-carousel-dot {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+@media (pointer: coarse) {
+  .applications-carousel-dot {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+    }
+
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: scale(0.9);
+    }
+  }
+
+  .applications-carousel-arrow {
+    &:hover {
+      transform: translateY(-50%);
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+  }
+}
+
+@include reduced-motion {
+  .applications-carousel-slide {
+    &.entering,
+    &.exiting {
+      transition: opacity 0.3s ease !important;
+      transform: translateX(0) !important;
+    }
+  }
+
+  .applications-carousel-dot,
+  .applications-carousel-arrow {
+    transition: none !important;
+
+    &:hover {
+      transform: none !important;
+    }
+  }
+}
+
+@include high-contrast {
+  .applications-carousel-dot {
+    border: 2px solid $text-color;
+
+    &.active {
+      border: 2px solid $primary-color;
+      box-shadow: 0 0 0 4px rgba($primary-color, 0.4);
+    }
+  }
+
+  .applications-carousel-arrow {
+    border: 2px solid $primary-color;
+
+    &:hover {
+      border-color: $secondary-color;
+    }
+  }
+}

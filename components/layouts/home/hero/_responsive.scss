@@ -1,0 +1,188 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _responsive.scss
+// Cas spéciaux uniquement — le reste est géré par clamp()
+// ================================
+
+// =============================
+// MODE PAYSAGE MOBILE
+// =============================
+@include mobile-landscape {
+  .hero .wrapper {
+    flex-direction: row;
+    padding: 0.5rem;
+
+    .textContainer {
+      width: 65%;
+      height: 100%;
+      min-height: auto;
+      gap: 1rem;
+      align-items: flex-start;
+      text-align: left;
+      padding: 0.75rem;
+
+      h2 {
+        font-size: 0.95rem;
+        line-height: 1.1;
+      }
+      h1 {
+        font-size: 2rem;
+        line-height: 1;
+      }
+
+      .buttonGroup {
+        flex-direction: row;
+        gap: 0.5rem;
+
+        .primaryButton,
+        .secondaryButton {
+          padding: 0.6rem 1.2rem;
+          font-size: 0.8rem;
+          min-height: 40px;
+        }
+      }
+
+      img {
+        width: 1.2rem;
+        margin-top: 0.25rem;
+      }
+    }
+  }
+
+  .hero .imageContainer {
+    width: 35%;
+    height: 100%;
+    min-height: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: auto;
+    left: auto;
+    opacity: 0.8;
+
+    .heroImage {
+      max-width: 85%;
+      max-height: 85%;
+      filter: none;
+    }
+  }
+
+  .hero .slidingTextContainer {
+    font-size: 5rem;
+    bottom: -25px;
+  }
+}
+
+// =============================
+// ÉCRANS COURTS (ex: paysage budget)
+// =============================
+@include short-screen {
+  .hero .wrapper .textContainer {
+    gap: 1rem;
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    .buttonGroup .primaryButton,
+    .buttonGroup .secondaryButton {
+      padding: 0.8rem 1.3rem;
+      font-size: 0.85rem;
+    }
+
+    img {
+      width: 1.2rem;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .hero .imageContainer {
+    min-height: 28vh;
+  }
+}
+
+// =============================
+// ACCESSIBILITÉ
+// =============================
+@include reduced-motion {
+  .hero .wrapper .textContainer {
+    img {
+      animation: none;
+    }
+    h1 {
+      animation: none;
+    }
+  }
+
+  .hero .wrapper .buttonGroup .primaryButton,
+  .hero .wrapper .buttonGroup .secondaryButton {
+    transition: none;
+    &:hover {
+      transform: none;
+    }
+    &:focus {
+      animation: none;
+    }
+  }
+
+  .hero .imageContainer .heroImage {
+    animation: none;
+  }
+}
+
+// =============================
+// HAUTE DENSITÉ
+// =============================
+@include high-density {
+  .hero .imageContainer .heroImage {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+// =============================
+// CONTRASTE ÉLEVÉ
+// =============================
+@include high-contrast {
+  .hero .wrapper .textContainer {
+    h2 {
+      text-shadow:
+        0 2px 4px rgba($background-color, 0.9),
+        0 0 25px rgba($background-color, 0.7);
+    }
+    h1 {
+      text-shadow:
+        0 3px 6px rgba($background-color, 0.9),
+        0 0 30px rgba($background-color, 0.8);
+    }
+  }
+
+  .hero .wrapper .buttonGroup {
+    .primaryButton {
+      box-shadow: 0 0 0 2px rgba($text-color, 0.3);
+    }
+    .secondaryButton {
+      border-width: 3px;
+    }
+  }
+}
+
+// =============================
+// TRÈS GRANDS ÉCRANS (2560px+)
+// =============================
+@include from('large-1920') {
+  .hero .wrapper {
+    max-width: 1400px;
+  }
+
+  .hero .wrapper .textContainer {
+    h2 {
+      font-size: 1.4rem;
+    }
+    img {
+      width: 2.8rem;
+    }
+  }
+}

@@ -1,0 +1,61 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _header.scss
+// ================================
+
+.promo-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(0.3rem, 0.22vw + 0.22rem, 0.75rem);
+}
+
+// =============================
+// SOUS-TITRE
+// clamp : 0.7rem (360px) → 0.85rem (1280px)
+// =============================
+.promo-subtitle {
+  font-family: font-family('content');
+  font-weight: 500;
+  text-transform: uppercase;
+  color: $color-orange;
+  font-size: clamp(0.7rem, 0.16vw + 0.64rem, 0.85rem);
+  letter-spacing: clamp(2px, 0.22vw + 1.2px, 4px);
+}
+
+// =============================
+// TITRE PRINCIPAL
+// clamp : 1.4rem (360px) → 3.2rem (1280px)
+// =============================
+.promo-title {
+  font-family: font-family('display') !important;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin: 0;
+  background: linear-gradient(45deg, $color-orange, $color-pink, $color-purple);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+
+  font-size: clamp(1.4rem, 1.96vw + 0.69rem, 3.2rem);
+}
+
+// =============================
+// DESCRIPTION
+// clamp : 0.72rem (360px) → 1rem (1280px)
+// =============================
+.promo-description {
+  font-family: font-family('content');
+  font-weight: 400;
+  color: rgba($color-light, 0.75);
+  line-height: 1.5;
+  max-width: clamp(280px, 80%, 650px);
+  margin: 0;
+
+  font-size: clamp(0.72rem, 0.3vw + 0.61rem, 1rem);
+}

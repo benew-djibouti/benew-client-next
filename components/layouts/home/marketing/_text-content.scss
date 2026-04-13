@@ -1,0 +1,165 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _text-content.scss
+// ================================
+
+// =============================
+// CONTENEUR TEXTE DESKTOP
+// =============================
+@include desktop-up {
+  .text-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    justify-content: center;
+    margin: 0;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 10;
+  }
+}
+
+// =============================
+// CONTENEUR TEXTE TABLETTE
+// =============================
+@include between('medium-768', 'large-1280') {
+  .text-container {
+    position: absolute;
+    top: 52%;
+    left: 50%;
+    height: auto; // ← ajoute ça
+    align-self: center; // ← ajoute ça
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: clamp(75%, 5.43vw + 58.04%, 85%);
+    padding: clamp(1.75rem, 0.54vw + 1.55rem, 2rem)
+      clamp(1.5rem, 0.54vw + 1.3rem, 1.75rem);
+    margin: 0;
+    background: rgba(220, 220, 230, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: clamp(20px, 0.43vw + 18.4px, 24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+// =============================
+// CONTENEUR TEXTE MOBILE
+// =============================
+@include mobile-only {
+  .text-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: clamp(80%, 2vw + 73%, 85%);
+    padding: clamp(1rem, 0.27vw + 0.9rem, 1.25rem)
+      clamp(0.8rem, 0.22vw + 0.72rem, 1rem);
+    margin: 0;
+    background: rgba(220, 220, 230, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: clamp(16px, 1vw + 12px, 20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+// =============================
+// TITRE PRINCIPAL
+// clamp : 1.6rem (360px) → 3.4rem (1280px)
+// =============================
+.main-title {
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin: 0 0 clamp(0.5rem, 0.54vw + 0.3rem, 1rem) 0;
+  color: $color-orange;
+  text-shadow:
+    0 3px 6px rgba($color-dark, 0.8),
+    0 0 25px rgba($color-orange, 0.5);
+
+  font-size: clamp(1.6rem, 1.96vw + 0.89rem, 3.4rem);
+  letter-spacing: clamp(0.8px, 0.08vw + 0.51px, 1.5px);
+
+  @include mobile-only {
+    text-shadow:
+      0 2px 4px rgba($color-dark, 0.9),
+      0 0 15px rgba($color-orange, 0.7),
+      0 0 30px rgba($color-orange, 0.4);
+  }
+
+  @include desktop-up {
+    margin: 0 0 1rem 0;
+  }
+}
+
+// =============================
+// BOUTON BLOG
+// clamp : 0.85rem (360px) → 1.1rem (1280px)
+// =============================
+.profit-blog-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $color-orange, $color-pink);
+  color: $color-light;
+  text-decoration: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: clamp(0.3px, 0.02vw + 0.23px, 0.5px);
+  padding: clamp(0.65rem, 0.16vw + 0.59rem, 0.8rem)
+    clamp(1.6rem, 0.76vw + 1.32rem, 2.3rem);
+  border-radius: 50px;
+  border: 2px solid rgba($color-light, 0.2);
+  margin-top: clamp(1.2rem, 0.87vw + 0.89rem, 2rem);
+  box-shadow:
+    0 6px 20px rgba($color-orange, 0.3),
+    0 3px 10px rgba($color-pink, 0.2),
+    0 0 30px rgba($color-orange, 0.1);
+  text-shadow: 0 2px 4px rgba($color-dark, 0.6);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  font-size: clamp(0.85rem, 0.27vw + 0.75rem, 1.1rem);
+
+  &:hover {
+    transform: translateY(-2px) scale(1.03);
+    background: linear-gradient(
+      135deg,
+      color.adjust($color-orange, $lightness: 6%),
+      color.adjust($color-pink, $lightness: 6%)
+    );
+    box-shadow:
+      0 8px 25px rgba($color-orange, 0.4),
+      0 4px 15px rgba($color-pink, 0.3),
+      0 0 40px rgba($color-orange, 0.15);
+    border-color: rgba($color-light, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba($color-light, 0.5);
+    box-shadow:
+      0 8px 25px rgba($color-orange, 0.4),
+      0 4px 15px rgba($color-pink, 0.3),
+      0 0 0 3px rgba($color-light, 0.2);
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(1.01);
+  }
+}

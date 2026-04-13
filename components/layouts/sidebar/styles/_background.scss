@@ -1,0 +1,44 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _background.scss
+// ================================
+
+.sidebar .bg {
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    $text-color,
+    color.adjust($text-color, $lightness: 5%)
+  );
+  box-shadow: 2px 0 10px rgba($background-color, 0.3);
+
+  // Mobile : largeur relative
+  width: clamp(260px, 20.65vw + 185.7px, 320px);
+  max-width: 320px;
+  min-width: 260px;
+
+  // Tablette : taille fixe
+  @include tablet-up {
+    width: 25rem;
+    min-width: 20rem;
+    max-width: 28rem;
+  }
+
+  // Desktop : taille optimale
+  @include desktop-up {
+    width: 20rem;
+    min-width: 18rem;
+    max-width: 24rem;
+  }
+
+  @include from('large-1920') {
+    width: 18rem;
+    max-width: 22rem;
+  }
+}

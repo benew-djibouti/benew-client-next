@@ -1,0 +1,513 @@
+@use '../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _base.scss - Structures de base
+// ================================
+
+// =============================
+// SECTION OTHERS
+// =============================
+.others {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+// FIX MOBILE - catégories avec scroll libre
+.others.categories-section {
+  @include mobile-only {
+    overflow: visible;
+    min-height: auto;
+  }
+}
+
+// ✅ CONTAINERS backgrounds (Next.js Image)
+.planets-background-container,
+.stars-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  top: 0;
+  left: 0;
+
+  &.planets-background-container {
+    z-index: 2;
+  }
+}
+
+// =============================
+// CONTENU PRINCIPAL
+// =============================
+.presentation-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  // clamp : 3rem (360px) → 4rem (1280px)
+  padding: clamp(5rem, 2.17vw + 4rem, 7rem) clamp(1rem, 1.09vw + 0.61rem, 2rem)
+    clamp(2rem, 1.09vw + 1.61rem, 3rem);
+
+  @include from('large-1280') {
+    padding: 4rem 2rem;
+  }
+}
+
+// =============================
+// TITRE BENEW
+// clamp : 2.5rem (360px) → 4.5rem (768px) → 5rem (1280px)
+// =============================
+.benew-title {
+  color: $primary-color;
+  font-size: clamp(2.5rem, 2.17vw + 1.72rem, 5rem);
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: clamp(3rem, 2.17vw + 2.22rem, 5rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba($primary-color, 0.5);
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow:
+      0 0 20px rgba($primary-color, 0.5),
+      0 0 30px rgba($primary-color, 0.3);
+  }
+  to {
+    text-shadow:
+      0 0 30px rgba($primary-color, 0.8),
+      0 0 40px rgba($primary-color, 0.5),
+      0 0 50px rgba($primary-color, 0.3);
+  }
+}
+
+// =============================
+// CARTE SKY IS THE LIMIT
+// =============================
+.sky-limit-card {
+  background: linear-gradient(
+    135deg,
+    rgba($text-color, 0.08),
+    rgba($text-color, 0.12)
+  );
+  backdrop-filter: blur(10px);
+  border: 0.2px solid rgba($primary-color, 0.3);
+  border-radius: 20px;
+  padding: clamp(3rem, 2.17vw + 2.22rem, 5rem)
+    clamp(2rem, 2.17vw + 1.22rem, 4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  max-width: clamp(90%, 5vw + 72%, 700px);
+  margin: auto;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba($primary-color, 0.1);
+  position: relative;
+  overflow: hidden;
+
+  // Bordure visible sur mobile/tablette
+  @include mobile-only {
+    border-width: 0.2px;
+    border-style: solid;
+    border-color: $primary-color;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      0 0 80px rgba($primary-color, 0.4),
+      inset 0 0 40px rgba($primary-color, 0.1);
+  }
+
+  @include from('large-1280') {
+    border-width: 2px;
+    border-color: rgba($primary-color, 0.3);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      rgba($primary-color, 0.1),
+      transparent
+    );
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+    opacity: 0;
+  }
+
+  &:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: rgba($primary-color, 0.6);
+    box-shadow:
+      0 12px 48px rgba(0, 0, 0, 0.4),
+      0 0 60px rgba($primary-color, 0.3);
+
+    &::before {
+      opacity: 1;
+      animation: shine 1.5s ease-in-out;
+    }
+
+    .sky-limit-text {
+      color: $secondary-color;
+      transform: scale(1.05);
+    }
+
+    .card-hint {
+      background: linear-gradient(135deg, $primary-color, $secondary-color);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transform: translateX(8px) scale(1.1);
+    }
+  }
+
+  &:active {
+    transform: translateY(-5px) scale(1);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $primary-color;
+    outline-offset: 4px;
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: rotate(45deg) translateX(-100%);
+  }
+  100% {
+    transform: rotate(45deg) translateX(100%);
+  }
+}
+
+// =============================
+// TEXTE "SKY IS THE LIMIT"
+// clamp : 2rem (360px) → 4rem (1280px)
+// =============================
+.sky-limit-text {
+  color: $text-color;
+  font-size: clamp(2rem, 2.17vw + 1.22rem, 4rem);
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba($primary-color, 0.3);
+  transition: all 0.3s ease;
+  margin: 0;
+  line-height: 1.2;
+}
+
+// =============================
+// INDICATION "LIRE →"
+// clamp : 1rem (360px) → 1.2rem (1280px)
+// =============================
+.card-hint {
+  background: linear-gradient(135deg, $primary-color, $secondary-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: clamp(1rem, 0.22vw + 0.92rem, 1.2rem);
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  transition: all 0.3s ease;
+  letter-spacing: 0.08em;
+  position: relative;
+}
+
+// =============================
+// SECTION CATÉGORIES
+// =============================
+.categories-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 1.09vw + 1.61rem, 3rem)
+    clamp(1rem, 1.09vw + 0.61rem, 2rem);
+}
+
+// Grille — mobile 2 colonnes → tablette 3 → desktop 4
+.categories-grid {
+  display: grid;
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem 0;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.75rem, 1.09vw + 0.36rem, 1.75rem);
+
+  @include from('medium-768') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include from('large-1280') {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+}
+
+// Carte catégorie individuelle
+.category-card {
+  background: linear-gradient(
+    135deg,
+    rgba($primary-color, 0.08),
+    rgba($secondary-color, 0.08)
+  );
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba($primary-color, 0.3);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  // clamp : 0.65rem (360px) → 1.25rem (1280px)
+  padding: clamp(0.65rem, 0.65vw + 0.42rem, 1.25rem)
+    clamp(0.5rem, 0.54vw + 0.3rem, 1rem);
+  gap: clamp(0.4rem, 0.38vw + 0.27rem, 0.75rem);
+  min-height: clamp(80px, 4.35vw + 64px, 120px);
+
+  // Variations de couleur
+  &:nth-child(1) {
+    border-color: rgba($primary-color, 0.4);
+    background: linear-gradient(
+      135deg,
+      rgba(246, 160, 55, 0.1),
+      rgba(246, 160, 55, 0.05)
+    );
+  }
+  &:nth-child(2) {
+    border-color: rgba($secondary-color, 0.4);
+    background: linear-gradient(
+      135deg,
+      rgba(242, 102, 176, 0.1),
+      rgba(242, 102, 176, 0.05)
+    );
+  }
+  &:nth-child(3) {
+    border-color: rgba($accent-color, 0.4);
+    background: linear-gradient(
+      135deg,
+      rgba(158, 31, 157, 0.1),
+      rgba(158, 31, 157, 0.05)
+    );
+  }
+  &:nth-child(4) {
+    border-color: rgba($primary-color, 0.4);
+    background: linear-gradient(
+      135deg,
+      rgba(246, 160, 55, 0.08),
+      rgba(242, 102, 176, 0.08)
+    );
+  }
+  &:nth-child(5) {
+    border-color: rgba($secondary-color, 0.4);
+    background: linear-gradient(
+      135deg,
+      rgba(242, 102, 176, 0.08),
+      rgba(158, 31, 157, 0.08)
+    );
+  }
+  &:nth-child(6) {
+    border-color: rgba($accent-color, 0.4);
+    background: linear-gradient(
+      135deg,
+      rgba(158, 31, 157, 0.08),
+      rgba(246, 160, 55, 0.08)
+    );
+  }
+  &:nth-child(7) {
+    border-color: rgba($primary-color, 0.4);
+    background: linear-gradient(
+      135deg,
+      rgba(246, 160, 55, 0.1),
+      rgba(158, 31, 157, 0.05)
+    );
+
+    @media (max-width: 767px) {
+      grid-column: 1;
+      grid-row: auto;
+      justify-self: center;
+      width: 100%;
+    }
+  }
+
+  // Icône décorative
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(
+      circle,
+      rgba($primary-color, 0.15),
+      transparent 70%
+    );
+    border-radius: 50%;
+    transition: all 0.4s ease;
+    opacity: 0;
+  }
+
+  &:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: rgba($primary-color, 0.7);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.3),
+      0 0 30px rgba($primary-color, 0.2);
+
+    &::before {
+      opacity: 1;
+      transform: translate(5px, 5px) scale(1.1);
+    }
+
+    .category-icon {
+      transform: scale(1.1) rotate(3deg);
+      filter: brightness(1.2);
+    }
+
+    .category-title {
+      color: $primary-color;
+      transform: scale(1.03);
+    }
+  }
+
+  &:active {
+    transform: translateY(-3px) scale(1);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $primary-color;
+    outline-offset: 4px;
+  }
+}
+
+// Icône — clamp : 1.4rem (360px) → 2.25rem (1280px)
+.category-icon {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  font-size: clamp(1.4rem, 0.92vw + 1.07rem, 2.25rem);
+}
+
+// Titre — clamp : 0.8rem (360px) → 1.05rem (1280px)
+.category-title {
+  color: $text-color;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  margin: 0;
+  line-height: 1.15;
+  font-size: clamp(0.8rem, 0.27vw + 0.7rem, 1.05rem);
+}
+
+// =============================
+// ACCESSIBILITÉ
+// =============================
+@include reduced-motion {
+  .benew-title {
+    animation: none !important;
+  }
+
+  .sky-limit-card,
+  .category-card {
+    transition: none !important;
+
+    &::before {
+      animation: none !important;
+    }
+
+    &:hover {
+      transform: none !important;
+
+      .sky-limit-text,
+      .card-hint,
+      .category-icon,
+      .category-title {
+        transform: none !important;
+      }
+    }
+  }
+}
+
+@media (pointer: coarse) {
+  .sky-limit-card,
+  .category-card {
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+@include dark-mode {
+  .sky-limit-card {
+    background: linear-gradient(
+      135deg,
+      rgba($text-color, 0.05),
+      rgba($text-color, 0.1)
+    );
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba($primary-color, 0.15);
+  }
+
+  .category-card {
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba($primary-color, 0.1);
+  }
+}
+
+@include high-density {
+  .benew-title {
+    text-shadow:
+      0 0 20px rgba($primary-color, 0.6),
+      0 0 30px rgba($primary-color, 0.4);
+  }
+
+  .sky-limit-card,
+  .category-card {
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      0 0 40px rgba($primary-color, 0.2);
+
+    &:hover {
+      box-shadow:
+        0 12px 48px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba($primary-color, 0.4);
+    }
+  }
+}

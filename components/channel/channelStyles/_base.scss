@@ -1,0 +1,30 @@
+// components/channel/channelStyles/_base.scss
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// =============================
+// CONTENEUR PRINCIPAL
+// =============================
+
+.channel-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+// =============================
+// GRILLE DE VIDÉOS
+// Même pattern que .templates-grid dans TemplatesList
+// Background : couleur unie, sans étoiles
+// =============================
+
+.channel-grid {
+  background-color: $background-color;
+
+  .projectSection {
+    background-image: none;
+    background-color: $background-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

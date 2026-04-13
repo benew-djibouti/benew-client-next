@@ -1,0 +1,603 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 single-template-skeleton.scss
+// MIGRÉ : clamp() + 3 breakpoints max (base / medium-768 / large-1280)
+// ================================
+
+// =============================
+// ANIMATIONS SKELETON
+// =============================
+@keyframes skeletonPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes skeletonFloat {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes skeletonGlow {
+  0% {
+    box-shadow: 0 0 10px rgba($color-orange, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba($color-orange, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba($color-orange, 0.2);
+  }
+}
+
+// =============================
+// BASE
+// =============================
+.skeleton-animate {
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.08) 25%,
+    rgba($text-color, 0.15) 50%,
+    rgba($text-color, 0.08) 75%
+  );
+  background-size: 200px 100%;
+  animation: skeletonShimmer 2s infinite linear;
+  border-radius: 8px;
+}
+
+// =============================
+// CONTENEUR PRINCIPAL
+// =============================
+.single-template-skeleton-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+// =============================
+// SECTION PARALLAX SKELETON
+// =============================
+.skeleton-parallax-section {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgba($background-color, 0.95),
+    rgba($background-color, 0.85)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  // Titre : clamp 240px → 360px, height clamp 3rem → 4.5rem
+  .skeleton-parallax-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    border-radius: 12px;
+    background: linear-gradient(
+      90deg,
+      rgba($color-orange, 0.2) 25%,
+      rgba($color-orange, 0.3) 50%,
+      rgba($color-orange, 0.2) 75%
+    );
+    width: clamp(240px, 13.04vw + 192.9px, 360px);
+    height: clamp(3rem, 1.63vw + 2.41rem, 4.5rem);
+  }
+
+  // Planète : clamp 80px → 150px, top clamp 18% → 25%, right clamp 5% → 12%
+  .skeleton-parallax-planet {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(
+      135deg,
+      rgba($color-pink, 0.15) 0%,
+      rgba($color-orange, 0.15) 50%,
+      rgba($color-purple, 0.15) 100%
+    );
+    animation: skeletonFloat 4s ease-in-out infinite;
+    width: clamp(80px, 7.61vw + 52.6px, 150px);
+    height: clamp(80px, 7.61vw + 52.6px, 150px);
+    top: clamp(18%, -0.76vw + 20.7%, 25%);
+    right: clamp(5%, 0.76vw + 2.3%, 12%);
+    z-index: 1;
+  }
+}
+
+// =============================
+// LISTE APPLICATIONS SKELETON
+// =============================
+.applications-skeleton-list {
+  .projectSection {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    // padding : clamp 1rem → 2.5rem vertical, clamp 0.75rem → 2rem horizontal
+    padding: clamp(1rem, 1.63vw + 0.41rem, 2.5rem)
+      clamp(0.75rem, 0.82vw + 0.45rem, 2rem);
+  }
+}
+
+// =============================
+// CARTE APPLICATION SKELETON
+// =============================
+.skeleton-application-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 1px solid rgba($color-orange, 0.15);
+  backdrop-filter: blur(15px);
+  overflow: hidden;
+  position: relative;
+  animation: skeletonPulse 3s infinite ease-in-out;
+
+  // width : clamp 88% → 95% (mobile large), max-width : clamp 420px → 490px
+  width: clamp(88%, 0.76vw + 85.3%, 95%);
+  max-width: clamp(420px, 7.61vw + 392.6px, 490px);
+  min-height: clamp(370px, 5.43vw + 350.4px, 420px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+
+  @include tablet-up {
+    width: clamp(80%, 1.09vw + 76.1%, 90%);
+    max-width: clamp(450px, 4.35vw + 416.7px, 500px);
+    min-height: clamp(360px, 2.17vw + 343.5px, 390px);
+    border-radius: 16px;
+  }
+
+  @include desktop-up {
+    width: 80%;
+    max-width: 400px;
+    min-height: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($color-orange, 0.1),
+      transparent
+    );
+    z-index: 1;
+    animation: skeletonShimmer 4s infinite linear;
+  }
+}
+
+// =============================
+// SKELETON IMAGE SECTION
+// =============================
+.skeleton-card-image {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba($color-orange, 0.08) 0%,
+    rgba($color-pink, 0.08) 50%,
+    rgba($color-purple, 0.08) 100%
+  );
+  z-index: 2;
+  // height : clamp 220px → 240px mobile, paliers tablette + desktop
+  height: clamp(220px, 2.17vw + 212.2px, 240px);
+
+  @include tablet-up {
+    height: clamp(215px, 1.09vw + 206.8px, 228px);
+  }
+
+  @include desktop-up {
+    height: 200px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba($background-color, 0.05) 100%
+    );
+    z-index: 1;
+  }
+}
+
+.skeleton-app-image {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    rgba($color-purple, 0.15) 25%,
+    rgba($color-purple, 0.25) 50%,
+    rgba($color-purple, 0.15) 75%
+  );
+  animation: skeletonShimmer 2.5s infinite linear;
+}
+
+// =============================
+// SKELETON CONTENU CARTE
+// =============================
+.skeleton-card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  // padding : clamp 1.75rem/1.25rem → 2rem/1.5rem
+  padding: clamp(1.75rem, 0.27vw + 1.65rem, 2rem)
+    clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem);
+}
+
+// =============================
+// SKELETON TITRE APPLICATION
+// =============================
+.skeleton-app-title {
+  border-radius: 6px;
+  margin: 0 0 clamp(0.875rem, 0.14vw + 0.82rem, 1rem) 0;
+  // height : clamp 1.25rem → 1.4rem, width ~80%
+  height: clamp(1.25rem, 0.16vw + 1.19rem, 1.4rem);
+  width: 80%;
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.15) 25%,
+    rgba($text-color, 0.25) 50%,
+    rgba($text-color, 0.15) 75%
+  );
+}
+
+// =============================
+// SKELETON META INFORMATIONS
+// =============================
+.skeleton-app-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem) 0;
+
+  .skeleton-level,
+  .skeleton-category {
+    border-radius: 4px;
+    height: clamp(0.8rem, 0.05vw + 0.78rem, 0.85rem);
+    background: linear-gradient(
+      90deg,
+      rgba($text-color, 0.12) 25%,
+      rgba($text-color, 0.18) 50%,
+      rgba($text-color, 0.12) 75%
+    );
+  }
+
+  .skeleton-level {
+    width: 60px;
+  }
+  .skeleton-category {
+    width: 80px;
+  }
+
+  .skeleton-separator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba($text-color, 0.3);
+  }
+}
+
+// =============================
+// SKELETON SECTION PRIX
+// =============================
+.skeleton-price-section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 0.22vw + 0.42rem, 0.75rem);
+  margin: auto 0 clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem) 0;
+}
+
+.skeleton-price-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(0.375rem, 0.08vw + 0.35rem, 0.5rem);
+}
+
+.skeleton-price-label,
+.skeleton-rent-label {
+  height: clamp(0.7rem, 0.05vw + 0.68rem, 0.75rem);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.1) 25%,
+    rgba($text-color, 0.15) 50%,
+    rgba($text-color, 0.1) 75%
+  );
+}
+
+.skeleton-price-label {
+  width: 120px;
+}
+.skeleton-rent-label {
+  width: 100px;
+}
+
+.skeleton-price {
+  height: clamp(0.85rem, 0.38vw + 0.71rem, 1.2rem);
+  width: clamp(70px, 1.09vw + 66.1px, 80px);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($color-orange, 0.2) 25%,
+    rgba($color-orange, 0.3) 50%,
+    rgba($color-orange, 0.2) 75%
+  );
+}
+
+.skeleton-rent-price {
+  height: clamp(0.85rem, 0.05vw + 0.83rem, 0.9rem);
+  width: clamp(75px, 1.63vw + 69.1px, 90px);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($color-pink, 0.2) 25%,
+    rgba($color-pink, 0.3) 50%,
+    rgba($color-pink, 0.2) 75%
+  );
+}
+
+// =============================
+// SKELETON BOUTONS D'ACTION
+// =============================
+.skeleton-action-buttons {
+  display: flex;
+  gap: clamp(0.5rem, 0.22vw + 0.42rem, 0.75rem);
+  width: 100%;
+  margin-top: auto;
+}
+
+.skeleton-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 12px;
+  position: relative;
+  // padding : clamp 0.625rem/0.75rem → 1rem/1.25rem
+  padding: clamp(0.625rem, 0.38vw + 0.49rem, 1rem)
+    clamp(0.75rem, 0.54vw + 0.55rem, 1.25rem);
+  min-height: clamp(40px, 0.87vw + 36.9px, 48px);
+}
+
+.skeleton-btn-cart {
+  background: linear-gradient(
+    135deg,
+    rgba($primary-color, 0.2),
+    rgba($secondary-color, 0.15)
+  );
+  border: 1px solid rgba($primary-color, 0.3);
+  animation: skeletonPulse 3s infinite ease-in-out;
+}
+
+.skeleton-btn-preview {
+  background: rgba($text-color, 0.05);
+  border: 1px solid rgba($primary-color, 0.2);
+  animation: skeletonPulse 3s infinite ease-in-out;
+}
+
+.skeleton-btn-icon {
+  width: clamp(14px, 0.43vw + 12.4px, 18px);
+  height: clamp(14px, 0.43vw + 12.4px, 18px);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.15) 25%,
+    rgba($text-color, 0.25) 50%,
+    rgba($text-color, 0.15) 75%
+  );
+}
+
+.skeleton-btn-text {
+  height: clamp(12px, 0.22vw + 11.2px, 14px);
+  width: clamp(50px, 5.43vw + 30.4px, 100px);
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.15) 25%,
+    rgba($text-color, 0.25) 50%,
+    rgba($text-color, 0.15) 75%
+  );
+}
+
+// =============================
+// CAS SPÉCIAUX (contextes non remplaçables par clamp)
+// =============================
+
+@include mobile-landscape {
+  .applications-skeleton-list .projectSection {
+    padding: 0.75rem;
+  }
+  .skeleton-application-card {
+    width: 85%;
+    max-width: 400px;
+    min-height: 350px;
+  }
+  .skeleton-card-image {
+    height: 180px;
+  }
+  .skeleton-card-content {
+    padding: 1.5rem 1.25rem;
+  }
+  .skeleton-app-title {
+    height: 1.2rem;
+  }
+  .skeleton-parallax-section {
+    .skeleton-parallax-title {
+      width: 200px;
+      height: 2.8rem;
+    }
+    .skeleton-parallax-planet {
+      width: 70px;
+      height: 70px;
+    }
+  }
+}
+
+@include tall-screen {
+  .skeleton-card-image {
+    @include below-desktop {
+      height: 260px;
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .applications-skeleton-list .projectSection {
+    padding: 0.75rem 0.5rem;
+  }
+  .skeleton-application-card {
+    width: 99%;
+    min-height: 380px;
+    border-radius: 14px;
+  }
+  .skeleton-card-image {
+    height: 200px;
+  }
+  .skeleton-card-content {
+    padding: 1.5rem 1rem;
+  }
+  .skeleton-app-title {
+    height: 1.15rem;
+    width: 90%;
+  }
+  .skeleton-parallax-section {
+    .skeleton-parallax-title {
+      width: 180px;
+      height: 2.5rem;
+    }
+    .skeleton-parallax-planet {
+      width: 60px;
+      height: 60px;
+    }
+  }
+}
+
+@include from('large-1920') {
+  .applications-skeleton-list .projectSection {
+    padding: 3rem 2rem;
+  }
+  .skeleton-application-card {
+    max-width: 500px;
+    width: 80%;
+    min-height: 400px;
+  }
+  .skeleton-card-image {
+    height: 220px;
+  }
+  .skeleton-app-title {
+    height: 1.3rem;
+  }
+  .skeleton-parallax-section {
+    .skeleton-parallax-title {
+      width: 400px;
+      height: 5rem;
+    }
+    .skeleton-parallax-planet {
+      width: 180px;
+      height: 180px;
+    }
+  }
+}
+
+@media (pointer: coarse) {
+  .skeleton-application-card {
+    min-height: 300px;
+  }
+}
+
+@include reduced-motion {
+  .skeleton-animate,
+  .skeleton-card-inner,
+  .skeleton-app-image,
+  .skeleton-btn-cart,
+  .skeleton-btn-preview {
+    animation: skeletonPulse 2s infinite ease-in-out;
+  }
+  .skeleton-parallax-planet {
+    animation: none;
+  }
+  .skeleton-application-card::before {
+    animation: none;
+  }
+}
+
+@include high-density {
+  .skeleton-application-card {
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.25),
+      0 4px 16px rgba($color-orange, 0.1);
+  }
+}
+
+@include high-contrast {
+  .skeleton-application-card {
+    border-color: rgba($color-orange, 0.3);
+  }
+  .skeleton-animate {
+    background: linear-gradient(
+      90deg,
+      rgba($text-color, 0.2) 25%,
+      rgba($text-color, 0.3) 50%,
+      rgba($text-color, 0.2) 75%
+    );
+  }
+}
+
+@include dark-mode {
+  .skeleton-application-card {
+    background: rgba($text-color, 0.01);
+    border-color: rgba($color-orange, 0.12);
+  }
+  .skeleton-card-image {
+    background: linear-gradient(
+      135deg,
+      rgba($color-orange, 0.02),
+      rgba($color-pink, 0.02)
+    );
+  }
+}

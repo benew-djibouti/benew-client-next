@@ -1,0 +1,76 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _title-block.scss
+// ================================
+
+.services-title-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 1rem;
+
+  .section-main-title {
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-shadow:
+      0 2px 8px rgba($color-dark, 0.6),
+      0 0 24px rgba(#ffffff, 0.15);
+    position: relative;
+    margin: 0;
+
+    // H1 : plus grand que l'ancien h2
+    font-size: clamp(1.75rem, 2.5vw + 0.85rem, 3.75rem);
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(
+        90deg,
+        rgba(#ffffff, 0.6),
+        rgba(#ffffff, 0.2)
+      );
+      border-radius: 3px;
+      bottom: clamp(-0.4rem, -0.02vw - 0.33rem, -0.6rem);
+      width: clamp(40px, 4.35vw + 24px, 80px);
+      height: clamp(2px, 0.11vw + 1.6px, 3px);
+    }
+  }
+}
+
+// Desktop : bloc titre dans la grid-area title
+.services-title-block--desktop {
+  grid-area: title;
+
+  // Masqué sur mobile et tablette
+  @include until('large-xs') {
+    display: none;
+  }
+}
+
+// Mobile/tablette : bloc titre sous la vidéo, caché sur desktop
+.services-title-block--mobile {
+  display: none;
+  margin-top: clamp(0.75rem, 1.5vw + 0.2rem, 1.25rem);
+  padding: 0 1rem;
+  width: 100%;
+
+  @include until('large-xs') {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .section-main-title {
+    // Légèrement plus petit sur mobile pour ne pas déborder
+    font-size: clamp(1.35rem, 3.5vw + 0.6rem, 2rem);
+  }
+}

@@ -1,0 +1,78 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _inputs.scss
+// ================================
+
+// clamp : 0.875rem/0.95rem (360px) → 1rem/1rem (768px → 1280px)
+input[type='text'],
+input[type='email'],
+input[type='tel'] {
+  background-color: rgba($text-color, 0.05);
+  border: 1px solid rgba($primary-color, 0.3);
+  border-radius: 8px;
+  color: $text-color;
+  outline: none;
+  transition: all 0.3s ease;
+
+  padding: clamp(0.875rem, 0.3vw + 0.77rem, 1rem)
+    clamp(1rem, 0.27vw + 0.9rem, 1.25rem);
+  font-size: clamp(0.95rem, 0.12vw + 0.91rem, 1rem);
+  min-height: clamp(44px, 0.98vw + 40.5px, 48px);
+
+  @include desktop-up {
+    padding: 0.8rem 1rem;
+    min-height: auto;
+  }
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.3);
+  }
+
+  &::placeholder {
+    color: rgba($text-color, 0.5);
+  }
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  gap: clamp(0.6rem, 0.16vw + 0.54rem, 0.8rem);
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  color: $text-color;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+
+  padding: clamp(0.875rem, 0.3vw + 0.77rem, 1rem)
+    clamp(0.625rem, 0.14vw + 0.57rem, 0.75rem);
+  min-height: clamp(44px, 0.98vw + 40.5px, 48px);
+
+  @include desktop-up {
+    padding: 0.6rem;
+    min-height: auto;
+  }
+
+  &:hover {
+    background-color: rgba($primary-color, 0.1);
+    border-color: rgba($primary-color, 0.2);
+  }
+
+  input[type='checkbox'] {
+    margin-right: 10px;
+    accent-color: $primary-color;
+
+    @include mobile-only {
+      transform: scale(1.2);
+      margin-right: 12px;
+    }
+  }
+}

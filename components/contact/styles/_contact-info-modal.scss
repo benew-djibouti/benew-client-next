@@ -1,0 +1,274 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _contact-info-modal.scss
+// ================================
+
+// 🖥️ DESKTOP - Modal COMPLÈTEMENT CACHÉE
+@include from('large-xs') {
+  .contact-info-modal-overlay {
+    display: none !important;
+  }
+}
+
+// 📱 MOBILE/TABLETTE - Modal active
+.contact-info-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba($background-color, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+
+  // Animation smooth
+  transition: all 0.3s ease;
+
+  @include until('small-sm') {
+    padding: 0.75rem;
+  }
+}
+
+.contact-info-modal-content {
+  background: linear-gradient(
+    135deg,
+    rgba($text-color, 0.8),
+    rgba($text-color, 0.5)
+  );
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba($primary-color, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 90%;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba($primary-color, 0.2);
+
+  @include until('small-sm') {
+    padding: 1.5rem;
+    border-radius: 12px;
+    max-width: 95%;
+  }
+
+  @include from('small-sm') {
+    padding: 1.75rem;
+  }
+
+  @include from('medium-sm') {
+    padding: 2rem;
+    max-width: 420px;
+  }
+
+  h2 {
+    text-align: center;
+    margin: 0 0 1.5rem 0;
+    color: $text-color;
+    font-size: 1.5rem;
+    font-weight: 600;
+
+    @include until('small-sm') {
+      font-size: 1.3rem;
+      margin-bottom: 1.25rem;
+    }
+
+    @include from('small-sm') {
+      font-size: 1.4rem;
+    }
+
+    @include from('medium-sm') {
+      font-size: 1.6rem;
+      margin-bottom: 1.75rem;
+    }
+  }
+}
+
+// Items de contact dans la modal
+.modal-contact-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @include until('small-sm') {
+    gap: 0.875rem;
+    margin-bottom: 1.25rem;
+  }
+
+  @include from('small-sm') {
+    gap: 1.1rem;
+  }
+
+  @include from('medium-sm') {
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+}
+
+.modal-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba($text-color, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba($primary-color, 0.2);
+  transition: all 0.3s ease;
+
+  @include until('small-sm') {
+    gap: 0.875rem;
+    padding: 0.875rem;
+    border-radius: 10px;
+  }
+
+  @include from('small-sm') {
+    gap: 1.05rem;
+    padding: 0.95rem;
+  }
+
+  @include from('medium-sm') {
+    gap: 1.15rem;
+    padding: 1.1rem;
+  }
+
+  &:hover {
+    background: rgba($primary-color, 0.1);
+    border-color: rgba($primary-color, 0.4);
+    transform: translateX(5px);
+  }
+
+  &:active {
+    transform: translateX(3px) scale(0.98);
+  }
+}
+
+.modal-contact-icon {
+  color: $primary-color;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include until('small-sm') {
+    font-size: 1.3rem;
+  }
+
+  @include from('small-sm') {
+    font-size: 1.4rem;
+  }
+
+  @include from('medium-sm') {
+    font-size: 1.6rem;
+  }
+}
+
+.modal-contact-item p {
+  color: $text-color;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+
+  @include until('small-sm') {
+    font-size: 0.9rem;
+  }
+
+  @include from('small-sm') {
+    font-size: 0.95rem;
+  }
+
+  @include from('medium-sm') {
+    font-size: 1.05rem;
+  }
+}
+
+// Bouton fermer
+.modal-close-button {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(
+    135deg,
+    $primary-color,
+    color.adjust($primary-color, $lightness: 10%)
+  );
+  color: $background-color;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+
+  @include until('small-sm') {
+    padding: 0.875rem;
+    font-size: 0.95rem;
+    border-radius: 10px;
+  }
+
+  @include from('small-sm') {
+    padding: 0.95rem;
+    font-size: 0.97rem;
+  }
+
+  @include from('medium-sm') {
+    padding: 1.1rem;
+    font-size: 1.05rem;
+  }
+
+  svg {
+    font-size: 1.25rem;
+  }
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      color.adjust($primary-color, $lightness: 5%),
+      $secondary-color
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba($primary-color, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Accessibilité - Réduction des animations
+@include reduced-motion {
+  .modal-contact-item {
+    transition: none;
+
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+
+  .modal-close-button {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// Support tactile optimisé
+@media (pointer: coarse) {
+  .modal-contact-item {
+    min-height: 48px;
+  }
+
+  .modal-close-button {
+    min-height: 48px;
+  }
+}

@@ -1,0 +1,41 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _content.scss
+// ================================
+
+// clamp : 1.75rem (360px) → 2rem (1280px) vertical,
+//         1.25rem → 1.5rem horizontal
+.card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: clamp(1.75rem, 0.27vw + 1.65rem, 2rem)
+    clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem);
+  position: relative;
+  z-index: 2;
+}
+
+// clamp : 0.8rem (360px) → 0.85rem (1280px)
+.app-meta {
+  color: $text-color-muted;
+  margin: 0 0 clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem) 0;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: clamp(0.8rem, 0.05vw + 0.78rem, 0.85rem);
+
+  .level,
+  .category {
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .separator {
+    color: $text-color-muted;
+    opacity: 0.6;
+  }
+}

@@ -1,0 +1,131 @@
+// components/channel/channelStyles/_responsive.scss
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// =============================
+// MODE PAYSAGE MOBILE
+// =============================
+
+@include mobile-landscape {
+  .channel-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+}
+
+// =============================
+// ÉCRANS TRÈS PETITS (< 360px)
+// =============================
+
+@media (max-width: 360px) {
+  .channel-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .video-card__info {
+    padding: 0.75rem;
+  }
+}
+
+// =============================
+// TRÈS GRANDS ÉCRANS
+// =============================
+
+@include from('large-xxxl') {
+  .channel-grid {
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 2rem;
+  }
+
+  .video-card__title {
+    font-size: 1.05rem;
+  }
+}
+
+// =============================
+// ÉCRANS HAUTE DENSITÉ
+// =============================
+
+@include high-density {
+  .video-card {
+    box-shadow: none;
+
+    &:hover {
+      box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba($primary-color, 0.15);
+    }
+  }
+}
+
+// =============================
+// ÉCRANS TACTILES
+// =============================
+
+@media (pointer: coarse) {
+  .video-card {
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    &:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+  }
+
+  .channel-search__input {
+    font-size: 1rem; // Évite le zoom auto sur iOS
+    min-height: 48px;
+  }
+
+  .channel-empty__reset {
+    min-height: 44px;
+    &:hover {
+      transform: none;
+    }
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+}
+
+// =============================
+// CONTRASTE ÉLEVÉ
+// =============================
+
+@include high-contrast {
+  .video-card {
+    border-color: rgba($primary-color, 0.3);
+
+    &--active {
+      border-color: $primary-color;
+      border-width: 2px;
+    }
+  }
+
+  .channel-search__input {
+    border-color: rgba($primary-color, 0.3);
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.15);
+    }
+  }
+}
+
+// =============================
+// MODE SOMBRE FORCÉ
+// =============================
+
+@include dark-mode {
+  .video-card {
+    background: rgba($text-color, 0.015);
+  }
+
+  .channel-search__input {
+    background: rgba($text-color, 0.03);
+  }
+}

@@ -1,0 +1,154 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _video.scss
+// ================================
+
+.services-video-block {
+  grid-area: cards;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 clamp(0.5rem, 1.63vw + -0.09rem, 2rem);
+  box-sizing: border-box;
+
+  // Mobile/tablette : flex column pour empiler vidéo + titre
+  @include until('large-xs') {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0; // le margin-top du titre gère l'espacement
+  }
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: clamp(100%, 21.74vw + 921.7px, 1100px);
+  aspect-ratio: 16 / 9;
+  border-radius: clamp(12px, 1.3vw + 7.3px, 24px);
+  overflow: hidden;
+  border: 1px solid rgba($color-pink, 0.25);
+  box-shadow:
+    0 20px 60px rgba($color-dark, 0.5),
+    0 0 40px rgba($color-pink, 0.1),
+    inset 0 1px 0 rgba($color-light, 0.05);
+  background: rgba($color-dark, 0.4);
+
+  @include mobile-only {
+    max-width: 88%; // 85-90% comme demandé
+  }
+
+  @include tablet-up {
+    max-width: clamp(720px, 31.25vw + 480px, 1100px);
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+  }
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  transition: background 0.3s ease;
+
+  &--paused {
+    background: rgba($color-dark, 0.25);
+  }
+
+  &--playing {
+    background: transparent;
+
+    .video-play-btn {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+
+    &:hover .video-play-btn {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.video-play-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($color-dark, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 50%;
+  border: 2px solid rgba($color-pink, 0.5);
+  cursor: pointer;
+  color: $color-light;
+  box-shadow:
+    0 8px 25px rgba($color-dark, 0.5),
+    0 0 20px rgba($color-pink, 0.2);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+
+  // clamp : 72px (1280px) → 80px (1440px)
+  width: clamp(72px, 5px + 3.13vw, 80px);
+  height: clamp(72px, 5px + 3.13vw, 80px);
+
+  &:hover {
+    background: rgba($color-pink, 0.3);
+    border-color: rgba($color-pink, 0.8);
+    box-shadow:
+      0 10px 30px rgba($color-dark, 0.6),
+      0 0 30px rgba($color-pink, 0.35);
+    transform: scale(1.08);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba($color-pink, 0.9);
+    box-shadow:
+      0 10px 30px rgba($color-dark, 0.6),
+      0 0 0 3px rgba($color-pink, 0.25);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &__icon {
+    font-size: clamp(2.2rem, 0.31vw + 2.09rem, 2.5rem);
+    color: $color-light;
+    filter: drop-shadow(0 2px 4px rgba($color-dark, 0.5));
+  }
+
+  &:not(.video-play-btn--ready) {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &--ready {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}

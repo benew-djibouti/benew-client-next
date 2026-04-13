@@ -1,0 +1,15 @@
+// ================================
+// 📄 index.scss - FICHIER PRINCIPAL OPTIMISÉ
+// ================================
+// ✅ Import du nouveau carousel gallery_app
+// ✅ Import de la nouvelle section cards
+// ✅ Structure modulaire maintenable
+// ✅ Production-ready
+
+@forward 'base';
+@forward 'gallery_app'; // Carousel moderne
+@forward 'cards_section'; // ✅ NOUVEAU: Section avec 4 cartes + modals
+@forward 'buttons';
+@forward 'tables';
+@forward 'animations';
+@forward 'responsive';

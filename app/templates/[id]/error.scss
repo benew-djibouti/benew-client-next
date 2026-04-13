@@ -1,0 +1,7 @@
+// app/templates/[id]/error.scss
+@use '../../styles/abstracts' as *;
+@use '../../styles/components/error-shared' as *;
+
+.template-error {
+  @include error-page-wrapper();
+}

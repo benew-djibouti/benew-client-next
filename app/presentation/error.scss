@@ -1,0 +1,110 @@
+// app/presentation/error.scss
+@use '../styles/abstracts' as *;
+@use '../styles/components/error-shared' as *;
+
+.presentation-error {
+  @include error-page-wrapper();
+}
+
+// =============================
+// LIENS ALTERNATIFS
+// Spécifique à la page présentation uniquement
+// =============================
+
+.alternative-content {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba($primary-color, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba($primary-color, 0.1);
+
+  @include until('small-sm') {
+    padding: 1rem;
+  }
+
+  @include dark-mode {
+    background: rgba($primary-color, 0.05);
+  }
+}
+
+.alternative-title {
+  color: $primary-color;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+
+  @include from('small-sm') {
+    font-size: 1.1rem;
+  }
+}
+
+.alternative-links {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr;
+
+  @include from('small-sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include from('medium-lg') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include until('small-sm') {
+    gap: 0.5rem;
+  }
+}
+
+.alternative-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba($background-color, 0.6);
+  border-radius: 8px;
+  color: $text-color;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid rgba($primary-color, 0.1);
+
+  &:hover {
+    background: rgba($primary-color, 0.1);
+    color: $primary-color;
+    border-color: rgba($primary-color, 0.3);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @include until('small-sm') {
+    padding: 0.875rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  @include dark-mode {
+    background: rgba($background-color, 0.8);
+    border-color: rgba($primary-color, 0.15);
+  }
+
+  @media (pointer: coarse) {
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  @include reduced-motion {
+    &:hover {
+      transform: none !important;
+    }
+  }
+}

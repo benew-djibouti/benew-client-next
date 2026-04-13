@@ -1,0 +1,90 @@
+// app/contact/error.scss
+@use '../styles/abstracts' as *;
+@use '../styles/components/error-shared' as *;
+
+.contact-error {
+  @include error-page-wrapper();
+}
+
+// =============================
+// ALTERNATIVES DE CONTACT
+// Spécifique à la page contact uniquement
+// =============================
+
+.contact-alternatives {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba($primary-color, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba($primary-color, 0.1);
+
+  @include until('small-sm') {
+    padding: 1rem;
+  }
+
+  @include dark-mode {
+    background: rgba($primary-color, 0.05);
+  }
+}
+
+.alternatives-title {
+  color: $primary-color;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+
+  @include from('small-sm') {
+    font-size: 1.1rem;
+  }
+}
+
+.alternatives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  @include until('small-sm') {
+    gap: 0.5rem;
+  }
+}
+
+.alternative-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: rgba($background-color, 0.5);
+  border-radius: 8px;
+  text-align: left;
+
+  @include until('small-sm') {
+    padding: 0.625rem;
+  }
+
+  @include dark-mode {
+    background: rgba($background-color, 0.8);
+  }
+
+  @media (pointer: coarse) {
+    padding: 0.75rem;
+  }
+
+  .alternative-icon {
+    font-size: 1.2rem;
+    min-width: 24px;
+  }
+
+  .alternative-text {
+    color: $text-color;
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    @include from('small-sm') {
+      font-size: 0.95rem;
+    }
+
+    @include until('small-sm') {
+      font-size: 0.85rem;
+    }
+  }
+}

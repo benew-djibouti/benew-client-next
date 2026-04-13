@@ -1,0 +1,124 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _typography.scss
+// ================================
+
+.minimalTitleLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  cursor: pointer;
+  margin-bottom: clamp(0.5rem, 0.27vw + 0.4rem, 0.75rem);
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+}
+
+// clamp : 1.3rem (360px) → 1.8rem (1280px)
+.minimalTitle {
+  text-transform: uppercase;
+  font-size: clamp(1.3rem, 0.54vw + 1.1rem, 1.8rem);
+  font-weight: 700;
+  color: $text-color;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+  transition: all 0.3s ease;
+  letter-spacing: 0.05em;
+
+  .minimalTitleLink:hover & {
+    color: $primary-color;
+    transform: translateX(4px);
+  }
+}
+
+// ================================
+// INDICATEUR "VOIR +"
+// ================================
+.view-details-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: clamp(0.35rem, 0.11vw + 0.31rem, 0.45rem)
+    clamp(0.65rem, 0.16vw + 0.59rem, 0.8rem);
+  background: linear-gradient(
+    135deg,
+    rgba($primary-color, 0.12),
+    rgba($secondary-color, 0.08)
+  );
+  border: 1px solid rgba($primary-color, 0.3);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+
+  .minimalTitleLink:hover & {
+    background: linear-gradient(
+      135deg,
+      rgba($primary-color, 0.2),
+      rgba($secondary-color, 0.15)
+    );
+    border-color: rgba($primary-color, 0.6);
+    transform: translateX(8px);
+  }
+}
+
+.indicator-text {
+  font-size: clamp(0.7rem, 0.08vw + 0.67rem, 0.8rem);
+  font-weight: 600;
+  color: $primary-color;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease;
+
+  .minimalTitleLink:hover & {
+    color: color.adjust($primary-color, $lightness: 10%);
+  }
+}
+
+.indicator-arrow {
+  width: clamp(12px, 0.43vw + 10.4px, 16px);
+  height: clamp(12px, 0.43vw + 10.4px, 16px);
+  color: $primary-color;
+  transition: transform 0.3s ease;
+
+  .minimalTitleLink:hover & {
+    transform: translateX(4px);
+    color: color.adjust($primary-color, $lightness: 10%);
+  }
+}
+
+// ================================
+// ACCESSIBILITÉ
+// ================================
+@include reduced-motion {
+  .view-details-indicator,
+  .indicator-arrow,
+  .minimalTitle {
+    transition: none !important;
+
+    .minimalTitleLink:hover & {
+      transform: none !important;
+    }
+  }
+}
+
+@media (pointer: coarse) {
+  .view-details-indicator {
+    padding: 0.5rem 0.9rem;
+
+    .minimalTitleLink:hover & {
+      transform: none;
+    }
+  }
+
+  .minimalTitleLink:active .view-details-indicator {
+    transform: scale(0.95);
+  }
+}

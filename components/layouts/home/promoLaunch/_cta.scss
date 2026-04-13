@@ -1,0 +1,65 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _cta.scss
+// ================================
+
+.promo-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// clamp : 0.7rem (360px) → 1.1rem (1280px)
+.promo-cta__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $color-orange, $color-pink);
+  color: $color-light;
+  text-decoration: none;
+  font-family: font-family('ui');
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: clamp(0.8px, 0.08vw + 0.51px, 1.5px);
+  border-radius: 50px;
+  border: 2px solid rgba($color-light, 0.2);
+  box-shadow:
+    0 8px 25px rgba($color-orange, 0.35),
+    0 4px 15px rgba($color-pink, 0.25),
+    0 0 40px rgba($color-orange, 0.1);
+  text-shadow: 0 2px 4px rgba($color-dark, 0.5);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  font-size: clamp(0.7rem, 0.43vw + 0.54rem, 1.1rem);
+  padding: clamp(0.65rem, 0.38vw + 0.51rem, 1.1rem)
+    clamp(1.5rem, 1.09vw + 1.11rem, 3rem);
+
+  &:hover {
+    transform: translateY(-3px) scale(1.04);
+    background: linear-gradient(
+      135deg,
+      color.adjust($color-orange, $lightness: 8%),
+      color.adjust($color-pink, $lightness: 8%)
+    );
+    box-shadow:
+      0 12px 35px rgba($color-orange, 0.45),
+      0 6px 20px rgba($color-pink, 0.35),
+      0 0 50px rgba($color-orange, 0.2);
+    border-color: rgba($color-light, 0.35);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba($color-light, 0.5);
+    box-shadow:
+      0 12px 35px rgba($color-orange, 0.45),
+      0 6px 20px rgba($color-pink, 0.35),
+      0 0 0 4px rgba($color-light, 0.2);
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(1.01);
+  }
+}

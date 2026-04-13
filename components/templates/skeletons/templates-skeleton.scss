@@ -1,0 +1,449 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts/' as *;
+
+// ================================
+// 📄 templates-skeleton.scss
+// ================================
+
+@keyframes skeletonPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes skeletonFloat {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+// =============================
+// BASE
+// =============================
+.skeleton-animate {
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.08) 25%,
+    rgba($text-color, 0.15) 50%,
+    rgba($text-color, 0.08) 75%
+  );
+  background-size: 200px 100%;
+  animation: skeletonShimmer 2s infinite linear;
+  border-radius: 8px;
+}
+
+// =============================
+// CONTENEUR PRINCIPAL
+// =============================
+.templates-skeleton-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+// =============================
+// SECTION PARALLAX SKELETON
+// =============================
+.skeleton-parallax-section {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(
+    180deg,
+    rgba($background-color, 0.95),
+    rgba($background-color, 0.85)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  // Titre : width 220px (360px) → 320px (1280px), height 3rem → 4.5rem
+  .skeleton-parallax-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    border-radius: 12px;
+    background: linear-gradient(
+      90deg,
+      rgba($color-orange, 0.2) 25%,
+      rgba($color-orange, 0.3) 50%,
+      rgba($color-orange, 0.2) 75%
+    );
+    // width : 220px → 320px
+    width: clamp(220px, 10.87vw + 180.9px, 320px);
+    // height : 3rem → 4.5rem
+    height: clamp(3rem, 1.63vw + 2.41rem, 4.5rem);
+  }
+
+  // Planète : size 80px (360px) → 150px (1280px)
+  .skeleton-parallax-planet {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(
+      135deg,
+      rgba($color-pink, 0.15) 0%,
+      rgba($color-orange, 0.15) 50%,
+      rgba($color-purple, 0.15) 100%
+    );
+    animation: skeletonFloat 4s ease-in-out infinite;
+    // size : 80px → 150px
+    width: clamp(80px, 7.61vw + 52.6px, 150px);
+    height: clamp(80px, 7.61vw + 52.6px, 150px);
+    // top : 25% → 18%
+    top: clamp(18%, -0.76vw + 20.7%, 25%);
+    // right : 5% → 12%
+    right: clamp(5%, 0.76vw + 2.3%, 12%);
+    z-index: 1;
+  }
+}
+
+// =============================
+// GRILLE SKELETON
+// =============================
+.templates-skeleton-grid {
+  .projectSection {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    // padding : 1rem/0.75rem (360px) → 2.5rem/2rem (1280px)
+    padding: clamp(1rem, 1.63vw + 0.41rem, 2.5rem)
+      clamp(0.75rem, 0.82vw + 0.45rem, 2rem);
+  }
+}
+
+// =============================
+// CARTE TEMPLATE SKELETON
+// width : 90% (360px) → 70% (1280px)
+// max-width : 420px → 520px
+// =============================
+.skeleton-template-card {
+  display: block;
+  cursor: default;
+  // width : 90% → 70% (décroissant)
+  width: clamp(70%, -2.17vw + 87.8%, 90%);
+  // max-width : 420px → 520px
+  max-width: clamp(420px, 10.87vw + 380.9px, 520px);
+}
+
+// =============================
+// CARTE INNER
+// =============================
+.skeleton-card-inner {
+  width: 100%;
+  background: rgba($text-color, 0.03);
+  border: 1px solid rgba($color-orange, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  animation: skeletonPulse 3s infinite ease-in-out;
+}
+
+// =============================
+// CONTENEUR IMAGE
+// height : 280px (360px) → 460px (1280px)
+// padding : 1.5rem → 3.5rem
+// =============================
+.skeleton-image-container {
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba($color-orange, 0.04),
+    rgba($color-pink, 0.04)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba($color-orange, 0.06);
+  // height : 280px → 460px
+  height: clamp(280px, 19.57vw + 209.4px, 460px);
+  // padding : 1.5rem → 3.5rem
+  padding: clamp(1.5rem, 2.17vw + 0.72rem, 3.5rem);
+}
+
+// =============================
+// IMAGE TEMPLATE
+// =============================
+.skeleton-template-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba($color-purple, 0.15) 25%,
+    rgba($color-purple, 0.25) 50%,
+    rgba($color-purple, 0.15) 75%
+  );
+  animation: skeletonShimmer 2.5s infinite linear;
+}
+
+// =============================
+// CONTENU
+// padding : 1.25rem (360px) → 1.75rem (1280px)
+// =============================
+.skeleton-content {
+  padding: clamp(1.25rem, 0.54vw + 1.05rem, 1.75rem);
+}
+
+// =============================
+// CATÉGORIE
+// =============================
+.skeleton-category {
+  display: flex;
+  align-items: center;
+  // gap : 0.375rem → 0.5rem
+  gap: clamp(0.375rem, 0.14vw + 0.32rem, 0.5rem);
+  // margin-bottom : 0.75rem → 1rem
+  margin-bottom: clamp(0.75rem, 0.27vw + 0.65rem, 1rem);
+
+  .skeleton-category-icons {
+    display: flex;
+    gap: 0.3rem;
+
+    .skeleton-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      background: linear-gradient(
+        90deg,
+        rgba($color-orange, 0.2) 25%,
+        rgba($color-orange, 0.3) 50%,
+        rgba($color-orange, 0.2) 75%
+      );
+    }
+  }
+
+  .skeleton-category-text {
+    // height : 0.8rem → 0.875rem
+    height: clamp(0.8rem, 0.08vw + 0.77rem, 0.875rem);
+    width: 80px;
+    border-radius: 4px;
+    background: linear-gradient(
+      90deg,
+      rgba($text-color, 0.12) 25%,
+      rgba($text-color, 0.2) 50%,
+      rgba($text-color, 0.12) 75%
+    );
+  }
+}
+
+// =============================
+// TITRE
+// height : 1.3rem (360px) → 1.8rem (1280px)
+// width : 90% → 82% (décroissant)
+// =============================
+.skeleton-title {
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.15) 25%,
+    rgba($text-color, 0.25) 50%,
+    rgba($text-color, 0.15) 75%
+  );
+  // height : 1.3rem → 1.8rem
+  height: clamp(1.3rem, 0.54vw + 1.1rem, 1.8rem);
+  // width : 90% → 82% (décroissant)
+  width: clamp(82%, -0.87vw + 93.1%, 90%);
+}
+
+// =============================
+// CAS SPÉCIAUX
+// =============================
+
+@include mobile-landscape {
+  .templates-skeleton-grid .projectSection {
+    padding: 0.75rem;
+  }
+  .skeleton-template-card {
+    width: 85%;
+    max-width: 400px;
+  }
+  .skeleton-image-container {
+    height: 260px;
+    padding: 1.25rem;
+  }
+  .skeleton-content {
+    padding: 1rem;
+  }
+  .skeleton-title {
+    height: 1.2rem;
+  }
+  .skeleton-category {
+    margin-bottom: 0.7rem;
+    .skeleton-category-text {
+      height: 0.75rem;
+      width: 60px;
+    }
+  }
+  .skeleton-parallax-section {
+    .skeleton-parallax-title {
+      width: 200px;
+      height: 2.8rem;
+    }
+    .skeleton-parallax-planet {
+      width: 70px;
+      height: 70px;
+    }
+  }
+}
+
+@include tall-screen {
+  .skeleton-image-container {
+    @include until('large-1280') {
+      height: 350px;
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .templates-skeleton-grid .projectSection {
+    padding: 0.75rem 0.5rem;
+  }
+  .skeleton-template-card {
+    width: 95%;
+    max-width: 350px;
+  }
+  .skeleton-image-container {
+    height: 240px;
+    padding: 1rem;
+  }
+  .skeleton-content {
+    padding: 1rem;
+  }
+  .skeleton-title {
+    height: 1.2rem;
+    width: 95%;
+  }
+  .skeleton-category {
+    margin-bottom: 0.7rem;
+    .skeleton-category-text {
+      height: 0.75rem;
+      width: 60px;
+    }
+  }
+  .skeleton-parallax-section {
+    .skeleton-parallax-title {
+      width: 180px;
+      height: 2.5rem;
+    }
+    .skeleton-parallax-planet {
+      width: 60px;
+      height: 60px;
+    }
+  }
+}
+
+@include reduced-motion {
+  .skeleton-animate {
+    animation: skeletonPulse 2s infinite ease-in-out;
+  }
+  .skeleton-card-inner {
+    animation: none;
+  }
+  .skeleton-template-image {
+    animation: skeletonPulse 2s infinite ease-in-out;
+  }
+  .skeleton-parallax-planet {
+    animation: none;
+  }
+}
+
+@include high-density {
+  .skeleton-card-inner {
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.1),
+      0 1px 4px rgba($color-orange, 0.08);
+  }
+}
+
+@include high-contrast {
+  .skeleton-card-inner {
+    border-color: rgba($color-orange, 0.3);
+  }
+  .skeleton-animate {
+    background: linear-gradient(
+      90deg,
+      rgba($text-color, 0.2) 25%,
+      rgba($text-color, 0.3) 50%,
+      rgba($text-color, 0.2) 75%
+    );
+  }
+}
+
+@include dark-mode {
+  .skeleton-card-inner {
+    background: rgba($text-color, 0.01);
+    border-color: rgba($color-orange, 0.12);
+  }
+  .skeleton-image-container {
+    background: linear-gradient(
+      135deg,
+      rgba($color-orange, 0.02),
+      rgba($color-pink, 0.02)
+    );
+  }
+}
+
+@media (pointer: coarse) {
+  .skeleton-template-card {
+    min-height: 300px;
+  }
+}
+
+@include from('large-1920') {
+  .templates-skeleton-grid .projectSection {
+    padding: 3rem 2rem;
+  }
+  .skeleton-template-card {
+    max-width: 600px;
+    width: 65%;
+  }
+  .skeleton-image-container {
+    height: 500px;
+    padding: 4rem;
+  }
+  .skeleton-title {
+    height: 2rem;
+  }
+  .skeleton-category {
+    .skeleton-category-text {
+      height: 0.9rem;
+      width: 90px;
+    }
+  }
+  .skeleton-parallax-section {
+    .skeleton-parallax-title {
+      width: 400px;
+      height: 5rem;
+    }
+    .skeleton-parallax-planet {
+      width: 180px;
+      height: 180px;
+    }
+  }
+}

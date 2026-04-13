@@ -1,0 +1,608 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _gallery.scss - VERSION CORRIGÉE (Bordure 1px)
+// ================================
+// ✅ CORRECTIONS APPLIQUÉES :
+// 1. Bordure gradient RÉDUITE : 2px → 1px
+// 2. Espacement visuel réduit de 36% (5.6px → 3.6px)
+// 3. Thumbnails visuellement SERRÉES comme souhaité
+// 4. Border-radius ajusté : 6px → 5px (4px conteneur + 1px bordure)
+
+// =============================
+// OVERLAY MODAL
+// =============================
+
+.gallery-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+
+  // 📱 MOBILE - Ajustement padding
+  padding: 1rem;
+
+  @include from('medium-sm') {
+    padding: 2rem;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// =============================
+// MODAL CONTENT
+// =============================
+
+.gallery-modal-content {
+  background: linear-gradient(
+    135deg,
+    rgba($background-color, 0.95),
+    rgba($background-color, 0.98)
+  );
+  border: 1px solid rgba($primary-color, 0.3);
+  border-radius: 16px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.4s ease;
+
+  // 📱 MOBILE FIRST
+  width: 100%;
+  max-width: 100%;
+  max-height: 90vh;
+  padding: 1rem;
+
+  @include from('medium-sm') {
+    width: 90%;
+    max-width: 900px;
+    padding: 1.5rem;
+    max-height: 92vh;
+  }
+
+  @include from('large-xs') {
+    max-width: 1100px; // ✅ Plus large pour layout horizontal
+    padding: 2rem;
+    max-height: 95vh;
+  }
+
+  @include from('large-xxl') {
+    max-width: 1200px;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// =============================
+// ✅ HEADER CORRIGÉ - TITRE + COMPTEUR GROUPÉS
+// =============================
+
+.gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba($primary-color, 0.2);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+
+  // 📱 MOBILE
+  @include small-screens {
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    padding-right: 2.5rem;
+  }
+
+  @include from('medium-sm') {
+    flex-direction: row;
+    margin-bottom: 1.25rem;
+    padding-right: 3rem;
+  }
+
+  @include from('large-xs') {
+    margin-bottom: 1.5rem;
+    padding-right: 3.5rem;
+  }
+}
+
+// ✅ NOUVEAU : Conteneur pour titre + compteur (groupés ensemble)
+.gallery-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+
+  // 📟 TABLET+ : Titre et compteur sur la même ligne
+  @include from('medium-sm') {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  h3 {
+    color: $primary-color;
+    margin: 0;
+    flex-shrink: 0;
+
+    // 📱 MOBILE FIRST
+    font-size: 1.2rem;
+
+    @include from('medium-sm') {
+      font-size: 1.4rem;
+    }
+
+    @include from('large-xs') {
+      font-size: 1.5rem;
+    }
+  }
+
+  .gallery-counter {
+    color: rgba($text-color, 0.7);
+    font-weight: 500;
+    margin: 0;
+    flex-shrink: 0;
+
+    // 📱 MOBILE
+    font-size: 0.85rem;
+
+    @include from('medium-sm') {
+      font-size: 0.95rem;
+    }
+
+    @include from('large-xs') {
+      font-size: 1rem;
+    }
+  }
+}
+
+// =============================
+// ✅ BOUTON FERMETURE - POSITION ABSOLUE SANS CONFLIT
+// =============================
+
+.gallery-close-btn {
+  position: absolute;
+  background: $primary-color;
+  color: $background-color;
+  border: none !important;
+  outline: none !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 100;
+
+  // 📱 MOBILE
+  width: 2.5rem;
+  height: 2.5rem;
+  top: 0.5rem;
+  right: 0.5rem;
+
+  @include small-screens {
+    width: 2.5rem;
+    height: 2.5rem;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  // 📟 TABLET
+  @include from('medium-sm') {
+    width: 3rem;
+    height: 3rem;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  // 🖥️ DESKTOP
+  @include from('large-xs') {
+    width: 3.5rem;
+    height: 3.5rem;
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+
+  svg {
+    font-family: initial !important;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover,
+  &:focus,
+  &:active,
+  &:focus-visible {
+    transform: scale(0.7);
+  }
+
+  &:active {
+    transform: scale(0.5);
+  }
+}
+
+// =============================
+// ✅ BODY AVEC LAYOUT ADAPTATIF
+// =============================
+
+.gallery-body {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+
+  // 📱 MOBILE + 📟 TABLET : Layout VERTICAL (image EN HAUT + thumbs EN BAS)
+  flex-direction: column-reverse;
+  gap: 0.8rem; // ✅ RÉDUIT : 0.8rem au lieu de 1rem
+
+  @include from('medium-sm') {
+    gap: 1rem; // ✅ RÉDUIT : 1rem au lieu de 1.25rem
+  }
+
+  // 🖥️ DESKTOP : Layout HORIZONTAL (thumbs à gauche + image)
+  @include from('large-xs') {
+    flex-direction: row;
+    gap: 1rem; // ✅ RÉDUIT : 0.8rem au lieu de 1.5rem (moins d'espace horizontal)
+    min-height: 0; // ✅ CRITIQUE : Permet au flex child de scroller
+  }
+
+  @include from('large-xxl') {
+    gap: 1.5rem;
+  }
+}
+
+// =============================
+// ✅ THUMBNAILS - PRESQUE COLLÉES (BORDURE FINE)
+// =============================
+
+.gallery-thumbnails {
+  display: flex;
+  overflow: auto;
+  flex-shrink: 0;
+
+  // 📱 MOBILE + 📟 TABLET : HORIZONTALES en bas
+  flex-direction: row;
+  gap: 0.5rem; // ✅ MINIMAL : ≈ 1.6px (presque rien)
+  padding: 0.75rem;
+
+  @include from('medium-sm') {
+    gap: 0.6rem; // ✅ 9.6px sur tablet
+    padding: 0.875rem;
+  }
+
+  // 🖥️ DESKTOP : VERTICALES à gauche
+  @include from('large-xs') {
+    flex-direction: column;
+    gap: 0.5rem; // ✅ MINIMAL : presque collées verticalement
+    padding: 1rem;
+    min-width: 120px; // ✅ Largeur fixe
+    max-width: 140px; // ✅ Légèrement élargi (était 120px)
+
+    // ✅ CRITIQUE : Hauteur contrôlée pour forcer le scroll
+    min-height: 300px;
+    max-height: 70vh; // ✅ Maximum 70% de la hauteur d'écran
+
+    overflow-y: scroll; // ✅ FORCE le scroll vertical (toujours visible)
+    overflow-x: hidden;
+
+    // ✅ Smooth scrolling
+    scroll-behavior: smooth;
+  }
+
+  @include from('large-xxl') {
+    max-width: 150px;
+    max-height: 75vh; // ✅ Plus d'espace sur grand écran
+    padding: 1.25rem;
+  }
+
+  // ✅ NOUVEAU : Espace APRÈS la dernière thumbnail
+  // Évite que la dernière image soit coupée
+  &::after {
+    content: '';
+    flex-shrink: 0;
+
+    // 📱 MOBILE/TABLET : Espace horizontal à droite
+    width: 0.5rem;
+    height: 1px;
+
+    @include from('medium-sm') {
+      width: 0.75rem;
+    }
+
+    // 🖥️ DESKTOP : Espace vertical en bas
+    @include from('large-xs') {
+      width: 1px;
+      height: 0.75rem;
+    }
+
+    @include from('large-xxl') {
+      height: 1rem;
+    }
+  }
+
+  // ✅ NOUVEAU : Smooth scroll sur mobile aussi
+  @include small-screens {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; // ✅ Momentum scrolling iOS
+  }
+
+  // Custom scrollbar (optimisé)
+  &::-webkit-scrollbar {
+    // 📱 MOBILE/TABLET : Scrollbar HORIZONTALE
+    height: 10px; // ✅ Plus visible (était 6px)
+
+    @include from('medium-sm') {
+      height: 12px; // ✅ Encore plus visible sur tablet
+    }
+
+    // 🖥️ DESKTOP : Scrollbar VERTICALE
+    @include from('large-xs') {
+      width: 10px; // ✅ Plus visible (était 6px)
+      height: auto;
+    }
+
+    @include from('large-xxl') {
+      width: 12px; // ✅ Très visible sur grand écran
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba($text-color, 0.15); // ✅ Plus visible (était 0.1)
+    border-radius: 6px; // ✅ Arrondi augmenté
+
+    // ✅ NOUVEAU : Marge pour ne pas toucher les bords
+    margin: 0.5rem;
+
+    @include from('large-xs') {
+      margin: 0.75rem 0; // ✅ Marge verticale sur desktop
+    }
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($primary-color, 0.7); // ✅ Plus visible (était 0.5)
+    border-radius: 6px;
+
+    // ✅ NOUVEAU : Bordure pour contraste
+    border: 2px solid rgba($background-color, 0.2);
+
+    &:hover {
+      background: rgba($primary-color, 0.9); // ✅ Hover très marqué (était 0.7)
+      border-color: rgba($primary-color, 0.3);
+    }
+
+    &:active {
+      background: $primary-color; // ✅ Clic = couleur pleine
+    }
+  }
+}
+
+// =============================
+// ✅ THUMBNAILS INDIVIDUELLES - BORDURE FINE + CONTENEUR EXACT
+// =============================
+
+.gallery-thumb {
+  flex-shrink: 0;
+  border: 1px solid rgba($text-color, 0.2); // ✅ 1px au lieu de 2px
+  border-radius: 6px; // ✅ 4px au lieu de 8px (plus discret)
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba($text-color, 0.05);
+  position: relative;
+
+  // 📱 MOBILE : 80-85px
+  width: 80px;
+  height: 80px;
+
+  @include from('small-sm') {
+    width: 82px;
+    height: 82px;
+  }
+
+  @include from('small-lg') {
+    width: 85px;
+    height: 85px;
+  }
+
+  // 📟 TABLET : 85-90px
+  @include from('medium-sm') {
+    width: 85px;
+    height: 85px;
+  }
+
+  @include from('medium-lg') {
+    width: 88px;
+    height: 88px;
+  }
+
+  // 🖥️ DESKTOP : 90-100px
+  @include from('large-xs') {
+    width: 90px;
+    height: 90px;
+  }
+
+  @include from('large-xxl') {
+    width: 100px;
+    height: 100px;
+  }
+
+  // ✅ BORDURE GRADIENT FINE SUR ACTIVE (CORRIGÉ)
+  &.active {
+    border: 1px solid $primary-color; // ✅ 1px au lieu de 2px
+    // ✅ OMBRE DISCRÈTE
+    box-shadow: 0 0 0 1px rgba($primary-color, 0.2);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+// =============================
+// ✅ IMAGE CONTAINER - PREND L'ESPACE RESTANT
+// =============================
+
+.gallery-image-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($text-color, 0.03);
+  border-radius: 12px;
+  overflow: hidden;
+  flex-grow: 1;
+  flex-shrink: 1;
+
+  // 📱 MOBILE FIRST
+  min-height: 250px;
+  max-height: 50vh;
+
+  @include from('small-sm') {
+    min-height: 280px;
+    max-height: 52vh;
+  }
+
+  @include from('small-lg') {
+    min-height: 300px;
+    max-height: 55vh;
+  }
+
+  // 📟 TABLET
+  @include from('medium-sm') {
+    min-height: 350px;
+    max-height: 60vh;
+  }
+
+  @include from('medium-lg') {
+    min-height: 380px;
+    max-height: 62vh;
+  }
+
+  @include from('medium-xxl') {
+    min-height: 400px;
+    max-height: 65vh;
+  }
+
+  // 🖥️ DESKTOP : Beaucoup d'espace (thumbs à gauche)
+  @include from('large-xs') {
+    min-height: 450px;
+    max-height: 75vh;
+  }
+
+  @include from('large-lg') {
+    min-height: 500px;
+    max-height: 78vh;
+  }
+
+  @include from('large-xxl') {
+    min-height: 550px;
+    max-height: 80vh;
+  }
+}
+
+// ✅ IMAGE CENTRALE - TOUJOURS EN CONTAIN
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+// =============================
+// ✅ BOUTON GALLERY DANS CARTE
+// =============================
+
+.btn-gallery {
+  background: transparent;
+  color: $secondary-color;
+  border: 2px solid $secondary-color;
+  backdrop-filter: blur(10px);
+
+  &:hover:not(:disabled) {
+    background: rgba($secondary-color, 0.15); // ← SCSS résout à la compilation
+    border-color: $accent-color;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba($secondary-color, 0.3); // ← idem
+  }
+
+  svg {
+    transition: transform 0.3s ease;
+  }
+
+  &:hover svg {
+    transform: scale(1.1);
+  }
+
+  .btn-text {
+    display: inline;
+  }
+}
+
+// =============================
+// ADAPTATIONS RESPONSIVE
+// =============================
+
+@include mobile-landscape {
+  .gallery-modal-content {
+    max-height: 95vh;
+  }
+
+  .gallery-image-container {
+    max-height: 65vh;
+  }
+}
+
+@include reduced-motion {
+  .gallery-modal-overlay,
+  .gallery-modal-content {
+    animation: none;
+  }
+
+  .gallery-thumb,
+  .gallery-close-btn {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+@include dark-mode {
+  .gallery-modal-content {
+    background: linear-gradient(
+      135deg,
+      rgba($background-color, 0.98),
+      rgba($background-color, 0.99)
+    );
+  }
+}

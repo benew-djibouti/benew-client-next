@@ -1,0 +1,179 @@
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _mobile-structure.scss
+// ================================
+
+// =============================
+// STRUCTURE MOBILE (petits écrans uniquement)
+// =============================
+.mobile-structure {
+  display: flex; // Visible par défaut sur mobile
+  width: 70%; // Augmenté pour accommoder le bouton musique
+  justify-content: space-between;
+  align-items: center;
+  margin-left: auto; // Colle à droite
+  margin-right: 0; // Colle à droite
+  position: relative;
+
+  // Caché sur tablettes et grands écrans (≥ 768px)
+  @include from('medium-sm') {
+    display: none;
+  }
+
+  // =============================
+  // LOGO MOBILE
+  // =============================
+  .mobile-logo {
+    display: flex;
+    align-items: center;
+
+    .logo {
+      width: 2.2rem; // Même taille que social-websites-icon
+      height: 2.2rem; // Même taille que social-websites-icon
+      object-fit: contain;
+    }
+  }
+
+  // =============================
+  // CONTENEUR BOUTON MUSIQUE MOBILE - NOUVEAU
+  // =============================
+  .mobile-music-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .mobile-music-button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+        background: rgba($primary-color, 0.1);
+      }
+
+      &:focus {
+        outline: 2px solid $primary-color;
+        outline-offset: 2px;
+      }
+
+      .mobile-music-icon {
+        width: 2.2rem; // Même taille que les autres icônes mobiles
+        height: 2.2rem; // Même taille que les autres icônes mobiles
+        color: $text-color-muted;
+        filter: grayscale(0.3);
+        transition: all 0.3s ease;
+
+        &:hover {
+          filter: grayscale(0) hue-rotate(20deg) brightness(1.2);
+          color: $primary-color;
+        }
+      }
+
+      // Effet hover sur le bouton applique aussi à l'icône
+      &:hover .mobile-music-icon {
+        filter: grayscale(0) hue-rotate(20deg) brightness(1.2);
+        color: $primary-color;
+      }
+
+      // États spéciaux pour indiquer le statut audio
+      &.audio-available {
+        .mobile-music-icon {
+          color: $primary-color;
+          filter: grayscale(0);
+        }
+      }
+
+      &.audio-unavailable {
+        .mobile-music-icon {
+          color: $text-color-muted;
+          filter: grayscale(0.7);
+        }
+
+        &:hover {
+          transform: scale(1.05); // Moins d'animation si indisponible
+
+          .mobile-music-icon {
+            color: $text-color;
+            filter: grayscale(0.5);
+          }
+        }
+      }
+
+      &.audio-playing {
+        .mobile-music-icon {
+          color: $secondary-color;
+          filter: grayscale(0) hue-rotate(45deg) brightness(1.3);
+          animation: musicPulse 2s ease-in-out infinite;
+        }
+      }
+    }
+  }
+
+  // =============================
+  // CONTENEUR SOCIAL MOBILE
+  // =============================
+  .mobile-social-container {
+    position: relative;
+
+    // Bouton trigger du dropdown
+    .social-dropdown-trigger {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem; // Espace entre l'image et la flèche
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+        background: rgba($primary-color, 0.1);
+      }
+
+      .social-websites-icon {
+        width: 2.2rem;
+        height: 2.2rem;
+        filter: grayscale(0.3);
+        transition: all 0.3s ease;
+
+        &:hover {
+          filter: grayscale(0) hue-rotate(20deg) brightness(1.2);
+        }
+      }
+
+      // =============================
+      // STYLES POUR L'ICÔNE REACT ARROW
+      // =============================
+      .dropdown-arrow {
+        color: $text-color;
+        transition: transform 0.3s ease;
+        font-size: 1rem; // Taille de l'icône
+        margin-left: -0.25rem; // Rapprocher de l'icône
+        filter: grayscale(0.3); // Cohérent avec les autres icônes
+
+        &.open {
+          transform: rotate(180deg); // Rotation quand ouvert
+        }
+
+        &:hover {
+          filter: grayscale(0) hue-rotate(20deg) brightness(1.2);
+        }
+      }
+
+      &:hover .dropdown-arrow {
+        filter: grayscale(0) hue-rotate(20deg) brightness(1.2);
+      }
+    }
+  }
+}

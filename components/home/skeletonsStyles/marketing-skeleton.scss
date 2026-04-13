@@ -1,0 +1,439 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 marketing-skeleton.scss
+// ================================
+
+@keyframes skeletonPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.marketing-skeleton {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.skeleton-animate {
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.1) 25%,
+    rgba($text-color, 0.2) 50%,
+    rgba($text-color, 0.1) 75%
+  );
+  background-size: 200px 100%;
+  animation: skeletonShimmer 2s infinite linear;
+  border-radius: 8px;
+}
+
+// =============================
+// LAYOUT DESKTOP (≥ 768px)
+// =============================
+@include tablet-up {
+  .main-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    gap: clamp(2rem, 1.09vw + 1.61rem, 3rem);
+    box-sizing: border-box;
+  }
+}
+
+// =============================
+// LAYOUT MOBILE (< 768px)
+// =============================
+@include mobile-only {
+  .main-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    box-sizing: border-box;
+  }
+}
+
+// =============================
+// SKELETON IMAGE DESKTOP
+// =============================
+@include tablet-up {
+  .skeleton-profit-image {
+    max-height: 90vh;
+    // width/height : 220px (768px) → 256px (1280px)
+    width: clamp(220px, 7.17vw + 164.8px, 256px);
+    height: clamp(330px, 10.87vw + 246.7px, 384px);
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 5;
+    background: linear-gradient(
+      90deg,
+      rgba($color-orange, 0.2) 25%,
+      rgba($color-orange, 0.3) 50%,
+      rgba($color-orange, 0.2) 75%
+    );
+
+    @include from('large-1280') {
+      border-radius: 28px;
+      max-height: 90vh;
+    }
+  }
+}
+
+// =============================
+// SKELETON IMAGE MOBILE
+// clamp : 60vh (360px) → 68vh (768px)
+// =============================
+@include mobile-only {
+  .skeleton-profit-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    // height : 60vh → 68vh
+    height: clamp(60vh, 1.96vw + 52.9vh, 68vh);
+    width: 180px;
+    opacity: 0.3;
+    filter: blur(2px);
+    background: linear-gradient(
+      90deg,
+      rgba($color-orange, 0.15) 25%,
+      rgba($color-orange, 0.25) 50%,
+      rgba($color-orange, 0.15) 75%
+    );
+  }
+}
+
+// =============================
+// TEXT CONTAINER DESKTOP
+// =============================
+@include desktop-up {
+  .text-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    justify-content: center;
+    margin: 0;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 10;
+  }
+}
+
+// =============================
+// TEXT CONTAINER TABLETTE
+// =============================
+@include between('medium-768', 'large-1280') {
+  .text-container {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: clamp(75%, 3.85vw + 64.4%, 85%);
+    padding: clamp(1.75rem, 0.48vw + 1.58rem, 2rem)
+      clamp(1.5rem, 0.48vw + 1.33rem, 1.75rem);
+    margin: 0;
+    background: rgba(220, 220, 230, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: clamp(20px, 0.77vw + 17.1px, 24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+// =============================
+// TEXT CONTAINER MOBILE
+// =============================
+@include mobile-only {
+  .text-container {
+    position: absolute;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: clamp(92%, 2.17vw + 84.2%, 94%);
+    padding: clamp(1rem, 0.61vw + 0.78rem, 1.25rem)
+      clamp(0.8rem, 0.49vw + 0.62rem, 1rem);
+    margin: 0;
+    background: transparent;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 0;
+    border: none;
+  }
+}
+
+// =============================
+// SKELETON TITLES
+// clamp height : 1.6rem (360px) → 3.4rem (1280px)
+// =============================
+.skeleton-title-1,
+.skeleton-title-2 {
+  width: 100%;
+  border-radius: 6px;
+  // height : 1.6rem → 3.4rem
+  height: clamp(1.6rem, 1.96vw + 0.89rem, 3.4rem);
+  margin-bottom: clamp(0.5rem, 0.54vw + 0.3rem, 1rem);
+  background: linear-gradient(
+    90deg,
+    rgba($color-orange, 0.2) 25%,
+    rgba($color-orange, 0.3) 50%,
+    rgba($color-orange, 0.2) 75%
+  );
+}
+
+.skeleton-title-1 {
+  max-width: 90%;
+}
+.skeleton-title-2 {
+  max-width: 85%;
+  margin-bottom: clamp(1.2rem, 0.87vw + 0.89rem, 2rem);
+}
+
+// =============================
+// SKELETON BUTTON
+// clamp : 2.1rem (360px) → 2.7rem (1280px)
+// =============================
+.skeleton-profit-button {
+  border-radius: 50px;
+  margin-top: clamp(1.2rem, 0.87vw + 0.89rem, 2rem);
+  // height : 2.1rem → 2.7rem
+  height: clamp(2.1rem, 0.65vw + 1.86rem, 2.7rem);
+  // width : 140px → 180px
+  width: clamp(140px, 4.35vw + 124.3px, 180px);
+  background: linear-gradient(
+    90deg,
+    rgba($color-orange, 0.3) 25%,
+    rgba($color-pink, 0.3) 50%,
+    rgba($color-orange, 0.3) 75%
+  );
+}
+
+// =============================
+// CAS SPÉCIAUX
+// =============================
+
+@media (max-width: 360px) {
+  .main-content {
+    gap: 0;
+  }
+  .skeleton-profit-image {
+    @include mobile-only {
+      height: 55vh;
+      width: 150px;
+      opacity: 0.2;
+      filter: blur(1.2px);
+    }
+  }
+  .text-container {
+    @include mobile-only {
+      padding: 1.2rem 0.6rem;
+    }
+  }
+  .skeleton-title-1,
+  .skeleton-title-2 {
+    height: 1.4rem;
+    margin-bottom: 0.4rem;
+  }
+  .skeleton-profit-button {
+    height: 1.9rem;
+    width: 120px;
+    margin-top: 1rem;
+  }
+}
+
+@include mobile-landscape {
+  .main-content {
+    @include mobile-only {
+      flex-direction: row;
+      gap: 1rem;
+    }
+  }
+  .skeleton-profit-image {
+    @include mobile-only {
+      position: relative;
+      transform: none;
+      top: auto;
+      left: auto;
+      width: 40%;
+      height: 80vh;
+      opacity: 0.8;
+      filter: none;
+      z-index: 5;
+    }
+  }
+  .text-container {
+    @include mobile-only {
+      width: 60%;
+      height: 100%;
+      align-items: flex-start;
+      text-align: left;
+      padding: 1rem;
+      z-index: 10;
+      position: relative;
+      bottom: auto;
+      left: auto;
+      transform: none;
+    }
+  }
+  .skeleton-title-1,
+  .skeleton-title-2 {
+    height: 1.4rem;
+    margin-bottom: 0.5rem;
+    max-width: 100%;
+  }
+  .skeleton-profit-button {
+    height: 1.9rem;
+    width: 120px;
+    margin-top: 1rem;
+  }
+}
+
+@include tall-screen {
+  .skeleton-profit-image {
+    @include mobile-only {
+      height: 75vh;
+      opacity: 0.35;
+    }
+    @include tablet-up {
+      max-height: 95vh;
+      height: 450px;
+    }
+  }
+  .text-container {
+    @include mobile-only {
+      padding: 2.5rem 1rem;
+    }
+  }
+}
+
+@include short-screen {
+  .skeleton-profit-image {
+    @include mobile-only {
+      height: 50vh;
+      width: 140px;
+      opacity: 0.2;
+    }
+    @include tablet-up {
+      max-height: 75vh;
+      height: 280px;
+    }
+  }
+  .text-container {
+    @include mobile-only {
+      padding: 1rem 0.8rem;
+    }
+  }
+  .skeleton-title-1,
+  .skeleton-title-2 {
+    height: 1.8rem;
+    margin-bottom: 0.5rem;
+    @include tablet-up {
+      height: 2.2rem;
+    }
+  }
+  .skeleton-profit-button {
+    margin-top: 1rem;
+  }
+}
+
+@include high-density {
+  .skeleton-profit-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+@include reduced-motion {
+  .skeleton-animate {
+    animation: skeletonPulse 2s infinite ease-in-out;
+  }
+}
+
+@include from('large-1920') {
+  .main-content {
+    gap: 4rem;
+  }
+  .skeleton-profit-image {
+    max-height: 95vh;
+    width: 300px;
+    height: 450px;
+    border-radius: 32px;
+  }
+  .text-container {
+    padding: 0 2rem;
+  }
+  .skeleton-title-1,
+  .skeleton-title-2 {
+    height: 3.6rem;
+    margin-bottom: 1.2rem;
+  }
+  .skeleton-profit-button {
+    height: 3rem;
+    width: 200px;
+    margin-top: 2.5rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .main-content {
+    gap: 1.5rem;
+  }
+  .skeleton-profit-image {
+    max-height: 80vh;
+    width: 200px;
+    height: 300px;
+  }
+  .text-container {
+    padding: 0 0.5rem;
+  }
+  .skeleton-title-1,
+  .skeleton-title-2 {
+    height: 2.2rem;
+  }
+  .skeleton-profit-button {
+    height: 2.2rem;
+    width: 140px;
+    margin-top: 1.2rem;
+  }
+}

@@ -1,0 +1,46 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _content.scss
+// ================================
+
+// clamp : 1.25rem (360px) → 1.75rem (1280px)
+.minimalContent {
+  padding: clamp(1.25rem, 0.54vw + 1.05rem, 1.75rem);
+}
+
+.minimalCategory {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.375rem, 0.16vw + 0.32rem, 0.5rem);
+  margin-top: clamp(0.5rem, 0.27vw + 0.4rem, 0.75rem);
+  margin-bottom: clamp(0.4rem, 0.11vw + 0.36rem, 0.5rem);
+  color: rgba($primary-color, 0.7);
+  font-size: clamp(0.8rem, 0.08vw + 0.77rem, 0.875rem);
+  font-weight: 500;
+  text-transform: lowercase;
+  letter-spacing: 0.3px;
+
+  svg {
+    color: $primary-color;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+  }
+
+  span {
+    color: rgba($text-color, 0.6);
+    transition: color 0.3s ease;
+  }
+
+  .minimalCard:hover & {
+    svg {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+
+    span {
+      color: rgba($text-color, 0.8);
+    }
+  }
+}

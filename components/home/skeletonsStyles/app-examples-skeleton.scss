@@ -1,0 +1,504 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 app-examples-skeleton.scss
+// ================================
+
+@keyframes skeletonPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes skeletonGlow {
+  0% {
+    box-shadow: 0 0 10px rgba($color-purple, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba($color-purple, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba($color-purple, 0.2);
+  }
+}
+
+.skeleton-animate {
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.1) 25%,
+    rgba($text-color, 0.2) 50%,
+    rgba($text-color, 0.1) 75%
+  );
+  background-size: 200px 100%;
+  animation: skeletonShimmer 2s infinite linear;
+  border-radius: 8px;
+}
+
+// =============================
+// AFFICHAGE PAR BREAKPOINT
+// =============================
+
+.app-examples-skeleton-desktop {
+  @include until('large-1280') {
+    display: none;
+  }
+  @include from('large-1280') {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.app-examples-skeleton-mobile {
+  @include until('large-1280') {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  @include from('large-1280') {
+    display: none;
+  }
+}
+
+// =============================
+// CONTENEUR SLIDER
+// width/height : 92% → 85%, border-radius : 16px → 24px
+// =============================
+.skeleton-slider-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  // width : 92% (360px) → 85% (1280px)
+  width: clamp(85%, -0.76vw + 87.7%, 92%);
+  // height : 90% (360px) → 85% (1280px)
+  height: clamp(85%, -0.54vw + 86.9%, 90%);
+  border-radius: clamp(16px, 0.87vw + 12.9px, 24px);
+  overflow: hidden;
+  box-shadow:
+    0 25px 80px rgba($color-dark, 0.3),
+    0 0 60px rgba($color-purple, 0.1);
+  background: rgba($color-dark, 0.05);
+}
+
+// =============================
+// VERSION DESKTOP — OVERLAY
+// =============================
+
+.app-examples-skeleton-desktop {
+  .skeleton-slide-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba($color-purple, 0.15) 25%,
+      rgba($color-purple, 0.25) 50%,
+      rgba($color-purple, 0.15) 75%
+    );
+    animation: skeletonShimmer 3s infinite linear;
+  }
+
+  .skeleton-text-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba($color-dark, 0.3);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 2px solid rgba($color-light, 0.1);
+    padding: 2.5rem;
+    max-width: 70%;
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    box-shadow:
+      0 20px 60px rgba($color-dark, 0.4),
+      0 0 40px rgba($color-light, 0.05);
+    animation: skeletonGlow 4s ease-in-out infinite;
+  }
+
+  .skeleton-description {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    align-items: center;
+
+    .skeleton-description-line-1,
+    .skeleton-description-line-2,
+    .skeleton-description-line-3 {
+      height: 1.3rem;
+      border-radius: 4px;
+      background: linear-gradient(
+        90deg,
+        rgba($text-color, 0.15) 25%,
+        rgba($text-color, 0.25) 50%,
+        rgba($text-color, 0.15) 75%
+      );
+    }
+    .skeleton-description-line-1 {
+      width: 95%;
+    }
+    .skeleton-description-line-2 {
+      width: 100%;
+    }
+    .skeleton-description-line-3 {
+      width: 85%;
+    }
+  }
+
+  .skeleton-shop-button {
+    border-radius: 50px;
+    height: 3rem;
+    width: 220px;
+    background: linear-gradient(
+      90deg,
+      rgba($color-purple, 0.3) 25%,
+      rgba($color-pink, 0.3) 50%,
+      rgba($color-purple, 0.3) 75%
+    );
+    border: 2px solid rgba($color-light, 0.1);
+    animation: skeletonGlow 3s ease-in-out infinite;
+  }
+}
+
+// =============================
+// VERSION MOBILE — STRUCTURE SÉPARÉE
+// =============================
+
+.app-examples-skeleton-mobile {
+  .skeleton-slider-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .skeleton-image-section {
+    width: 100%;
+    height: 60%;
+    position: relative;
+
+    .skeleton-slide-image {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        rgba($color-purple, 0.15) 25%,
+        rgba($color-purple, 0.25) 50%,
+        rgba($color-purple, 0.15) 75%
+      );
+      animation: skeletonShimmer 3s infinite linear;
+    }
+  }
+
+  .skeleton-text-section {
+    width: 100%;
+    height: 40%;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    // padding : 0.75rem (360px) → 1.25rem (768px)
+    padding: clamp(0.75rem, 1.23vw + 0.31rem, 1.25rem);
+    // gap : 0.75rem → 1.1rem
+    gap: clamp(0.75rem, 0.86vw + 0.44rem, 1.1rem);
+  }
+
+  .skeleton-description {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    align-items: center;
+
+    .skeleton-description-line-1,
+    .skeleton-description-line-2 {
+      border-radius: 4px;
+      background: linear-gradient(
+        90deg,
+        rgba($text-color, 0.15) 25%,
+        rgba($text-color, 0.25) 50%,
+        rgba($text-color, 0.15) 75%
+      );
+      // height : 0.8rem (360px) → 0.9rem (768px)
+      height: clamp(0.8rem, 0.25vw + 0.71rem, 0.9rem);
+    }
+    .skeleton-description-line-1 {
+      width: 95%;
+    }
+    .skeleton-description-line-2 {
+      width: 85%;
+    }
+  }
+
+  .skeleton-shop-button {
+    border-radius: 50px;
+    background: linear-gradient(
+      90deg,
+      rgba($color-purple, 0.3) 25%,
+      rgba($color-pink, 0.3) 50%,
+      rgba($color-purple, 0.3) 75%
+    );
+    border: 2px solid rgba($color-light, 0.1);
+    // height : 2.3rem (360px) → 2.5rem (768px)
+    height: clamp(2.3rem, 0.49vw + 2.12rem, 2.5rem);
+    // width : 180px → 220px
+    width: clamp(180px, 9.8vw + 144.7px, 220px);
+  }
+}
+
+// =============================
+// FLÈCHES NAVIGATION
+// size : 50px (360px) → 70px (1280px)
+// =============================
+
+.skeleton-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba($color-dark, 0.3);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba($color-light, 0.1);
+  border-radius: 50%;
+  animation: skeletonPulse 3s infinite ease-in-out;
+  // size : 50px → 70px
+  width: clamp(50px, 2.17vw + 42.2px, 70px);
+  height: clamp(50px, 2.17vw + 42.2px, 70px);
+
+  @include mobile-only {
+    background: rgba($color-dark, 0.2);
+    border: 1px solid rgba($color-light, 0.05);
+  }
+
+  @include from('large-1280') {
+    width: 70px;
+    height: 70px;
+  }
+
+  &.prev {
+    // left : 1rem (360px) → 3rem (1280px)
+    left: clamp(1rem, 2.17vw + 0.22rem, 3rem);
+  }
+
+  &.next {
+    // right : 1rem (360px) → 3rem (1280px)
+    right: clamp(1rem, 2.17vw + 0.22rem, 3rem);
+  }
+}
+
+// =============================
+// CAS SPÉCIAUX
+// =============================
+
+@media (max-width: 360px) {
+  .skeleton-slider-container {
+    width: 95%;
+    height: 92%;
+  }
+  .app-examples-skeleton-mobile {
+    .skeleton-text-section {
+      padding: 0.5rem;
+      gap: 0.6rem;
+    }
+    .skeleton-description-line-1,
+    .skeleton-description-line-2 {
+      height: 0.75rem;
+    }
+    .skeleton-shop-button {
+      height: 2.1rem;
+      width: 160px;
+    }
+  }
+  .skeleton-nav-arrow {
+    width: 45px;
+    height: 45px;
+    &.prev {
+      left: 0.5rem;
+    }
+    &.next {
+      right: 0.5rem;
+    }
+  }
+}
+
+@include mobile-landscape {
+  .app-examples-skeleton-mobile {
+    .skeleton-text-section {
+      padding: 0.75rem;
+      gap: 0.6rem;
+    }
+    .skeleton-description-line-1,
+    .skeleton-description-line-2 {
+      height: 0.8rem;
+    }
+    .skeleton-shop-button {
+      height: 2.15rem;
+      width: 170px;
+    }
+  }
+}
+
+@include tall-screen {
+  .app-examples-skeleton-desktop {
+    .skeleton-text-card {
+      padding: 3rem;
+      gap: 2rem;
+      .skeleton-description-line-1,
+      .skeleton-description-line-2,
+      .skeleton-description-line-3 {
+        height: 1.5rem;
+      }
+      .skeleton-shop-button {
+        height: 3.5rem;
+        width: 240px;
+      }
+    }
+  }
+}
+
+@include short-screen {
+  .skeleton-slider-container {
+    height: 95%;
+  }
+  .app-examples-skeleton-mobile {
+    .skeleton-text-section {
+      padding: 0.75rem;
+      gap: 0.75rem;
+    }
+    .skeleton-description-line-1,
+    .skeleton-description-line-2 {
+      height: 0.85rem;
+    }
+    .skeleton-shop-button {
+      height: 2.2rem;
+      width: 180px;
+    }
+  }
+}
+
+@include reduced-motion {
+  .skeleton-animate {
+    animation: skeletonPulse 2s infinite ease-in-out;
+  }
+  .skeleton-text-card {
+    animation: none;
+  }
+  .skeleton-nav-arrow {
+    animation: none;
+  }
+  .skeleton-slide-image {
+    animation: skeletonPulse 2s infinite ease-in-out;
+  }
+}
+
+@include high-density {
+  .skeleton-slider-container {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+@include high-contrast {
+  .app-examples-skeleton-desktop .skeleton-text-card {
+    background: rgba($color-dark, 0.9);
+    border-color: rgba($color-light, 0.5);
+  }
+  .skeleton-shop-button {
+    border-width: 3px;
+    border-color: rgba($color-light, 0.8);
+  }
+  .skeleton-nav-arrow {
+    border-width: 3px;
+    border-color: rgba($color-light, 0.8);
+  }
+}
+
+@media (pointer: coarse) {
+  .skeleton-nav-arrow {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .skeleton-shop-button {
+    min-height: 44px;
+  }
+}
+
+@include from('large-1920') {
+  .skeleton-slider-container {
+    max-width: 85%;
+    max-height: 85%;
+  }
+  .app-examples-skeleton-desktop {
+    .skeleton-text-card {
+      padding: 3.5rem;
+      max-width: 75%;
+      min-width: 500px;
+      gap: 2rem;
+      .skeleton-description-line-1,
+      .skeleton-description-line-2,
+      .skeleton-description-line-3 {
+        height: 1.6rem;
+      }
+      .skeleton-shop-button {
+        height: 3.8rem;
+        width: 280px;
+      }
+    }
+  }
+  .skeleton-nav-arrow {
+    width: 80px;
+    height: 80px;
+    &.prev {
+      left: 4rem;
+    }
+    &.next {
+      right: 4rem;
+    }
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .app-examples-skeleton-mobile {
+    .skeleton-image-section {
+      height: 65%;
+    }
+    .skeleton-text-section {
+      height: 35%;
+      padding: 1rem 1.5rem;
+      gap: 0.8rem;
+    }
+    .skeleton-description-line-1,
+    .skeleton-description-line-2 {
+      height: 0.9rem;
+    }
+    .skeleton-shop-button {
+      height: 2.4rem;
+      width: 200px;
+    }
+  }
+}

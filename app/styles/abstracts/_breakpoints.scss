@@ -1,0 +1,323 @@
+// =============================================================================
+// SYSTÈME DE BREAKPOINTS — CALIBRÉ POUR DJIBOUTI / AFRIQUE 2026
+// =============================================================================
+// Audience : ~500 users/jour, marché émergent, appareils budget dominants
+// Source statistiques : StatCounter Afrique jan. 2026
+//
+// RÈGLE D'USAGE :
+//   - 90% des composants n'utilisent que 3 paliers : base / medium-768 / large-1280
+//   - Les valeurs scalables (font-size, spacing, padding) utilisent clamp()
+//   - Les breakpoints servent uniquement aux changements structurels (layout, display, position)
+// =============================================================================
+
+@use 'sass:map';
+@use 'sass:list';
+
+// =============================================================================
+// 1. BREAKPOINTS — 8 VALEURS CALIBRÉES
+// =============================================================================
+
+$breakpoints: (
+  // 📱 MOBILE
+  // 360px : résolution dominante Afrique (13,75% StatCounter)
+  // 414px : Android mid-range Afrique (Samsung Galaxy A-series, Tecno, Infinix)
+  'small-360': 360px,
+  'small-414': 414px,
+
+  // 📟 TABLETTE
+  // 768px : iPad classique, référence absolue industrie
+  // 1024px : iPad Pro, tablettes landscape, Chromebooks
+  'medium-768': 768px,
+  'medium-1024': 1024px,
+
+  // 🖥️ DESKTOP
+  // 1280px : laptops 14-15" standard (MacBook Air, Dell XPS)
+  // 1366px : laptops budget + anciens écrans (11,69% marché global)
+  // 1440px : desktop 2K entry, laptops premium
+  // 1920px : Full HD dominant (22% marché mondial)
+  'large-1280': 1280px,
+  'large-1366': 1366px,
+  'large-1440': 1440px,
+  'large-1920': 1920px,
+
+  // =============================================================================
+  // ALIAS RÉTROCOMPATIBILITÉ — À supprimer après migration complète
+  // =============================================================================
+  // Ces valeurs permettent aux fichiers non encore migrés de continuer
+  // à compiler correctement pendant la période de transition.
+  // 📱 Anciens breakpoints small
+  'small-sm': 375px,
+  // → clamp() après migration
+  'small-lg': 393px,
+  // → clamp() après migration
+  'small-xl': 430px,
+
+  // → small-414 après migration
+  // 📟 Anciens breakpoints medium
+  'medium-sm': 768px,
+  // → medium-768 après migration
+  'medium-lg': 834px,
+  // → clamp() après migration
+  'medium-xl': 900px,
+  // → clamp() après migration
+  'medium-xxl': 1024px,
+
+  // → medium-1024 après migration
+  // 🖥️ Anciens breakpoints large
+  'large-xs': 1200px,
+  // → large-1280 après migration (seuil structurel contact)
+  'large-sm': 1280px,
+  // → large-1280 après migration
+  'large-md': 1366px,
+  // → large-1366 après migration
+  'large-lg': 1440px,
+  // → large-1440 après migration
+  'large-xxl': 1920px,
+  // → large-1920 après migration
+  'large-xxxl': 2560px // → from('large-1920') après migration
+) !default;
+
+// =============================================================================
+// 2. FONCTIONS UTILITAIRES
+// =============================================================================
+
+@function breakpoint($name) {
+  @if map.has-key($breakpoints, $name) {
+    @return map.get($breakpoints, $name);
+  }
+  @warn "⚠️ Breakpoint `#{$name}` introuvable. Disponibles: #{map.keys($breakpoints)}";
+  @return null;
+}
+
+// =============================================================================
+// 3. MIXINS PRINCIPAUX
+// =============================================================================
+
+/// Mobile-first standard
+@mixin from($breakpoint) {
+  $value: breakpoint($breakpoint);
+  @if $value {
+    @media (min-width: $value) {
+      @content;
+    }
+  }
+}
+
+/// Desktop-first standard
+@mixin until($breakpoint) {
+  $value: breakpoint($breakpoint);
+  @if $value {
+    @media (max-width: calc(#{$value} - 1px)) {
+      @content;
+    }
+  }
+}
+
+/// Entre deux breakpoints
+@mixin between($from-bp, $until-bp) {
+  $from-val: breakpoint($from-bp);
+  $until-val: breakpoint($until-bp);
+  @if $from-val and $until-val {
+    @media (min-width: $from-val) and (max-width: calc(#{$until-val} - 1px)) {
+      @content;
+    }
+  }
+}
+
+// =============================================================================
+// 4. MIXINS CATÉGORIES — LES 3 PALIERS STRUCTURELS
+// =============================================================================
+
+/// 📱 Mobile uniquement (< 768px)
+@mixin mobile-only {
+  @media (max-width: calc(#{breakpoint('medium-768')} - 1px)) {
+    @content;
+  }
+}
+
+/// 📟 Tablette et plus (≥ 768px)
+@mixin tablet-up {
+  @include from('medium-768') {
+    @content;
+  }
+}
+
+/// 🖥️ Desktop et plus (≥ 1280px)
+@mixin desktop-up {
+  @include from('large-1280') {
+    @content;
+  }
+}
+
+/// Mobile + Tablette uniquement (< 1280px)
+@mixin below-desktop {
+  @media (max-width: calc(#{breakpoint('large-1280')} - 1px)) {
+    @content;
+  }
+}
+
+// =============================================================================
+// 5. MIXINS CONTEXTUELS — CONSERVÉS POUR ACCESSIBILITÉ ET CAS SPÉCIAUX
+// =============================================================================
+
+/// Mode paysage mobile
+@mixin mobile-landscape {
+  @media (max-width: calc(#{breakpoint('medium-768')} - 1px)) and (orientation: landscape) {
+    @content;
+  }
+}
+
+/// Écrans hauts (smartphones modernes avec grande hauteur)
+@mixin tall-screen {
+  @media (min-height: 850px) {
+    @content;
+  }
+}
+
+/// Écrans courts (paysage budget, laptops compacts)
+@mixin short-screen {
+  @media (max-height: 700px) {
+    @content;
+  }
+}
+
+/// Haute densité (Retina, 2x)
+@mixin high-density {
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    @content;
+  }
+}
+
+/// Mode sombre
+@mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+/// Mode clair
+@mixin light-mode {
+  @media (prefers-color-scheme: light) {
+    @content;
+  }
+}
+
+/// Réduction de mouvement (accessibilité)
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+/// Contraste élevé
+@mixin high-contrast {
+  @media (prefers-contrast: high) {
+    @content;
+  }
+}
+
+/// Écrans tactiles
+@mixin touch-screen {
+  @media (pointer: coarse) {
+    @content;
+  }
+}
+
+// =============================================================================
+// 6. HELPERS RÉTROCOMPATIBILITÉ MIXINS
+// =============================================================================
+// Ces alias de mixins permettent aux anciens fichiers non encore migrés
+// de continuer à compiler pendant la période de transition.
+// À supprimer une fois tous les composants migrés.
+
+@mixin small-screens {
+  @include mobile-only {
+    @content;
+  }
+}
+
+@mixin medium-screens {
+  @include between('medium-768', 'large-1280') {
+    @content;
+  }
+}
+
+@mixin large-screens {
+  @include desktop-up {
+    @content;
+  }
+}
+
+@mixin mobile-and-tablets {
+  @include below-desktop {
+    @content;
+  }
+}
+
+@mixin tablets-and-computers {
+  @include tablet-up {
+    @content;
+  }
+}
+
+// =============================================================================
+// 7. CONTENEUR RESPONSIVE UTILITAIRE
+// =============================================================================
+
+@mixin container($max-width: null) {
+  width: 100%;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+  margin-inline: auto;
+
+  @if $max-width {
+    max-width: $max-width;
+  } @else {
+    @include desktop-up {
+      max-width: 1140px;
+    }
+    @include from('large-1440') {
+      max-width: 1320px;
+    }
+    @include from('large-1920') {
+      max-width: 1540px;
+    }
+  }
+}
+
+// =============================================================================
+// 8. NOTES MIGRATION
+// =============================================================================
+
+/*
+SUPPRESSIONS PAR RAPPORT À L'ANCIENNE VERSION :
+
+✅ $device-breakpoints supprimé (18 appareils — code mort, jamais utilisé)
+✅ 44 breakpoints → 8 breakpoints calibrés Djibouti/Afrique (-82%)
+✅ Mixins screen-category() remplacés par mobile-only/tablet-up/desktop-up
+✅ Mixins from('small-xs')...from('large-xxxl') remplacés par clamp() dans les composants
+
+ALIAS RÉTROCOMPATIBILITÉ (section 1, bas de la map) :
+  Ces valeurs sont temporaires. Les supprimer fichier par fichier une fois
+  chaque composant migré vers clamp() + nouveaux noms de breakpoints.
+
+BREAKPOINTS CANONIQUES ET LEUR ÉQUIVALENT APRÈS MIGRATION :
+  small-sm (375px)   → clamp() gère le fluide
+  small-lg (393px)   → clamp() gère le fluide
+  small-xl (430px)   → small-414 (414px)
+  medium-sm (768px)  → medium-768
+  medium-lg (834px)  → clamp() gère le fluide
+  medium-xl (900px)  → clamp() gère le fluide
+  medium-xxl (1024px)→ medium-1024
+  large-xs (1200px)  → large-1280 (seuil structurel — vérifier visuellement)
+  large-sm (1280px)  → large-1280
+  large-md (1366px)  → large-1366
+  large-lg (1440px)  → large-1440
+  large-xxl (1920px) → large-1920
+  large-xxxl (2560px)→ from('large-1920')
+
+AUDIENCE DJIBOUTIENNE — PRIORITÉS :
+  1. 360px : base par défaut (13,75% Afrique)
+  2. 414px : Android mid-range (Tecno, Infinix, Samsung A-series)
+  3. 768px : tablettes (utilisation bureau/commerce)
+  4. 1280px+ : desktop (cybercafés, bureaux)
+*/

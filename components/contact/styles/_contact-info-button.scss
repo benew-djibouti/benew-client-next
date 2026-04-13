@@ -1,0 +1,169 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _contact-info-button.scss
+// ================================
+
+// 🖥️ DESKTOP - Bouton COMPLÈTEMENT CACHÉ
+@include from('large-xs') {
+  .contact-info-trigger {
+    display: none !important;
+  }
+}
+
+// 📱 MOBILE/TABLETTE - Bouton actif
+.contact-info-trigger {
+  // Position absolute dans la section
+  position: absolute;
+  top: 1.5rem;
+  right: 1rem;
+  z-index: 100;
+
+  // ✅ NOUVEAU STYLE - Bordure uniquement, pas de background
+  background: transparent;
+  color: $primary-color;
+  border: 2px solid $primary-color;
+  border-radius: 25px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: none; // Pas d'ombre par défaut
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(10px); // Garde le blur pour lisibilité
+
+  @include until('small-sm') {
+    top: 1rem;
+    right: 0.75rem;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    border-radius: 20px;
+    border-width: 1.5px;
+  }
+
+  @include from('small-sm') {
+    padding: 0.7rem 1.35rem;
+    font-size: 0.9rem;
+  }
+
+  @include from('small-lg') {
+    padding: 0.725rem 1.4rem;
+    font-size: 0.92rem;
+  }
+
+  @include from('small-xl') {
+    padding: 0.75rem 1.45rem;
+    font-size: 0.94rem;
+  }
+
+  @include from('medium-sm') {
+    top: 1.5rem;
+    right: 1rem;
+    padding: 0.8rem 1.55rem;
+    font-size: 0.97rem;
+  }
+
+  @include from('medium-lg') {
+    padding: 0.85rem 1.6rem;
+    font-size: 0.99rem;
+  }
+
+  @include from('medium-xl') {
+    padding: 0.9rem 1.65rem;
+    font-size: 1rem;
+  }
+
+  @include from('medium-xxl') {
+    padding: 0.95rem 1.7rem;
+    font-size: 1.02rem;
+  }
+
+  svg {
+    font-size: 1.15rem;
+    transition: transform 0.3s ease;
+
+    @include until('small-sm') {
+      font-size: 1rem;
+    }
+
+    @include from('medium-sm') {
+      font-size: 1.2rem;
+    }
+  }
+
+  &:hover {
+    // ✅ Hover avec background gradient + bordure
+    background: linear-gradient(
+      135deg,
+      $primary-color,
+      color.adjust($primary-color, $lightness: 10%)
+    );
+    color: $background-color;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba($primary-color, 0.4);
+
+    svg {
+      transform: scale(1.1) rotate(-5deg);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Mode paysage mobile - Position ajustée
+@include mobile-landscape {
+  .contact-info-trigger {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.85rem;
+  }
+}
+
+// Accessibilité - Réduction des animations
+@include reduced-motion {
+  .contact-info-trigger {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+
+    svg {
+      transition: none;
+
+      &:hover {
+        transform: none;
+      }
+    }
+  }
+}
+
+// Support tactile optimisé
+@media (pointer: coarse) {
+  .contact-info-trigger {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+// Écrans très petits - Bouton plus compact
+@media screen and (max-width: 360px) {
+  .contact-info-trigger {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    top: 0.5rem;
+    right: 0.5rem;
+
+    svg {
+      font-size: 0.9rem;
+    }
+  }
+}

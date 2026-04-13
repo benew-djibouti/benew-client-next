@@ -1,0 +1,21 @@
+.promo-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly; // ← distribue intelligemment
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2rem, 0.54vw + 1.8rem, 2.5rem)
+    clamp(0.75rem, 1.96vw + 0.04rem, 2.5rem);
+}
+
+.promo-cards-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.75rem, 0.54vw + 0.55rem, 1.25rem); // cards collées aux dots
+  width: 100%;
+}

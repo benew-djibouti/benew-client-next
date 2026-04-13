@@ -1,0 +1,106 @@
+// app/styles/abstracts/_typography.scss
+@use 'variables' as *;
+
+// =============================
+// MIXINS SPÉCIALISÉS PAR USAGE - THÈME SPATIAL 🚀
+// =============================
+
+// ✅ Mixin pour les titres IMPORTANTS (Orbitron)
+@mixin heading($size: 1.5rem, $weight: 700) {
+  font-family: font-family('display') !important; // Orbitron
+  font-weight: $weight;
+  font-size: $size;
+  line-height: 1.2;
+  letter-spacing: 0.02em; // Espacement spatial
+}
+
+// Mixin pour les liens (Exo 2)
+@mixin link-style($size: 1rem, $weight: 500) {
+  font-family: font-family('ui'); // Orbitron
+  font-weight: $weight;
+  font-size: $size;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Mixin pour les boutons (Exo 2)
+@mixin button-style($size: 0.9rem, $weight: 600) {
+  font-family: font-family('ui'); // Orbitron
+  font-weight: $weight;
+  font-size: $size;
+  letter-spacing: 0.05em;
+  text-transform: uppercase; // Majuscules pour effet tech
+}
+
+// Mixin pour le contenu textuel (Inter)
+@mixin body-text($size: 1rem, $weight: 400) {
+  font-family: font-family('content'); // Inter
+  font-weight: $weight;
+  font-size: $size;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+// ✅ Mixin pour le parallax (Orbitron) - IMPACT MAXIMAL
+@mixin parallax-title($size: 4rem, $weight: 900) {
+  font-family: font-family('display') !important; // Orbitron
+  font-weight: $weight;
+  font-size: $size;
+  line-height: 1.1;
+  letter-spacing: 0.05em; // Effet spatial
+  text-transform: uppercase; // Majuscules pour impact
+}
+
+// =============================
+// STYLES PRÉDÉFINIS POUR TITRES (Orbitron)
+// =============================
+
+// Titres avec tailles prédéfinies - TOUS en Orbitron
+@mixin heading-xl {
+  @include heading(clamp(2rem, 5vw, 3rem), 900); // Black
+}
+
+@mixin heading-lg {
+  @include heading(clamp(1.5rem, 4vw, 2rem), 700); // Bold
+}
+
+@mixin heading-md {
+  @include heading(clamp(1.25rem, 3vw, 1.5rem), 600); // SemiBold
+}
+
+@mixin heading-sm {
+  @include heading(clamp(1rem, 2vw, 1.25rem), 500); // Medium
+}
+
+// Navigation (Exo 2)
+@mixin nav-link {
+  @include link-style(0.9rem, 500);
+  text-transform: uppercase;
+}
+
+// Boutons (Exo 2)
+@mixin button-primary {
+  @include button-style(0.875rem, 600); // SemiBold pour CTA
+}
+
+@mixin button-secondary {
+  @include button-style(0.8rem, 500);
+}
+
+// Texte de contenu (Inter)
+@mixin paragraph {
+  @include body-text(1rem, 400);
+}
+
+@mixin small-text {
+  @include body-text(0.875rem, 400);
+}
+
+// Texte en emphase (Inter)
+@mixin text-emphasis {
+  @include body-text(1rem, 600); // Inter SemiBold
+}

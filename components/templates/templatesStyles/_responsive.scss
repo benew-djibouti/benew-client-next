@@ -1,0 +1,144 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _responsive.scss
+// ================================
+
+@include mobile-landscape {
+  .projectSection {
+    padding: 0.75rem;
+  }
+
+  .minimalCard {
+    width: 85%;
+    max-width: 400px;
+  }
+
+  .minimalImageContainer {
+    height: 260px;
+    padding: 1.25rem;
+  }
+
+  .minimalContent {
+    padding: 1rem;
+  }
+  .minimalTitle {
+    font-size: 1.2rem;
+  }
+  .minimalCategory {
+    font-size: 0.75rem;
+    gap: 0.3rem;
+    margin-bottom: 0.7rem;
+  }
+}
+
+@include tall-screen {
+  .minimalImageContainer {
+    @include below-desktop {
+      height: 350px;
+    }
+  }
+}
+
+@media (pointer: coarse) {
+  .minimalCard {
+    min-height: 300px;
+    &:hover {
+      transform: none;
+    }
+    &:active {
+      opacity: 0.9;
+    }
+  }
+}
+
+@include reduced-motion {
+  .minimalCardInner,
+  .minimalImage,
+  .minimalTitle,
+  .minimalCategory {
+    transition: none !important;
+
+    &:hover,
+    &.hovered {
+      transform: none !important;
+    }
+  }
+}
+
+@include high-density {
+  .minimalImage {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+
+  .minimalCardInner {
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.12),
+      0 1px 4px rgba($primary-color, 0.1);
+  }
+}
+
+@media (max-width: 359px) {
+  .projectSection {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .minimalCard {
+    width: 95%;
+    max-width: 350px;
+  }
+  .minimalImageContainer {
+    height: 240px;
+    padding: 1rem;
+  }
+  .minimalContent {
+    padding: 1rem;
+  }
+  .minimalTitle {
+    font-size: 1.2rem;
+  }
+  .minimalCategory {
+    font-size: 0.75rem;
+    gap: 0.3rem;
+    margin-bottom: 0.7rem;
+  }
+}
+
+@include from('large-1920') {
+  .projectSection {
+    padding: 3rem 2rem;
+  }
+
+  .minimalCard {
+    max-width: 600px;
+    width: 65%;
+  }
+  .minimalImageContainer {
+    height: 500px;
+    padding: 4rem;
+  }
+  .minimalTitle {
+    font-size: 2rem;
+  }
+  .minimalCategory {
+    font-size: 0.9rem;
+    gap: 0.6rem;
+  }
+}
+
+@include dark-mode {
+  .minimalCardInner {
+    background: rgba($text-color, 0.01);
+    border-color: rgba($primary-color, 0.15);
+  }
+
+  .minimalImageContainer {
+    background: linear-gradient(
+      135deg,
+      rgba($primary-color, 0.02),
+      rgba($secondary-color, 0.02)
+    );
+  }
+}

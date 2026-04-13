@@ -1,0 +1,116 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _text-container.scss
+// ================================
+
+.textContainer {
+  // Base mobile (360px+)
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  padding-top: 2rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  z-index: 10;
+
+  // Tablette (768px+)
+  @include from('medium-768') {
+    height: 55%;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+    gap: clamp(1.5rem, 2.5vw, 2.75rem);
+  }
+
+  // Desktop (1280px+)
+  @include from('large-1280') {
+    width: 50%;
+    height: 100%;
+    align-items: flex-start;
+    text-align: left;
+    gap: 1.5rem;
+    padding: 0;
+    z-index: auto;
+  }
+
+  // =============================
+  // SOUS-TITRE h2
+  // clamp : 0.9rem (360px) → 1.3rem (768px+)
+  // =============================
+  h2 {
+    color: $secondary-color;
+    line-height: 1.2;
+    margin: 0;
+    max-width: 95%;
+    font-weight: 500;
+    font-size: clamp(0.9rem, 1.5vw + 0.4rem, 1.3rem);
+    letter-spacing: clamp(0.03rem, 0.3vw, 0.19rem);
+
+    @include from('large-1280') {
+      font-size: 1.3rem;
+      letter-spacing: 0.188rem;
+      margin-top: 0;
+      max-width: 100%;
+    }
+  }
+
+  // =============================
+  // TITRE PRINCIPAL h1
+  // clamp : 1.8rem (360px) → 6rem (1280px)
+  // formule : 3.85vw + 0.47rem donne ~1.86rem à 360px, ~6rem à 1280px
+  // =============================
+  h1 {
+    font-size: clamp(1.8rem, 3.85vw + 0.47rem, 6rem);
+    background: linear-gradient(
+      45deg,
+      $text-color,
+      $primary-color,
+      $secondary-color
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+    max-width: 98%;
+
+    @include from('medium-768') {
+      line-height: 1.6;
+      letter-spacing: 0.2rem;
+    }
+
+    @include from('large-1280') {
+      max-width: 100%;
+      line-height: 1.6;
+      letter-spacing: 0.3rem;
+    }
+
+    @include from('large-1920') {
+      font-size: 7.5rem;
+    }
+  }
+
+  // =============================
+  // ICÔNE SCROLL
+  // clamp : 1rem (360px) → 2.5rem (1280px)
+  // =============================
+  img {
+    width: clamp(1rem, 1.5vw + 0.4rem, 2.5rem);
+    filter: hue-rotate(20deg) brightness(1.2);
+    margin-top: clamp(0.25rem, 0.5vw, 0.5rem);
+    animation: bounce 2s infinite;
+    opacity: clamp(0.6, 0.4 + 0.6 * ((100vw - 360px) / 920), 1);
+
+    @include from('large-1280') {
+      margin-top: 0;
+      opacity: 1;
+    }
+  }
+}

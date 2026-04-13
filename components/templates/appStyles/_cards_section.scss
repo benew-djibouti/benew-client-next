@@ -1,0 +1,460 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _cards_section.scss
+// ================================
+
+.cards-section {
+  background: linear-gradient(135deg, #0c0c1d 0%, #1a0f2e 50%, #151528 100%);
+  background-image: url('/stars.png');
+  background-repeat: repeat;
+  background-size: auto;
+  background-position: center;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(
+        circle at 80% 20%,
+        rgba($color-orange, 0.06) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 20% 80%,
+        rgba($color-purple, 0.06) 0%,
+        transparent 50%
+      );
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+.cards-section-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  padding: clamp(1.5rem, 1.63vw + 0.91rem, 3rem)
+    clamp(1rem, 1.09vw + 0.61rem, 2rem);
+}
+
+// ================================
+// HEADER
+// ================================
+.cards-section-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: clamp(1.5rem, 0.54vw + 1.3rem, 2.5rem);
+
+  @include mobile-only {
+    justify-content: center;
+  }
+}
+
+.title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+
+  @include mobile-only {
+    align-items: center;
+  }
+
+  // clamp : 1.75rem (360px) → 2.5rem (1280px)
+  .app-title {
+    font-weight: 800;
+    font-size: clamp(1.75rem, 0.82vw + 1.45rem, 2.5rem);
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    text-align: right;
+    background: linear-gradient(135deg, $color-orange, $color-pink);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    @include mobile-only {
+      text-align: center;
+    }
+  }
+}
+
+.app-badges {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+
+  @include mobile-only {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid;
+  transition: all 0.3s ease;
+  padding: clamp(0.35rem, 0.05vw + 0.33rem, 0.4rem)
+    clamp(0.6rem, 0.11vw + 0.56rem, 0.7rem);
+
+  .badge-value {
+    font-weight: 600;
+    font-size: clamp(0.75rem, 0.05vw + 0.73rem, 0.8rem);
+  }
+
+  &.level-badge {
+    background: rgba($color-orange, 0.1);
+    border-color: rgba($color-orange, 0.3);
+    color: $color-orange;
+  }
+
+  &.category-badge {
+    background: rgba($color-purple, 0.1);
+    border-color: rgba($color-purple, 0.3);
+    color: $color-purple;
+  }
+}
+
+// ================================
+// GRILLE 4 CARTES
+// ================================
+.cards-grid {
+  display: grid;
+  gap: clamp(1rem, 0.54vw + 0.8rem, 2rem);
+  width: 100%;
+  margin: auto 0;
+  grid-template-columns: repeat(2, 1fr);
+  max-width: clamp(380px, 18.48vw + 313.4px, 600px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.info-card {
+  background: rgba($color-light, 0.03);
+  border: 0.2px solid rgba($color-light, 0.2);
+  border-radius: 16px;
+  backdrop-filter: blur(15px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: clamp(100px, 2.17vw + 92.2px, 120px);
+  padding: clamp(0.875rem, 0.16vw + 0.82rem, 1.25rem);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 70%
+    );
+    transform: scale(0);
+    transition: transform 0.6s ease;
+  }
+
+  &:hover::before {
+    transform: scale(1);
+  }
+
+  &:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  &.card-orange {
+    border-color: rgba($color-orange, 0.6);
+    &:hover {
+      border-color: $color-orange;
+      background: rgba($color-orange, 0.08);
+      box-shadow: 0 12px 40px rgba($color-orange, 0.4);
+    }
+    .card-icon {
+      color: $color-orange;
+    }
+  }
+
+  &.card-purple {
+    border-color: rgba($color-purple, 0.6);
+    &:hover {
+      border-color: $color-purple;
+      background: rgba($color-purple, 0.08);
+      box-shadow: 0 12px 40px rgba($color-purple, 0.4);
+    }
+    .card-icon {
+      color: $color-purple;
+    }
+  }
+
+  &.card-pink {
+    border-color: rgba($color-pink, 0.6);
+    &:hover {
+      border-color: $color-pink;
+      background: rgba($color-pink, 0.08);
+      box-shadow: 0 12px 40px rgba($color-pink, 0.4);
+    }
+    .card-icon {
+      color: $color-pink;
+    }
+  }
+}
+
+.card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+
+  .info-card:hover & {
+    transform: scale(1.15);
+  }
+}
+
+.card-title {
+  font-size: clamp(0.85rem, 0.11vw + 0.81rem, 0.95rem);
+  font-weight: 600;
+  color: $color-light;
+  text-align: center;
+  margin: 0;
+  line-height: 1.2;
+}
+
+// ================================
+// BOUTON COMMANDER
+// ================================
+.order-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
+
+  .purchase-btn {
+    width: 100%;
+    max-width: clamp(300px, 10.87vw + 260.9px, 400px);
+  }
+}
+
+// ================================
+// MODAL CONTENU
+// ================================
+.content-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 1.09vw + 0.61rem, 2rem);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.content-modal-container {
+  background: linear-gradient(
+    135deg,
+    rgba($background-color, 0.95),
+    rgba($background-color, 0.98)
+  );
+  border: 2px solid rgba($color-orange, 0.3);
+  border-radius: 20px;
+  width: 100%;
+  max-width: clamp(700px, 21.74vw + 621.7px, 900px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.4s ease;
+  position: relative;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.content-modal-close {
+  position: absolute;
+  z-index: 10;
+  background: $primary-color;
+  border: none !important;
+  outline: none !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  // clamp : 36px (360px) → 44px (1280px)
+  top: clamp(0.75rem, 0.82vw + 0.45rem, 1.5rem);
+  right: clamp(0.75rem, 0.82vw + 0.45rem, 1.5rem);
+  width: clamp(36px, 0.87vw + 32.9px, 44px);
+  height: clamp(36px, 0.87vw + 32.9px, 44px);
+
+  .close-icon,
+  svg {
+    display: block !important;
+    color: $background-color !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    flex-shrink: 0;
+    width: inherit;
+    height: inherit;
+  }
+
+  &:hover,
+  &:active {
+    transform: scale(0.7);
+  }
+}
+
+.content-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem);
+  padding-top: 3.5rem;
+  border-bottom: 1px solid rgba($color-light, 0.1);
+  flex-shrink: 0;
+}
+
+.content-modal-title {
+  font-size: clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem);
+  font-weight: 700;
+  color: $color-light;
+  margin: 0;
+  text-align: center;
+  background: linear-gradient(135deg, $color-orange, $color-pink);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.content-modal-body {
+  padding: clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba($color-orange, 0.4);
+    border-radius: 3px;
+    &:hover {
+      background: rgba($color-orange, 0.6);
+    }
+  }
+}
+
+.modal-content-section {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+
+  .description-content {
+    text-align: center;
+
+    .description-text {
+      line-height: 1.7;
+      color: $text-color-muted;
+      font-size: clamp(0.95rem, 0.05vw + 0.93rem, 1rem);
+      margin: 0;
+      text-align: justify;
+    }
+  }
+
+  .info-table-container,
+  .needs-table-container,
+  .pricing-table-container {
+    margin: 0 auto;
+  }
+}
+
+// Responsive modal
+@include mobile-landscape {
+  .content-modal-container {
+    max-height: 85vh;
+  }
+}
+
+@include reduced-motion {
+  .content-modal-overlay,
+  .content-modal-container {
+    animation: none;
+  }
+
+  .info-card,
+  .content-modal-close {
+    transition: none;
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+@media (pointer: coarse) {
+  .info-card {
+    &:hover {
+      transform: none;
+    }
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}

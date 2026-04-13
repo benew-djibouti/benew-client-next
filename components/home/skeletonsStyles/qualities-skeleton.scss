@@ -1,0 +1,492 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 qualities-skeleton.scss
+// ================================
+
+@keyframes skeletonPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes skeletonGlow {
+  0% {
+    box-shadow: 0 0 5px rgba($color-pink, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba($color-pink, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba($color-pink, 0.2);
+  }
+}
+
+.skeleton-animate {
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.1) 25%,
+    rgba($text-color, 0.2) 50%,
+    rgba($text-color, 0.1) 75%
+  );
+  background-size: 200px 100%;
+  animation: skeletonShimmer 2s infinite linear;
+  border-radius: 8px;
+}
+
+// =============================
+// BLOC 1 — TITRE
+// =============================
+.services-title-block {
+  grid-area: title;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  .skeleton-section-title {
+    position: relative;
+    margin: 0;
+    border-radius: 6px;
+    background: linear-gradient(
+      90deg,
+      rgba($color-pink, 0.2) 25%,
+      rgba($color-pink, 0.3) 50%,
+      rgba($color-pink, 0.2) 75%
+    );
+    // width : 120px (360px) → 175px (1280px)
+    width: clamp(120px, 6.03vw + 98.3px, 175px);
+    // height : 1.3rem (360px) → 2.2rem (1280px)
+    height: clamp(1.3rem, 0.98vw + 0.95rem, 2.2rem);
+  }
+
+  .skeleton-title-underline {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 3px;
+    background: linear-gradient(
+      90deg,
+      rgba($color-pink, 0.3) 0%,
+      rgba($color-purple, 0.3) 100%
+    );
+    animation: skeletonGlow 3s ease-in-out infinite;
+    // width : 35px → 60px
+    width: clamp(35px, 2.72vw + 25.2px, 60px);
+    // height : 2px → 3px
+    height: clamp(2px, 0.11vw + 1.6px, 3px);
+    // bottom : -0.4rem → -0.6rem
+    bottom: clamp(-0.6rem, 0.22vw - 0.68rem, -0.4rem);
+  }
+}
+
+// =============================
+// BLOC 2 — CARTES
+// =============================
+.services-cards-block {
+  grid-area: cards;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+
+  .service-card-container {
+    position: relative;
+    width: 100%;
+    // max-width : 300px (360px) → 450px (1280px)
+    max-width: clamp(300px, 16.3vw + 241.3px, 450px);
+    // height : 220px (360px) → 320px (1280px)
+    height: clamp(220px, 10.87vw + 180.9px, 320px);
+  }
+}
+
+// =============================
+// CARTE INDIVIDUELLE
+// =============================
+.skeleton-service-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background: rgba($color-light, 0.08);
+  backdrop-filter: blur(15px);
+  border-radius: 24px;
+  border: 2px solid rgba($color-pink, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow:
+    0 20px 60px rgba($color-dark, 0.4),
+    0 0 40px rgba($color-pink, 0.1);
+  opacity: 1;
+  visibility: visible;
+
+  // width : 260px → 380px
+  width: clamp(260px, 13.04vw + 213px, 380px);
+  // height : 170px → 250px
+  height: clamp(170px, 8.7vw + 138.7px, 250px);
+  // padding : 1.25rem → 2rem
+  padding: clamp(1.25rem, 0.82vw + 0.95rem, 2rem)
+    clamp(0.75rem, 0.65vw + 0.51rem, 1.5rem);
+  // gap : 1rem → 2rem
+  gap: clamp(1rem, 1.09vw + 0.61rem, 2rem);
+
+  &.active {
+    border-color: rgba($color-pink, 0.5);
+    box-shadow:
+      0 25px 80px rgba($color-dark, 0.5),
+      0 0 60px rgba($color-pink, 0.2);
+  }
+}
+
+// =============================
+// ICÔNE
+// clamp : 2.8rem (360px) → 4.5rem (1280px)
+// =============================
+.skeleton-service-icon {
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    rgba($color-pink, 0.25) 25%,
+    rgba($color-pink, 0.35) 50%,
+    rgba($color-pink, 0.25) 75%
+  );
+  width: clamp(2.8rem, 1.85vw + 2.13rem, 4.5rem);
+  height: clamp(2.8rem, 1.85vw + 2.13rem, 4.5rem);
+}
+
+// =============================
+// LABEL (2 lignes)
+// =============================
+.skeleton-service-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  align-items: center;
+
+  .skeleton-label-line-1,
+  .skeleton-label-line-2 {
+    border-radius: 4px;
+    background: linear-gradient(
+      90deg,
+      rgba($text-color, 0.15) 25%,
+      rgba($text-color, 0.25) 50%,
+      rgba($text-color, 0.15) 75%
+    );
+    // height : 0.85rem → 1.25rem
+    height: clamp(0.85rem, 0.43vw + 0.7rem, 1.25rem);
+  }
+
+  .skeleton-label-line-1 {
+    width: 90%;
+  }
+  .skeleton-label-line-2 {
+    width: 75%;
+  }
+}
+
+// =============================
+// BLOC 3 — DOTS
+// =============================
+.services-dots-block {
+  grid-area: dots;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // gap : 0.4rem → 0.8rem
+    gap: clamp(0.4rem, 0.43vw + 0.24rem, 0.8rem);
+  }
+}
+
+.skeleton-dot {
+  border-radius: 50%;
+  background: rgba($color-light, 0.1);
+  border: 1px solid rgba($color-light, 0.3);
+  // size : 3px (360px) → 8px (1280px)
+  width: clamp(3px, 0.54vw + 1.1px, 8px);
+  height: clamp(3px, 0.54vw + 1.1px, 8px);
+
+  &.active {
+    background: $color-pink;
+    border-color: $color-pink;
+    box-shadow: 0 0 8px rgba($color-pink, 0.5);
+    // scale : 1.1 → 1.5 via transform discret
+    transform: scale(1.2);
+
+    @include from('medium-768') {
+      transform: scale(1.35);
+    }
+    @include from('large-1280') {
+      transform: scale(1.5);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      bottom: -1px;
+      border-radius: 50%;
+      border: 1px solid $color-pink;
+      opacity: 0.3;
+      animation: skeletonPulse 2s infinite;
+
+      @include from('large-1280') {
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+      }
+    }
+  }
+}
+
+// =============================
+// CAS SPÉCIAUX
+// =============================
+
+@media (max-width: 360px) {
+  .skeleton-section-title {
+    width: 100px;
+    height: 1.1rem;
+  }
+  .skeleton-title-underline {
+    width: 30px;
+    height: 1.5px;
+  }
+  .services-cards-block .service-card-container {
+    height: 200px;
+    max-width: 280px;
+  }
+  .skeleton-service-card {
+    width: 240px;
+    height: 150px;
+    padding: 1rem 0.5rem;
+    gap: 0.75rem;
+  }
+  .skeleton-service-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  .skeleton-label-line-1,
+  .skeleton-label-line-2 {
+    height: 0.8rem;
+  }
+  .skeleton-dot {
+    width: 4px;
+    height: 4px;
+    &.active {
+      transform: scale(1.25);
+    }
+  }
+}
+
+@include mobile-landscape {
+  .skeleton-section-title {
+    height: 1.2rem;
+    width: 110px;
+  }
+  .services-cards-block .service-card-container {
+    height: 160px;
+    max-width: 350px;
+  }
+  .skeleton-service-card {
+    width: 280px;
+    height: 130px;
+    gap: 0.75rem;
+  }
+  .skeleton-service-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+  .skeleton-label-line-1,
+  .skeleton-label-line-2 {
+    height: 0.75rem;
+  }
+}
+
+@include tall-screen {
+  .services-cards-block .service-card-container {
+    height: 300px;
+    max-width: 520px;
+    @include until('large-1280') {
+      height: 240px;
+      max-width: 320px;
+    }
+  }
+  .skeleton-service-card {
+    @include from('medium-768') {
+      width: 360px;
+      height: 260px;
+      gap: 2rem;
+    }
+  }
+  .skeleton-service-icon {
+    @include from('medium-768') {
+      width: 4.8rem;
+      height: 4.8rem;
+    }
+  }
+  .skeleton-label-line-1,
+  .skeleton-label-line-2 {
+    @include from('medium-768') {
+      height: 1.3rem;
+    }
+  }
+}
+
+@include short-screen {
+  .skeleton-section-title {
+    height: 1.5rem;
+    width: 130px;
+    @include from('medium-768') {
+      height: 1.8rem;
+      width: 140px;
+    }
+  }
+  .services-cards-block .service-card-container {
+    height: 180px;
+    @include from('medium-768') {
+      height: 220px;
+    }
+  }
+  .skeleton-service-card {
+    height: 150px;
+    gap: 1rem;
+    @include from('medium-768') {
+      height: 180px;
+      gap: 1.2rem;
+    }
+  }
+  .skeleton-service-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    @include from('medium-768') {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+  }
+  .skeleton-label-line-1,
+  .skeleton-label-line-2 {
+    height: 0.8rem;
+    @include from('medium-768') {
+      height: 1rem;
+    }
+  }
+}
+
+@include reduced-motion {
+  .skeleton-animate {
+    animation: skeletonPulse 2s infinite ease-in-out;
+  }
+  .skeleton-title-underline {
+    animation: none;
+  }
+  .skeleton-dot.active::after {
+    animation: none;
+  }
+}
+
+@include high-density {
+  .skeleton-service-card {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+@include from('large-1920') {
+  .skeleton-section-title {
+    height: 2.4rem;
+    width: 200px;
+  }
+  .skeleton-title-underline {
+    width: 70px;
+    height: 4px;
+    bottom: -0.8rem;
+  }
+  .services-cards-block .service-card-container {
+    height: 350px;
+    max-width: 500px;
+  }
+  .skeleton-service-card {
+    width: 420px;
+    height: 280px;
+    padding: 2.5rem 2rem;
+    gap: 2.5rem;
+  }
+  .skeleton-service-icon {
+    width: 5rem;
+    height: 5rem;
+  }
+  .skeleton-label-line-1,
+  .skeleton-label-line-2 {
+    height: 1.4rem;
+  }
+  .skeleton-dot {
+    width: 10px;
+    height: 10px;
+    &.active {
+      transform: scale(1.6);
+    }
+  }
+  .slider-dots {
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .skeleton-section-title {
+    height: 1.6rem;
+    width: 140px;
+  }
+  .services-cards-block .service-card-container {
+    height: 200px;
+    max-width: 380px;
+  }
+  .skeleton-service-card {
+    width: 320px;
+    height: 160px;
+    padding: 1.2rem 1rem;
+    gap: 1rem;
+  }
+  .skeleton-service-icon {
+    width: 3rem;
+    height: 3rem;
+  }
+  .skeleton-label-line-1,
+  .skeleton-label-line-2 {
+    height: 0.9rem;
+  }
+  .skeleton-dot {
+    width: 6px;
+    height: 6px;
+    &.active {
+      transform: scale(1.3);
+    }
+  }
+}

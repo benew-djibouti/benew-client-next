@@ -1,0 +1,21 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _contact-section-wrapper.scss
+// ================================
+
+// ✅ Wrapper pour la section "others" qui contient le bouton + formulaire
+.contact-section-wrapper {
+  // 📱 MOBILE/TABLETTE - Position relative pour contenir le bouton absolute
+  @include until('large-xs') {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  // 🖥️ DESKTOP - Comportement normal
+  @include from('large-xs') {
+    position: relative; // Garde relative au cas où besoin futur
+  }
+}

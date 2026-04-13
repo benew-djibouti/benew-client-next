@@ -1,0 +1,372 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 contact-skeleton.scss (home)
+// ================================
+
+@keyframes skeletonPulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes skeletonGlow {
+  0% {
+    box-shadow: 0 0 10px rgba($color-orange, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba($color-orange, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba($color-orange, 0.2);
+  }
+}
+
+.skeleton-animate {
+  background: linear-gradient(
+    90deg,
+    rgba($text-color, 0.1) 25%,
+    rgba($text-color, 0.2) 50%,
+    rgba($text-color, 0.1) 75%
+  );
+  background-size: 200px 100%;
+  animation: skeletonShimmer 2s infinite linear;
+  border-radius: 8px;
+}
+
+// =============================
+// CONTENEUR PRINCIPAL — 50/50
+// =============================
+.contact-skeleton-main-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: row;
+
+  @include mobile-only {
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+// =============================
+// BLOC GAUCHE — TEXTE + BOUTON
+// =============================
+.skeleton-contact-text-block {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  // padding : 1.5rem (360px) → 3rem (1280px)
+  padding: clamp(1.5rem, 1.63vw + 0.91rem, 3rem);
+
+  @include mobile-only {
+    width: 100%;
+    height: 60%;
+  }
+}
+
+// =============================
+// SKELETON TEXTE
+// =============================
+.skeleton-contact-text {
+  display: flex;
+  flex-direction: column;
+  // gap : 0.5rem → 0.7rem
+  gap: clamp(0.5rem, 0.22vw + 0.42rem, 0.7rem);
+  width: 90%;
+  align-items: center;
+  // margin-bottom : 1.5rem → 2.5rem
+  margin-bottom: clamp(1.5rem, 1.09vw + 1.11rem, 2.5rem);
+
+  .skeleton-text-line-1,
+  .skeleton-text-line-2,
+  .skeleton-text-line-3 {
+    border-radius: 4px;
+    background: linear-gradient(
+      90deg,
+      rgba($text-color, 0.15) 25%,
+      rgba($text-color, 0.25) 50%,
+      rgba($text-color, 0.15) 75%
+    );
+    // height : 1rem (360px) → 1.4rem (1280px)
+    height: clamp(1rem, 0.43vw + 0.84rem, 1.4rem);
+  }
+
+  .skeleton-text-line-1 {
+    width: 100%;
+  }
+  .skeleton-text-line-2 {
+    width: 85%;
+  }
+  .skeleton-text-line-3 {
+    width: 40%;
+  }
+}
+
+// =============================
+// SKELETON BOUTON
+// height : 2.7rem (360px) → 3.4rem (1280px)
+// width  : 160px → 220px
+// =============================
+.skeleton-contact-button {
+  border-radius: 50px;
+  background: linear-gradient(
+    135deg,
+    rgba($color-orange, 0.3) 25%,
+    rgba($color-pink, 0.3) 50%,
+    rgba($color-orange, 0.3) 75%
+  );
+  border: 2px solid rgba($color-light, 0.1);
+  animation: skeletonGlow 3s ease-in-out infinite;
+  height: clamp(2.7rem, 0.76vw + 2.43rem, 3.4rem);
+  width: clamp(160px, 6.52vw + 136.5px, 220px);
+}
+
+// =============================
+// BLOC DROITE — IMAGE
+// =============================
+.skeleton-contact-image-block {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  @include mobile-only {
+    width: 100%;
+    height: 40%;
+  }
+
+  .skeleton-contact-logo-container {
+    position: relative;
+    width: 90%;
+    height: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .skeleton-contact-logo-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      background: linear-gradient(
+        90deg,
+        rgba($color-orange, 0.2) 25%,
+        rgba($color-orange, 0.3) 50%,
+        rgba($color-orange, 0.2) 75%
+      );
+      box-shadow: 0 10px 30px rgba($color-dark, 0.2);
+      animation: skeletonShimmer 3s infinite linear;
+    }
+  }
+}
+
+// =============================
+// CAS SPÉCIAUX
+// =============================
+
+@media (max-width: 360px) {
+  .skeleton-contact-text-block {
+    padding: 1.25rem;
+  }
+  .skeleton-contact-text {
+    margin-bottom: 1.25rem;
+    .skeleton-text-line-1,
+    .skeleton-text-line-2,
+    .skeleton-text-line-3 {
+      height: 0.9rem;
+    }
+  }
+  .skeleton-contact-button {
+    height: 2.45rem;
+    width: 140px;
+  }
+  .skeleton-contact-image-block .skeleton-contact-logo-container {
+    width: 95%;
+    height: 95%;
+  }
+}
+
+@include mobile-landscape {
+  .contact-skeleton-main-container {
+    flex-direction: row;
+  }
+  .skeleton-contact-text-block,
+  .skeleton-contact-image-block {
+    width: 50%;
+    height: 100%;
+  }
+  .skeleton-contact-text-block {
+    padding: 1.5rem;
+    .skeleton-contact-text {
+      margin-bottom: 1.5rem;
+      .skeleton-text-line-1,
+      .skeleton-text-line-2,
+      .skeleton-text-line-3 {
+        height: 0.95rem;
+      }
+    }
+  }
+  .skeleton-contact-button {
+    height: 2.6rem;
+    width: 155px;
+  }
+}
+
+@include tall-screen {
+  .skeleton-contact-text-block {
+    @include mobile-only {
+      height: 35%;
+      padding: 2rem 1.5rem;
+    }
+  }
+  .skeleton-contact-image-block {
+    @include mobile-only {
+      height: 45%;
+    }
+  }
+}
+
+@include short-screen {
+  .skeleton-contact-text-block {
+    padding: 1.5rem;
+  }
+  .skeleton-contact-text {
+    margin-bottom: 1.5rem;
+    .skeleton-text-line-1,
+    .skeleton-text-line-2,
+    .skeleton-text-line-3 {
+      height: 1rem;
+    }
+  }
+  .skeleton-contact-button {
+    height: 2.8rem;
+    width: 170px;
+  }
+  .skeleton-contact-image-block .skeleton-contact-logo-container {
+    width: 85%;
+    height: 85%;
+  }
+}
+
+@include reduced-motion {
+  .skeleton-animate {
+    animation: skeletonPulse 2s infinite ease-in-out;
+  }
+  .skeleton-contact-button {
+    animation: none;
+    background: linear-gradient(
+      135deg,
+      rgba($color-orange, 0.3),
+      rgba($color-pink, 0.3)
+    );
+  }
+  .skeleton-contact-logo-image {
+    animation: skeletonPulse 2s infinite ease-in-out;
+  }
+}
+
+@media (pointer: coarse) {
+  .skeleton-contact-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@include high-density {
+  .skeleton-contact-logo-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+@include high-contrast {
+  .skeleton-contact-button {
+    border-width: 3px;
+    border-color: rgba($color-light, 0.8);
+  }
+  .skeleton-contact-text {
+    .skeleton-text-line-1,
+    .skeleton-text-line-2,
+    .skeleton-text-line-3 {
+      background: linear-gradient(
+        90deg,
+        rgba($text-color, 0.3) 25%,
+        rgba($text-color, 0.4) 50%,
+        rgba($text-color, 0.3) 75%
+      );
+    }
+  }
+}
+
+@include from('large-1920') {
+  .skeleton-contact-text-block {
+    padding: 3.5rem;
+  }
+  .skeleton-contact-text {
+    margin-bottom: 3rem;
+    max-width: 85%;
+    .skeleton-text-line-1,
+    .skeleton-text-line-2,
+    .skeleton-text-line-3 {
+      height: 1.5rem;
+    }
+  }
+  .skeleton-contact-button {
+    height: 3.8rem;
+    width: 280px;
+  }
+  .skeleton-contact-image-block .skeleton-contact-logo-container {
+    width: 85%;
+    height: 85%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .contact-skeleton-main-container {
+    flex-direction: row;
+  }
+  .skeleton-contact-text-block {
+    width: 50%;
+    height: 100%;
+    padding: 2rem;
+  }
+  .skeleton-contact-text {
+    margin-bottom: 1.8rem;
+    .skeleton-text-line-1,
+    .skeleton-text-line-2,
+    .skeleton-text-line-3 {
+      height: 1.1rem;
+    }
+  }
+  .skeleton-contact-button {
+    height: 3.05rem;
+    width: 190px;
+  }
+  .skeleton-contact-image-block {
+    width: 50%;
+    height: 100%;
+  }
+}

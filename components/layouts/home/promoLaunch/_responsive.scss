@@ -1,0 +1,301 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _responsive.scss
+// ================================
+
+// =============================
+// ÉCRANS TRÈS PETITS
+// =============================
+@media (max-width: 360px) {
+  .promo-container {
+    padding: 1rem 0.5rem;
+    gap: 0.75rem;
+  }
+
+  .promo-title {
+    font-size: 1.2rem;
+  }
+
+  .promo-description {
+    font-size: 0.65rem;
+  }
+
+  .promo-card {
+    padding: 0.6rem 0.3rem;
+    gap: 0.3rem;
+    border-radius: 12px;
+  }
+
+  .promo-card__months-number {
+    font-size: 1.75rem;
+  }
+
+  .promo-card__icon {
+    font-size: 1rem;
+  }
+
+  .promo-cta__button {
+    font-size: 0.65rem;
+    padding: 0.6rem 1.3rem;
+  }
+}
+
+// =============================
+// MODE PAYSAGE MOBILE
+// =============================
+@include mobile-landscape {
+  .promo-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .promo-header {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .promo-subtitle {
+    display: none;
+  }
+
+  .promo-title {
+    font-size: 1.2rem;
+  }
+
+  .promo-description {
+    display: none;
+  }
+
+  .promo-cards {
+    gap: 0.5rem;
+  }
+
+  .promo-card {
+    padding: 0.6rem 0.4rem;
+    gap: 0.3rem;
+  }
+
+  .promo-card__months-number {
+    font-size: 1.75rem;
+  }
+
+  .promo-card__icon {
+    font-size: 1rem;
+  }
+
+  .promo-cta__button {
+    font-size: 0.7rem;
+    padding: 0.6rem 1.4rem;
+  }
+}
+
+// =============================
+// ÉCRANS HAUTS
+// =============================
+@include tall-screen {
+  .promo-container {
+    @include until('large-xs') {
+      gap: 1.75rem;
+    }
+  }
+
+  .promo-card {
+    @include until('large-xs') {
+      padding: 1.25rem 0.75rem;
+      gap: 0.6rem;
+    }
+  }
+
+  .promo-card__months-number {
+    @include until('large-xs') {
+      font-size: 2.75rem;
+    }
+  }
+}
+
+// =============================
+// ÉCRANS COURTS
+// =============================
+@include short-screen {
+  .promo-container {
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .promo-description {
+    display: none;
+  }
+
+  .promo-card {
+    padding: 0.75rem 0.5rem;
+    gap: 0.35rem;
+  }
+
+  .promo-card__months-number {
+    @include from('large-xs') {
+      font-size: 3rem;
+    }
+  }
+}
+
+// =============================
+// ACCESSIBILITÉ - REDUCED MOTION
+// =============================
+@include reduced-motion {
+  .promo-card {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .promo-cta__button {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// =============================
+// SUPPORT TACTILE
+// =============================
+@media (pointer: coarse) {
+  .promo-card {
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .promo-cta__button {
+    min-height: 44px;
+
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      opacity: 0.85;
+      transform: scale(0.98);
+    }
+  }
+}
+
+// =============================
+// HAUTE DENSITÉ
+// =============================
+@include high-density {
+  .promo-card {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+// =============================
+// CONTRASTE ÉLEVÉ
+// =============================
+@include high-contrast {
+  .promo-card {
+    border-width: 2px;
+  }
+
+  .promo-card--orange {
+    border-color: rgba($color-orange, 0.7);
+  }
+
+  .promo-card--pink {
+    border-color: rgba($color-pink, 0.7);
+  }
+
+  .promo-card--purple {
+    border-color: rgba($color-purple, 0.7);
+  }
+
+  .promo-cta__button {
+    border-width: 3px;
+    border-color: rgba($color-light, 0.5);
+  }
+}
+
+// =============================
+// TRÈS GRANDS ÉCRANS
+// =============================
+@include from('large-xxxl') {
+  .promo-container {
+    gap: 3rem;
+    padding: 3rem 5rem;
+  }
+
+  .promo-title {
+    font-size: 3.8rem;
+  }
+
+  .promo-description {
+    font-size: 1.1rem;
+    max-width: 750px;
+  }
+
+  .promo-cards {
+    gap: 3rem;
+    max-width: 1500px;
+  }
+
+  .promo-card {
+    padding: 3rem 2.5rem;
+    gap: 1.5rem;
+    border-radius: 32px;
+  }
+
+  .promo-card__months-number {
+    font-size: 6rem;
+  }
+
+  .promo-card__icon {
+    font-size: 3.5rem;
+  }
+
+  .promo-cta__button {
+    font-size: 1.2rem;
+    padding: 1.25rem 3.5rem;
+  }
+}
+
+// =============================
+// ORIENTATION PAYSAGE TABLETTES
+// =============================
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .promo-container {
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .promo-description {
+    font-size: 0.8rem;
+  }
+
+  .promo-card {
+    padding: 1rem 0.75rem;
+    gap: 0.6rem;
+  }
+
+  .promo-card__months-number {
+    font-size: 2.5rem;
+  }
+
+  .promo-card__icon {
+    font-size: 1.5rem;
+  }
+}

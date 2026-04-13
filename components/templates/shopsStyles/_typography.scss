@@ -1,0 +1,23 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _typography.scss
+// ================================
+
+// clamp : 1.25rem (360px) → 1.4rem (1280px)
+.app-title {
+  font-weight: 700;
+  color: $text-color;
+  margin: 0 0 clamp(0.875rem, 0.14vw + 0.82rem, 1rem) 0;
+  line-height: 1.3;
+  text-shadow: 0 2px 4px rgba($background-color, 0.5);
+  transition: all 0.3s ease;
+
+  font-size: clamp(1.25rem, 0.16vw + 1.19rem, 1.4rem);
+
+  .application-card:hover & {
+    color: $primary-color;
+    transform: translateX(5px);
+  }
+}

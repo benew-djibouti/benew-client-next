@@ -1,0 +1,178 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _card.scss - AVEC BLUR GLASSMORPHISM ET OMBRES VISIBLES
+// ================================
+// ✅ CORRECTION : Bordure 0.2px sur TOUS les écrans (mobile, tablette, PC)
+
+.application-card {
+  // ✅ EFFET GLASSMORPHISM AVEC BLUR
+  background: linear-gradient(
+    135deg,
+    rgba($background-color, 0.8),
+    rgba(color.adjust($background-color, $lightness: 5%), 0.8)
+  );
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  border-radius: 20px;
+
+  // ✅ BORDURE 0.2px SUR TOUS LES ÉCRANS (plus de condition)
+  border: 0.2px solid $primary-color;
+
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+
+  // 📱 MOBILE FIRST
+  width: 95%;
+  max-width: 100%;
+  min-height: 420px;
+
+  // ✅ OMBRES VISIBLES
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.7),
+    // ✅ Ombre noire plus prononcée
+    0 8px 25px rgba(255, 69, 0, 0.4),
+    // 🔥 Rouge-orangé (OrangeRed)
+    0 4px 15px rgba(255, 140, 0, 0.3),
+    // 🔥 Orange vif (DarkOrange)
+    0 2px 8px rgba(255, 215, 0, 0.2); // 🔥 Jaune doré (Gold)
+
+  // 📟 TRÈS PETITS ÉCRANS
+  @include small-screens {
+    width: 98%;
+    min-height: 400px;
+    border-radius: 16px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    box-shadow:
+      0 18px 60px rgba(0, 0, 0, 0.7),
+      0 6px 25px rgba($primary-color, 0.25);
+  }
+
+  @include from('small-sm') {
+    width: 97%;
+    min-height: 405px;
+  }
+
+  @include from('small-lg') {
+    width: 96%;
+    min-height: 410px;
+  }
+
+  @include from('small-xl') {
+    width: 95%;
+    min-height: 415px;
+  }
+
+  // 📟 MOYENS ÉCRANS
+  @include between('small-xl', 'medium-sm') {
+    width: 93%;
+    max-width: 480px;
+    min-height: 400px;
+  }
+
+  @include from('medium-sm') {
+    width: 92%;
+    max-width: 490px;
+    min-height: 390px;
+  }
+
+  @include from('medium-lg') {
+    width: 90%;
+    max-width: 500px;
+    min-height: 380px;
+  }
+
+  @include from('medium-xxl') {
+    width: 88%;
+    max-width: 470px;
+    min-height: 370px;
+  }
+
+  // 🖥️ GRANDS ÉCRANS - Desktop
+  @include from('large-xs') {
+    width: 85%;
+    max-width: 450px;
+    min-height: 360px;
+  }
+
+  @include from('large-lg') {
+    width: 82%;
+    max-width: 430px;
+    min-height: auto;
+  }
+
+  @include from('large-xxl') {
+    width: 80%;
+    max-width: 400px;
+    min-height: auto;
+    border-radius: 16px;
+    background: linear-gradient(
+      135deg,
+      rgba($background-color, 0.8),
+      rgba(color.adjust($background-color, $lightness: 5%), 0.8)
+    );
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.5),
+      0 4px 16px rgba($primary-color, 0.15);
+  }
+
+  &:hover {
+    transform: translateY(-10px);
+
+    box-shadow:
+      0 30px 90px rgba(0, 0, 0, 0.9),
+      // ✅ Ombre noire très forte
+      0 15px 50px rgba(255, 69, 0, 0.7),
+      // 🔥 Rouge-orangé intense
+      0 10px 35px rgba(255, 140, 0, 0.6),
+      // 🔥 Orange vif intense
+      0 5px 20px rgba(255, 215, 0, 0.5),
+      // 🔥 Jaune doré intense
+      0 0 40px rgba(255, 99, 71, 0.4); // 🔥 Lueur rouge-tomate (Tomato)
+
+    // ✅ Bordure intensifiée au hover SUR TOUS LES ÉCRANS
+    border-color: $secondary-color; // Rose
+    border-width: 0.3px;
+  }
+
+  // 📱 MOBILE - Effet tactile
+  &:active {
+    transform: translateY(-5px);
+
+    box-shadow:
+      0 20px 70px rgba(0, 0, 0, 0.8),
+      0 12px 40px rgba(255, 69, 0, 0.6),
+      0 8px 25px rgba(255, 140, 0, 0.5),
+      0 4px 15px rgba(255, 215, 0, 0.4);
+  }
+
+  // Effet de brillance subtil
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($primary-color, 0.3),
+      transparent
+    );
+    transition: left 0.5s ease;
+    z-index: 1;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+}

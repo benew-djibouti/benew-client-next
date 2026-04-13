@@ -1,0 +1,77 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _base.scss
+// ================================
+
+.contact {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  position: relative;
+
+  // 📱 MOBILE/TABLETTE - CENTRAGE VERTICAL ET HORIZONTAL
+  @include until('large-xs') {
+    flex-direction: column;
+    justify-content: center; // ✅ Centrage vertical
+    align-items: center; // ✅ Centrage horizontal
+    min-height: 100vh;
+    max-width: 100%;
+    padding: 2rem 1rem; // ✅ Padding pour éviter que le contenu touche les bords
+  }
+
+  @include until('small-sm') {
+    padding: 1.5rem 0.75rem;
+  }
+
+  @include from('small-sm') {
+    padding: 1.75rem 0.875rem;
+  }
+
+  @include from('small-lg') {
+    padding: 1.875rem 0.95rem;
+  }
+
+  @include from('small-xl') {
+    padding: 2rem 1rem;
+  }
+
+  @include from('medium-sm') {
+    padding: 2.25rem 1.25rem;
+  }
+
+  @include from('medium-lg') {
+    padding: 2.5rem 1.5rem;
+  }
+
+  @include from('medium-xl') {
+    padding: 2.75rem 1.75rem;
+  }
+
+  @include from('medium-xxl') {
+    padding: 3rem 2rem;
+  }
+
+  // 🖥️ DESKTOP - Layout original (2 blocs horizontaux 50/50)
+  @include from('large-xs') {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start; // ✅ Pas de centrage sur desktop
+    gap: 3rem;
+    padding: 2rem;
+    max-width: 70rem;
+    min-height: auto;
+    height: 100%;
+  }
+
+  @include from('large-lg') {
+    gap: 3.2rem;
+    max-width: 75rem;
+  }
+
+  @include from('large-xxl') {
+    gap: 3.5rem;
+    max-width: 80rem;
+  }
+}

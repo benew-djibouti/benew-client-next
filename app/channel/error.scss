@@ -1,0 +1,7 @@
+// app/channel/error.scss
+@use '../styles/abstracts' as *;
+@use '../styles/components/error-shared' as *;
+
+.channel-error {
+  @include error-page-wrapper();
+}

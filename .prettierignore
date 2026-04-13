@@ -1,0 +1,53 @@
+# ===== Build Outputs =====
+dist
+.next
+out
+build
+
+# ===== Dependencies =====
+node_modules
+
+# ===== Lockfiles & Package Managers =====
+package.json
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# ===== Sentry =====
+.sentry-build-info
+sentry.client.config.ts
+sentry.server.config.ts
+sentry.edge.config.ts
+instrumentation.js
+
+# ===== Cache & Turbopack =====
+.turbo
+.cache
+.vercel
+
+# ===== Logs =====
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ===== Environment Files =====
+.env
+.env.local
+.env.production.local
+.env.development.local
+
+# ===== Config Files (déjà formatés) =====
+*.config.js
+*.config.mjs
+*.config.ts
+next-env.d.ts
+
+# ===== Public Assets (minifiés) =====
+public/**/*.min.js
+public/**/*.min.css
+public/**/*.bundle.js
+
+# ===== Generated Files =====
+coverage
+.nyc_output

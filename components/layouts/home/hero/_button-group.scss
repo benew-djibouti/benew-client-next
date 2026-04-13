@@ -1,0 +1,112 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _button-group.scss
+// ================================
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 300px;
+
+  // Tablette (768px+) — passage horizontal
+  @include from('medium-768') {
+    flex-direction: row;
+    justify-content: center;
+    max-width: 520px;
+    gap: 1.25rem;
+  }
+
+  // Desktop (1280px+)
+  @include from('large-1280') {
+    justify-content: flex-start;
+    max-width: none;
+    gap: 1rem;
+  }
+
+  // =============================
+  // STYLES COMMUNS DES BOUTONS
+  // clamp padding/font : mobile compact → desktop standard
+  // =============================
+  .primaryButton,
+  .secondaryButton {
+    padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 2vw, 2rem);
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: clamp(0.85rem, 1vw + 0.5rem, 1rem);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    line-height: 1.1;
+
+    @include from('medium-768') {
+      flex: 1;
+      min-height: 56px;
+      border-radius: 30px;
+    }
+
+    @include from('large-1280') {
+      flex: none;
+      min-height: auto;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba($primary-color, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    @media (pointer: coarse) {
+      &:hover {
+        transform: none;
+      }
+      &:active {
+        opacity: 0.8;
+        transform: scale(0.98);
+      }
+    }
+  }
+
+  .primaryButton {
+    background: linear-gradient(
+      45deg,
+      $primary-color,
+      color.adjust($primary-color, $lightness: 10%)
+    );
+    color: $background-color;
+    border: none;
+    order: 1;
+
+    &:hover {
+      background: linear-gradient(
+        45deg,
+        color.adjust($primary-color, $lightness: 5%),
+        $secondary-color
+      );
+    }
+  }
+
+  .secondaryButton {
+    background: transparent;
+    color: $primary-color;
+    border: 2px solid $primary-color;
+    order: 2;
+
+    &:hover {
+      background: rgba($primary-color, 0.1);
+      border-color: $secondary-color;
+      color: $secondary-color;
+    }
+  }
+}

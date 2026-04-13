@@ -1,0 +1,114 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _buttons.scss
+// ================================
+
+.buttonContainer {
+  display: flex;
+  margin-top: 1rem;
+  flex-direction: column-reverse;
+  gap: clamp(0.75rem, 0.16vw + 0.69rem, 0.9rem);
+
+  @include tablet-up {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+}
+
+button {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+
+  // Mobile : full-width, zone tactile optimale
+  // clamp : 0.875rem/0.95rem (360px) → 1rem/1rem (768px)
+  padding: clamp(0.875rem, 0.3vw + 0.77rem, 1rem)
+    clamp(1.25rem, 0.61vw + 1.03rem, 1.5rem);
+  font-size: clamp(0.95rem, 0.12vw + 0.91rem, 1rem);
+  min-height: clamp(44px, 0.98vw + 40.5px, 48px);
+  width: 100%;
+
+  @include tablet-up {
+    width: auto;
+    flex: 1;
+  }
+
+  @include desktop-up {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    min-height: auto;
+    width: auto;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.nextButton {
+  background: linear-gradient(
+    135deg,
+    $primary-color,
+    color.adjust($primary-color, $lightness: 10%)
+  );
+  color: $background-color;
+  box-shadow: 0 4px 8px rgba($primary-color, 0.3);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(
+      135deg,
+      color.adjust($primary-color, $lightness: 5%),
+      $secondary-color
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba($primary-color, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.backButton,
+.cancelButton {
+  background-color: transparent;
+  color: $primary-color;
+  border: 1px solid $primary-color;
+
+  &:hover {
+    background-color: rgba($primary-color, 0.1);
+    border-color: color.adjust($primary-color, $lightness: 10%);
+  }
+}
+
+.closeButton {
+  background: linear-gradient(
+    135deg,
+    $primary-color,
+    color.adjust($primary-color, $lightness: 10%)
+  );
+  color: $background-color;
+  box-shadow: 0 4px 8px rgba($primary-color, 0.3);
+  margin-top: 1rem;
+  width: 100%;
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      color.adjust($primary-color, $lightness: 5%),
+      $secondary-color
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba($primary-color, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
