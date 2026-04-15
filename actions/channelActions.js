@@ -69,8 +69,6 @@ export async function searchVideos(query) {
     if (!cleanQuery || cleanQuery.length < 1) {
       client = await getClient();
 
-      await client.query('SET LOCAL statement_timeout = 5000');
-
       const result = await withTimeout(
         client.query(`
           SELECT
@@ -105,8 +103,6 @@ export async function searchVideos(query) {
 
     // ===== REQUÊTE DB =====
     client = await getClient();
-
-    await client.query('SET LOCAL statement_timeout = 5000');
 
     const searchPattern = `%${cleanQuery}%`;
 

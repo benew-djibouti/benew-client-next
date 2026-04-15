@@ -217,7 +217,6 @@ const getApplicationData = cache(
         const client = await getClient();
 
         try {
-          await client.query('SET LOCAL statement_timeout = 5000');
           // ✅ QUERY OPTIMISÉE - Une seule requête avec tous les JOIN nécessaires
           const queryPromise = client.query(
             `SELECT

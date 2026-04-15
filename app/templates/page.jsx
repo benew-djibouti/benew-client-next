@@ -240,10 +240,6 @@ async function getTemplates() {
       const client = await getClient();
 
       try {
-        // Définir le timeout PostgreSQL sur cette connexion spécifiquement
-        // plus court que le statement_timeout global (10s) du pool
-        await client.query('SET LOCAL statement_timeout = 5000');
-
         // Query avec timeout intégré - ✅ CORRIGÉ: template_images (pluriel)
         const queryPromise = client.query(`
           SELECT

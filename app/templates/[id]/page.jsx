@@ -199,7 +199,6 @@ const getTemplateData = cache(async function getTemplateData(templateId) {
       const client = await getClient();
 
       try {
-        await client.query('SET LOCAL statement_timeout = 8000');
         // ✅ QUERY FUSIONNÉE - Template + Applications en un seul LEFT JOIN
         const queryPromise = client.query(
           `SELECT
