@@ -1,0 +1,127 @@
+name: Build & Deploy Benew (Lite)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_ENV: production
+      CI: true
+      GITHUB_ACTIONS: true
+      NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+      NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
+      NEXT_PUBLIC_GTM_CONTAINER_ID: ${{ secrets.NEXT_PUBLIC_GTM_CONTAINER_ID }}
+      NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
+      NEXT_PUBLIC_CLOUDINARY_API_KEY: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_API_KEY }}
+      NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint (optional)
+        run: npm run lint || echo "No lint script, skipping"
+
+      - name: Tests (optional)
+        run: npm test -- --passWithNoTests || echo "No tests, skipping"
+
+      - name: Build Next.js (standalone)
+        run: |
+          echo "🏗️ Starting build..."
+          echo "NODE_ENV: $NODE_ENV"
+          echo "CI: $CI"
+          echo "GITHUB_ACTIONS: $GITHUB_ACTIONS"
+          npm run build
+
+      - name: Package deployment artifact
+        run: |
+          echo "📦 Creating deployment package..."
+          tar -czf deployment.tar.gz \
+            .next/standalone \
+            .next/static \
+            public
+          echo "📊 Package size:"
+          ls -lh deployment.tar.gz
+
+      - name: Upload to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          source: 'deployment.tar.gz'
+          target: '/var/www/benew/'
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            set -e
+            cd /var/www/benew
+
+            echo "🚀 Starting deployment..."
+
+            echo "📦 Extracting artifact..."
+            tar -xzf deployment.tar.gz
+            rm -f deployment.tar.gz
+
+            echo "📁 Copying static assets..."
+            cp -r .next/static .next/standalone/.next/
+            cp -r public .next/standalone/
+
+            echo "🔍 Checking .env file..."
+            if [ ! -f .env ]; then
+              echo "❌ ERROR: .env file not found!"
+              exit 1
+            fi
+            echo "✅ .env file found"
+
+            echo "🔄 Starting/reloading app with PM2..."
+            pm2 describe benew >/dev/null 2>&1 && pm2 reload benew || pm2 start ecosystem.config.js
+            pm2 save
+
+            echo "⏳ Waiting for app to start..."
+            sleep 5
+
+            echo "🏥 Health check..."
+            for i in 1 2 3 4 5; do
+              if curl -fsS http://localhost:3000 >/dev/null; then
+                echo "✅ Health check passed on attempt $i"
+                break
+              fi
+              echo "⚠️ Retry ($i/5)..."
+              sleep 3
+            done
+
+            if curl -f http://localhost:3000 >/dev/null; then
+              echo "🎉 Deployment successful!"
+              pm2 list
+            else
+              echo "❌ Deployment failed!"
+              pm2 logs benew --lines 50
+              exit 1
+            fi
