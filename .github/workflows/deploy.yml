@@ -114,9 +114,6 @@ jobs:
             # Lien symbolique permanent pour .env
             ln -sf /var/www/benew/.env /var/www/benew/.next/standalone/.env
 
-            # Copier le .env au bon endroit pour Next.js standalone
-            cp /var/www/benew/.env /var/www/benew/.next/standalone/.env
-
             # Vérification du .env
             echo "✅ .env file found"
 
