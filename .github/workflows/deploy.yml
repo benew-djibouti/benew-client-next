@@ -111,6 +111,9 @@ jobs:
             cp -r /tmp/benew-new/public public
             rm -rf /tmp/benew-new
 
+            # Lien symbolique permanent pour .env
+            ln -sf /var/www/benew/.env /var/www/benew/.next/standalone/.env
+
             # Copier le .env au bon endroit pour Next.js standalone
             cp /var/www/benew/.env /var/www/benew/.next/standalone/.env
 
