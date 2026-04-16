@@ -16,7 +16,6 @@ jobs:
       NODE_ENV: production
       CI: true
       GITHUB_ACTIONS: true
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
       NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
       NEXT_PUBLIC_GTM_CONTAINER_ID: ${{ secrets.NEXT_PUBLIC_GTM_CONTAINER_ID }}
@@ -86,14 +85,14 @@ jobs:
 
             echo "🚀 Starting deployment..."
 
-            echo "📦 Extracting artifact..."
-            tar -xzf deployment.tar.gz
+            # Extraire dans un dossier temporaire
+            echo "📦 Extracting to temp directory..."
+            rm -rf /tmp/benew-new
+            mkdir -p /tmp/benew-new
+            tar -xzf deployment.tar.gz -C /tmp/benew-new
             rm -f deployment.tar.gz
 
-            echo "📁 Copying static assets..."
-            cp -r .next/static .next/standalone/.next/
-            cp -r public .next/standalone/
-
+            # Vérification du fichier .env
             echo "🔍 Checking .env file..."
             if [ ! -f .env ]; then
               echo "❌ ERROR: .env file not found!"
@@ -101,13 +100,30 @@ jobs:
             fi
             echo "✅ .env file found"
 
+            # Supprimer l'ancien build
+            echo "🧹 Cleaning old build..."
+            rm -rf .next/standalone .next/static public
+
+            # Déplacer le nouveau build
+            echo "📁 Moving new build..."
+            cp -r /tmp/benew-new/.next/standalone .next/
+            cp -r /tmp/benew-new/.next/static .next/static
+            cp -r /tmp/benew-new/public public
+            rm -rf /tmp/benew-new
+
+            # Vérification du .env
+            echo "✅ .env file found"
+
+            # Démarrage/rechargement PM2
             echo "🔄 Starting/reloading app with PM2..."
             pm2 describe benew >/dev/null 2>&1 && pm2 reload benew || pm2 start ecosystem.config.js
             pm2 save
 
+            # Attendre que l'app démarre
             echo "⏳ Waiting for app to start..."
             sleep 5
 
+            # Health check avec retry
             echo "🏥 Health check..."
             for i in 1 2 3 4 5; do
               if curl -fsS http://localhost:3000 >/dev/null; then
@@ -118,6 +134,7 @@ jobs:
               sleep 3
             done
 
+            # Vérification finale
             if curl -f http://localhost:3000 >/dev/null; then
               echo "🎉 Deployment successful!"
               pm2 list
