@@ -102,6 +102,7 @@ jobs:
 
             # Supprimer l'ancien build
             echo "🧹 Cleaning old build..."
+            sudo chown -R deployer:deployer .next/ public/ 2>/dev/null || true
             rm -rf .next/standalone .next/static public
 
             # Déplacer le nouveau build
