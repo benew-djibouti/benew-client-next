@@ -1,10 +1,6 @@
 name: Sync .env to standalone
 
 on:
-  workflow_run:
-    workflows: ['Build & Deploy Benew (Lite)']
-    types:
-      - completed
   workflow_dispatch:
 
 jobs:
