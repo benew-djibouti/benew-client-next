@@ -111,11 +111,18 @@ jobs:
             cp -r /tmp/benew-new/public public
             rm -rf /tmp/benew-new
 
-            # Copier le .env au bon endroit pour Next.js standalone
-            cp /var/www/benew/.env /var/www/benew/.next/standalone/.env
+            # ✅ Copier static dans standalone pour CSS
+            echo "🎨 Copying static assets to standalone..."
+            mkdir -p .next/standalone/.next/
+            cp -r .next/static .next/standalone/.next/static
 
-            # Vérification du .env
-            echo "✅ .env file found"
+            # ✅ Copier public dans standalone pour les images
+            echo "🖼️ Copying public assets to standalone..."
+            cp -r public .next/standalone/public
+
+            # ✅ Copie du .env dans standalone
+            echo "📋 Copying .env to standalone..."
+            cp /var/www/benew/.env /var/www/benew/.next/standalone/.env
 
             # Démarrage/rechargement PM2
             echo "🔄 Starting/reloading app with PM2..."
