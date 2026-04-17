@@ -4,8 +4,11 @@
 
 import { promises as fs } from 'fs';
 import { Pool } from 'pg';
-import { captureException, captureMessage } from '../sentry.server.config';
 import path from 'path';
+import tls from 'tls';
+
+import { captureException, captureMessage } from '../sentry.server.config';
+
 
 // Configuration simple et adaptée
 const isProduction = process.env.NODE_ENV === 'production';
@@ -117,11 +120,15 @@ async function getDatabaseConfig() {
       process.env.NODE_ENV === 'production'
         ? certificate
           ? {
-              rejectUnauthorized: true, // ← vérification activée si on a le CA
+              rejectUnauthorized: true,
               ca: certificate,
+              // ✅ FIX: Bug node-postgres avec IP addresses
+              checkServerIdentity: (host, cert) => {
+                return tls.checkServerIdentity(process.env.DB_HOST_NAME || process.env.DB_HOST, cert);
+              },
             }
           : {
-              rejectUnauthorized: false, // ← fallback sans CA — accepté mais loggé
+              rejectUnauthorized: false,
             }
         : false,
   };
