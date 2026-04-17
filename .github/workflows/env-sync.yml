@@ -1,0 +1,51 @@
+name: Sync .env to standalone
+
+on:
+  workflow_run:
+    workflows: ['Build & Deploy Benew (Lite)']
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  sync-env:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Sync .env to standalone
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            set -e
+
+            echo "🔍 Checking .env file..."
+            if [ ! -f /var/www/benew/.env ]; then
+              echo "❌ ERROR: .env file not found!"
+              exit 1
+            fi
+            echo "✅ .env file found"
+
+            echo "📋 Copying .env to standalone..."
+            cp /var/www/benew/.env /var/www/benew/.next/standalone/.env
+            echo "✅ .env copied successfully"
+
+            echo "🔄 Restarting app with PM2..."
+            pm2 restart benew
+            pm2 save
+
+            echo "⏳ Waiting for app to start..."
+            sleep 5
+
+            echo "🏥 Health check..."
+            if curl -f http://localhost:3000 >/dev/null; then
+              echo "🎉 App is healthy!"
+              pm2 list
+            else
+              echo "❌ App is not responding!"
+              pm2 logs benew --lines 20
+              exit 1
+            fi
