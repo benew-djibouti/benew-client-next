@@ -2,7 +2,7 @@ name: Build & Deploy Benew (Lite)
 
 on:
   push:
-    branches: [main]
+    branches: [production]
   workflow_dispatch:
 
 permissions:
