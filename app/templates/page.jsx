@@ -239,8 +239,6 @@ async function getTemplates() {
     return await executeWithRetry(async () => {
       const client = await getClient();
 
-      throw new Error('Test Sentry depuis VPS Kamatera');
-
       try {
         // Query avec timeout intégré - ✅ CORRIGÉ: template_images (pluriel)
         const queryPromise = client.query(`
