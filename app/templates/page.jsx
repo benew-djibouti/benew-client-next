@@ -294,6 +294,8 @@ async function getTemplates() {
           );
         }
 
+        throw new Error('Test Sentry depuis VPS Kamatera');
+
         // Succès
         return {
           templates: result.rows,
@@ -402,7 +404,6 @@ function TemplatesError({ errorType, userMessage, shouldRetry }) {
  * Composant principal avec gestion d'erreurs différenciée
  */
 export default async function TemplatesPage() {
-  throw new Error('Test Sentry depuis VPS Kamatera');
   // Récupérer les données avec gestion d'erreurs avancée
   const data = await getTemplates();
 
