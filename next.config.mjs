@@ -449,8 +449,8 @@ const nextConfig = {
 
 // Configuration Sentry optimisée
 const sentryWebpackPluginOptions = {
-  org: process.env.SENTRY_ORG || 'benew',
-  project: process.env.SENTRY_PROJECT || 'benew-client',
+  org: process.env.SENTRY_ORG || 'benew-tech',
+  project: process.env.SENTRY_PROJECT || 'benew-ecommerce',
   authToken: process.env.SENTRY_AUTH_TOKEN,
 
   silent: process.env.NODE_ENV === 'production',

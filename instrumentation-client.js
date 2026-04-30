@@ -1,6 +1,6 @@
 // instrumentation-client.js
 // Configuration Sentry Client (Navigateur)
-// Next.js 15 - E-commerce Djibouti - 500 visiteurs/jour
+// Next.js 16 - E-commerce Djibouti - 500 visiteurs/jour
 // ERREURS UNIQUEMENT - Pas de performance monitoring ni session replay
 
 import * as Sentry from '@sentry/nextjs';
@@ -231,7 +231,7 @@ if (sentryDSN && isValidDSN(sentryDSN)) {
       // Tags pour e-commerce Djibouti
       event.tags = {
         ...event.tags,
-        project: 'benew-client',
+        project: 'benew-ecommerce',
         runtime: 'browser',
         country: 'DJ', // Djibouti
         app_type: 'ecommerce',
