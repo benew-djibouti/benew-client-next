@@ -1,6 +1,6 @@
 // sentry.server.config.js
 // Configuration Sentry Serveur (Node.js)
-// Next.js 15 + PostgreSQL + Cloudinary + Resend
+// Next.js 16 + PostgreSQL + Cloudinary + Resend
 // E-commerce Djibouti - 500 utilisateurs/jour
 // ERREURS UNIQUEMENT - Pas de logs ni performance
 
@@ -292,8 +292,8 @@ if (sentryDSN && isValidDSN(sentryDSN)) {
       // Tags globaux serveur
       event.tags = {
         ...event.tags,
-        project: 'benew-client',
-        stack: 'nextjs15-postgres-cloudinary-resend',
+        project: 'benew-ecommerce',
+        stack: 'nextjs16-postgres-cloudinary-resend',
         runtime: 'nodejs',
         country: 'DJ', // Djibouti
         app_type: 'ecommerce',

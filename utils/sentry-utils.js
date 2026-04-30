@@ -1,7 +1,7 @@
 // utils/sentry-utils.js
 // Utilitaires Sentry - Version complète et adaptée
 // E-commerce Djibouti - Paiement mobile - 500 users/jour
-// Next.js 15 + Resend + PostgreSQL
+// Next.js 16 + Resend + PostgreSQL
 
 // =============================================
 // DÉTECTION DONNÉES SENSIBLES

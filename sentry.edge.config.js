@@ -37,7 +37,7 @@ if (sentryDSN && isValidDSN(sentryDSN)) {
 
       event.tags = {
         ...event.tags,
-        project: 'benew-client',
+        project: 'benew-ecommerce',
         runtime: 'edge',
         country: 'DJ',
         app_type: 'ecommerce',
