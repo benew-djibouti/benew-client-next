@@ -47,7 +47,7 @@ const ContactInfo = memo(({ variants }) => (
     <motion.h1 variants={variants}>Coordonnées</motion.h1>
     <ContactItem icon={MdPhone} text="77.86.00.64" variants={variants} />
     <ContactItem icon={MdPhone} text="77.19.68.18" variants={variants} />
-    <ContactItem icon={MdWhatsapp} text="77.19.68.18" variants={variants} />
+    <ContactItem icon={MdWhatsapp} text="77.86.00.64" variants={variants} />
     <ContactItem
       icon={MdMail}
       text="benew-tech@benew-dj.com"
