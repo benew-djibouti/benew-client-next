@@ -387,7 +387,13 @@ const PricingSection = memo(({ application }) => (
           <tr className="pricing-row">
             <td className="pricing-label">Gestion</td>
             <td className="pricing-value">
-              {formatPrice(application.application_rent)}
+              {formatPrice(application.application_rent)}/mois
+            </td>
+          </tr>
+          <tr className="pricing-row">
+            <td className="pricing-label">Autres charges</td>
+            <td className="pricing-value">
+              A determiner selon les besoins spécifiques de l&apos;application
             </td>
           </tr>
           <tr className="pricing-row total-row">
