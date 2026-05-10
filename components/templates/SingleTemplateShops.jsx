@@ -187,7 +187,9 @@ const ApplicationCard = memo(
               <span className="price">{formatPrice(app.application_fee)}</span>
             </div>
             <div className="price-item">
-              <span className="price-label">Frais de gestion</span>
+              <span className="price-label">
+                Frais de gestion (hors charges infrastructures)
+              </span>
               <span className="rent-price">
                 {formatPrice(app.application_rent)}/mois
               </span>
