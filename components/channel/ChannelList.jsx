@@ -326,8 +326,6 @@ const ChannelList = ({ videos: initialVideos = [] }) => {
     } catch (e) {
       console.warn('[Analytics] Error tracking video play:', e);
     }
-
-    incrementVideoViews(video.video_id).catch(() => {});
   }, []);
 
   const handleCloseModal = useCallback(() => {
