@@ -9,7 +9,6 @@ import tls from 'tls';
 
 import { captureException, captureMessage } from '../sentry.server.config';
 
-
 // Configuration simple et adaptée
 const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -17,6 +16,8 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 // Variable pour le certificat (chargé en lazy loading)
 let cachedCertificate = null;
 let certificateLoadAttempted = false;
+
+let cachedDbConfig = null;
 
 // Fonction pour charger le certificat (appelée seulement au runtime)
 async function loadCertificate() {
@@ -65,14 +66,14 @@ const CONFIG = {
   // Pool adapté pour 500 visiteurs/jour
   pool: {
     max: 20, // Largement suffisant pour le trafic
-    min: 2, // Une connexion minimum
+    min: 0, // Une connexion minimum
     idleTimeoutMillis: 30000, // 30 secondes
     connectionTimeoutMillis: 5000,
   },
 
   // Monitoring simple
   monitoring: {
-    healthCheckInterval: isProduction ? 60 * 60 * 1000 : 5 * 60 * 1000, // 60min prod
+    healthCheckInterval: isProduction ? 5 * 60 * 1000 : 60 * 1000,
     enableMetrics: isDevelopment, // Métriques seulement en dev
   },
 
@@ -104,6 +105,8 @@ const getTimestamp = () => new Date().toISOString();
 // =============================================
 
 async function getDatabaseConfig() {
+  if (cachedDbConfig) return cachedDbConfig;
+
   // Charger le certificat en lazy loading (seulement en production)
   let certificate = null;
   if (process.env.NODE_ENV === 'production') {
@@ -124,7 +127,10 @@ async function getDatabaseConfig() {
               ca: certificate,
               // ✅ FIX: Bug node-postgres avec IP addresses
               checkServerIdentity: (host, cert) => {
-                return tls.checkServerIdentity(process.env.DB_HOST_NAME || process.env.DB_HOST, cert);
+                return tls.checkServerIdentity(
+                  process.env.DB_HOST_NAME || process.env.DB_HOST,
+                  cert,
+                );
               },
             }
           : {
@@ -149,6 +155,7 @@ async function getDatabaseConfig() {
     console.log(`[${getTimestamp()}] ✅ Configuration base de données chargée`);
   }
 
+  cachedDbConfig = config;
   return config;
 }
 
@@ -160,6 +167,7 @@ async function createPool() {
   const config = await getDatabaseConfig(); // Ajouter await
 
   const poolConfig = {
+    application_name: 'benew-e-commerce-app',
     host: config.host,
     port: config.port,
     database: config.database,
@@ -170,6 +178,7 @@ async function createPool() {
     // Configuration optimisée pour petite application
     max: CONFIG.pool.max,
     min: CONFIG.pool.min,
+    maxUses: 7500,
     idleTimeoutMillis: CONFIG.pool.idleTimeoutMillis,
     connectionTimeoutMillis: CONFIG.pool.connectionTimeoutMillis,
   };
@@ -186,7 +195,16 @@ async function createPool() {
   // Protège le pool contre les requêtes bloquées (deadlocks, table locks)
   // Complémentaire aux withTimeout() Node.js des pages — agit côté PostgreSQL
   newPool.on('connect', async (client) => {
-    await client.query('SET statement_timeout = 10000');
+    try {
+      await client.query('SET statement_timeout = 10000');
+    } catch (err) {
+      captureException(err, {
+        tags: {
+          component: 'database_pool',
+          error_type: 'statement_timeout_setup',
+        },
+      });
+    }
   });
 
   // Gestion d'erreurs critiques uniquement
@@ -234,16 +252,17 @@ async function createPool() {
 // =============================================
 
 async function performHealthCheck() {
-  if (!pool) return { status: 'no_pool' };
+  const { Client } = await import('pg');
+  const config = await getDatabaseConfig();
+  const client = new Client(config);
 
   const startTime = Date.now();
-
   try {
-    const client = await pool.connect();
+    await client.connect();
     const result = await client.query(
       'SELECT NOW() as current_time, version() as pg_version',
     );
-    client.release();
+    await client.end();
 
     const responseTime = Date.now() - startTime;
     const pgVersion = result.rows[0].pg_version.split(' ')[0];
@@ -266,6 +285,10 @@ async function performHealthCheck() {
       timestamp: new Date().toISOString(),
     };
   } catch (error) {
+    try {
+      await client.end();
+    } catch (_) {}
+
     console.error(`[${getTimestamp()}] 🚨 Health Check échoué:`, error.message);
 
     captureException(error, {
@@ -300,6 +323,8 @@ async function reconnectPool(attempt = 1) {
     healthCheckInterval = null;
   }
 
+  initializationPromise = null;
+
   // Fermer l'ancien pool
   try {
     if (pool) await pool.end();
@@ -314,6 +339,8 @@ async function reconnectPool(attempt = 1) {
 
   try {
     pool = await createPool();
+
+    initializationPromise = Promise.resolve(pool);
 
     // Test de connexion
     const client = await pool.connect();
@@ -447,9 +474,10 @@ async function initializePool() {
       extra: { retryAction: 'attempting_reconnection' },
     });
 
+    initializationPromise = null;
+
     // Tentative de reconnexion
     setTimeout(() => reconnectPool(), 2000);
-    throw error;
   }
 }
 
@@ -555,11 +583,21 @@ async function shutdown() {
 // Handlers de signaux
 process.on('SIGINT', () => {
   console.log(`[${getTimestamp()}] 🛑 SIGINT reçu`);
+  const forceExit = setTimeout(() => {
+    console.error(`[${getTimestamp()}] ⚠️ Shutdown forcé après timeout`);
+    process.exit(1);
+  }, 5000);
+  forceExit.unref(); // Ne pas bloquer la boucle d'événements si tout se passe bien
   shutdown().then(() => process.exit(0));
 });
 
 process.on('SIGTERM', () => {
   console.log(`[${getTimestamp()}] 🛑 SIGTERM reçu`);
+  const forceExit = setTimeout(() => {
+    console.error(`[${getTimestamp()}] ⚠️ Shutdown forcé après timeout`);
+    process.exit(1);
+  }, 5000);
+  forceExit.unref();
   shutdown().then(() => process.exit(0));
 });
 
