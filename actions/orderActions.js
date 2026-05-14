@@ -6,9 +6,8 @@ import {
   validateOrderServer,
   prepareOrderDataFromFormData,
   formatValidationErrors,
-  isValidUUID,
-  isValidAmount,
 } from '@/utils/schemas/schema';
+import { isValidUUID, isValidAmount } from '@/utils/validation';
 import {
   sanitizeOrderData,
   validateBusinessRules,

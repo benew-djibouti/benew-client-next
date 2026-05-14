@@ -101,6 +101,15 @@ export function assertValidUUID(value, fieldName = 'UUID') {
   return sanitized;
 }
 
+export function isValidAmount(amount) {
+  return (
+    typeof amount === 'number' &&
+    amount > 0 &&
+    amount <= 100000 &&
+    Number.isFinite(amount)
+  );
+}
+
 // Exemples d'utilisation :
 
 /*

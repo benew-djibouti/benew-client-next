@@ -147,28 +147,3 @@ export function formatValidationErrors(errors) {
   const errorMessages = Object.values(errors).slice(0, 3);
   return errorMessages.join('. ');
 }
-
-/**
- * Valide basiquement un UUID v4
- * @param {string} uuid - UUID à valider
- * @returns {boolean}
- */
-export function isValidUUID(uuid) {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(uuid);
-}
-
-/**
- * Valide un montant monétaire
- * @param {number} amount - Montant à valider
- * @returns {boolean}
- */
-export function isValidAmount(amount) {
-  return (
-    typeof amount === 'number' &&
-    amount > 0 &&
-    amount <= 100000 &&
-    /^\d+(\.\d{1,2})?$/.test(amount.toString())
-  );
-}
