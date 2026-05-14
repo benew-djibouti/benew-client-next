@@ -7,7 +7,8 @@ import {
 } from '@/backend/rateLimiter';
 import { captureException, captureMessage } from '../sentry.server.config';
 // Importé dans les deux fichiers
-import { withTimeout, formatVideo } from '../lib/channelUtils';
+import { formatVideo } from '../lib/channelUtils';
+export { withTimeout } from '@/utils/asyncUtils';
 
 // =============================
 // UTILITAIRES
@@ -66,7 +67,7 @@ export async function searchVideos(query) {
     const cleanQuery = sanitizeSearchQuery(query);
 
     // Requête vide → retourner toutes les vidéos
-    if (!cleanQuery || cleanQuery.length < 1) {
+    if (!cleanQuery || cleanQuery.length === 0) {
       client = await getClient();
 
       const result = await withTimeout(
@@ -83,6 +84,15 @@ export async function searchVideos(query) {
         5000,
         'Get all videos timeout',
       );
+
+      const queryDuration = Date.now() - startTime;
+      if (queryDuration > 2000) {
+        captureMessage('Slow channel all-videos query', {
+          level: 'warning',
+          tags: { component: 'channel_actions', operation: 'get_all_videos' },
+          extra: { queryDuration, rowCount: result.rows.length },
+        });
+      }
 
       return {
         videos: result.rows.map(formatVideo),

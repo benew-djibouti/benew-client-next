@@ -366,7 +366,7 @@ export async function sendContactEmail(formData) {
       level: 'warning',
       tags: { component: 'contact_email', bot_detection: true },
       extra: {
-        email: data.email,
+        emailDomain: data.email?.split('@')[1] || 'unknown',
         riskScore: botCheck.riskScore,
         reasons: botCheck.reasons,
       },
@@ -441,7 +441,7 @@ export async function sendContactEmail(formData) {
         level: 'warning',
         tags: { component: 'contact_email', db_save: true },
         extra: {
-          email: data.email,
+          emailDomain: data.email?.split('@')[1] || 'unknown',
           resendEmailId: emailResult.id,
           dbError: dbResult.error,
         },
