@@ -8,7 +8,7 @@ import {
 import { captureException, captureMessage } from '../sentry.server.config';
 // Importé dans les deux fichiers
 import { formatVideo } from '../lib/channelUtils';
-export { withTimeout } from '@/utils/asyncUtils';
+import { withTimeout } from '@/utils/asyncUtils';
 
 // =============================
 // UTILITAIRES
