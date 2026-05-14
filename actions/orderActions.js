@@ -308,6 +308,12 @@ export async function createOrder(formData, applicationId, applicationFee) {
           throw txError;
         }
 
+        const newOrder = insertResult?.rows[0];
+        const hasCashPayment = platformCheck.rows.some(
+          (p) => p.is_cash_payment,
+        );
+        const platformNames = platformCheck.rows.map((p) => p.platform_name);
+
         if (!newOrder?.order_id) {
           return {
             success: false,

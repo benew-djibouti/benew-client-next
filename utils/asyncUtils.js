@@ -1,4 +1,4 @@
-function withTimeout(promise, timeoutMs, errorMessage = 'Timeout') {
+export function withTimeout(promise, timeoutMs, errorMessage = 'Timeout') {
   return Promise.race([
     promise,
     new Promise((_, reject) => {
