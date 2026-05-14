@@ -1,7 +1,7 @@
 'use server';
 
 import { getClient } from '@/backend/dbConnect';
-import { captureException } from '../sentry.server.config';
+import { captureException, captureMessage } from '../sentry.server.config';
 import {
   validateOrderServer,
   prepareOrderDataFromFormData,
@@ -15,25 +15,13 @@ import {
   hasInjectionAttempt,
 } from '@/utils/sanitizers/orderSanitizer';
 import { checkServerActionRateLimit } from '@/backend/rateLimiter';
+import { withTimeout } from '@/utils/asyncUtils';
 import * as Sentry from '@sentry/nextjs';
 import { headers } from 'next/headers';
 
 // =============================
 // CRÉATION DE COMMANDE
 // =============================
-
-function withTimeout(promise, timeoutMs, errorMessage = 'Timeout') {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => {
-      setTimeout(() => {
-        const timeoutError = new Error(errorMessage);
-        timeoutError.name = 'TimeoutError';
-        reject(timeoutError);
-      }, timeoutMs);
-    }),
-  ]);
-}
 
 /**
  * Crée une nouvelle commande - PRODUCTION-READY
@@ -63,8 +51,12 @@ export async function createOrder(formData, applicationId, applicationFee) {
 
         // Extraire l'email ou le téléphone comme identifiant
         // (FormData n'est pas encore parsé, donc on le fait ici)
-        const emailIdentifier =
+        const rawIdentifier =
           formData.get('email') || formData.get('phone') || 'anonymous';
+        const emailIdentifier =
+          typeof rawIdentifier === 'string'
+            ? rawIdentifier.trim().substring(0, 100)
+            : 'anonymous';
 
         const rateLimitResult = await checkServerActionRateLimit(
           emailIdentifier,
@@ -221,98 +213,100 @@ export async function createOrder(formData, applicationId, applicationFee) {
         // =============================
 
         client = await getClient();
+        await client.query('BEGIN');
 
-        // Vérifier que l'application existe et est active
-        const appCheck = await withTimeout(
-          client.query(
-            'SELECT application_name, application_fee FROM catalog.applications WHERE application_id = $1 AND is_active = true',
-            [yupValidation.data.applicationId],
-          ),
-          5000,
-          'Application check timeout',
-        );
+        let appCheck, platformCheck, insertResult;
+        try {
+          appCheck = await withTimeout(
+            client.query(
+              'SELECT application_name, application_fee FROM catalog.applications WHERE application_id = $1 AND is_active = true',
+              [yupValidation.data.applicationId],
+            ),
+            5000,
+            'Application check timeout',
+          );
 
-        if (appCheck.rows.length === 0) {
-          return {
-            success: false,
-            message: "L'application sélectionnée n'est pas disponible.",
-            code: 'APPLICATION_NOT_FOUND',
-          };
+          if (appCheck.rows.length === 0) {
+            await client.query('ROLLBACK');
+            return {
+              success: false,
+              message: "L'application sélectionnée n'est pas disponible.",
+              code: 'APPLICATION_NOT_FOUND',
+            };
+          }
+
+          const platformIds = [...new Set(yupValidation.data.paymentMethods)];
+          platformCheck = await withTimeout(
+            client.query(
+              `SELECT platform_id, platform_name, is_cash_payment
+                FROM admin.platforms
+                WHERE platform_id = ANY($1) AND is_active = true`,
+              [platformIds],
+            ),
+            5000,
+            'Platform check timeout',
+          );
+
+          if (platformCheck.rows.length !== platformIds.length) {
+            await client.query('ROLLBACK');
+            return {
+              success: false,
+              message:
+                'Une ou plusieurs méthodes de paiement ne sont pas disponibles.',
+              code: 'PLATFORM_NOT_FOUND',
+            };
+          }
+
+          const expectedFee = parseFloat(appCheck.rows[0].application_fee);
+          if (
+            Math.abs(yupValidation.data.applicationFee - expectedFee) > 0.01
+          ) {
+            await client.query('ROLLBACK');
+            captureException(new Error('Price manipulation attempt'), {
+              tags: { component: 'order_actions', severity: 'high' },
+              extra: {
+                expected: expectedFee,
+                received: yupValidation.data.applicationFee,
+              },
+            });
+            return {
+              success: false,
+              message: 'Erreur de montant. Veuillez actualiser la page.',
+              code: 'PRICE_MISMATCH',
+            };
+          }
+
+          insertResult = await withTimeout(
+            client.query(
+              `INSERT INTO admin.orders (
+                order_client_name,
+                order_client_email,
+                order_client_phone,
+                order_platform_ids,
+                order_application_id,
+                order_price,
+                order_payment_status
+              ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+              RETURNING order_id, order_created, order_payment_status`,
+              [
+                yupValidation.data.name,
+                yupValidation.data.email,
+                yupValidation.data.phone,
+                platformIds,
+                yupValidation.data.applicationId,
+                yupValidation.data.applicationFee,
+                'unpaid',
+              ],
+            ),
+            5000,
+            'Order insert timeout',
+          );
+
+          await client.query('COMMIT');
+        } catch (txError) {
+          await client.query('ROLLBACK');
+          throw txError;
         }
-
-        // Vérifier que toutes les plateformes existent et sont actives
-        const platformIds = yupValidation.data.paymentMethods;
-        const platformCheck = await withTimeout(
-          client.query(
-            `SELECT platform_id, platform_name, is_cash_payment
-             FROM admin.platforms
-             WHERE platform_id = ANY($1) AND is_active = true`,
-            [platformIds],
-          ),
-          5000,
-          'Platform check timeout',
-        );
-
-        if (platformCheck.rows.length !== platformIds.length) {
-          return {
-            success: false,
-            message:
-              'Une ou plusieurs méthodes de paiement ne sont pas disponibles.',
-            code: 'PLATFORM_NOT_FOUND',
-          };
-        }
-
-        // Vérifier le montant (protection contre manipulation)
-        const expectedFee = parseFloat(appCheck.rows[0].application_fee);
-        if (Math.abs(yupValidation.data.applicationFee - expectedFee) > 0.01) {
-          captureException(new Error('Price manipulation attempt'), {
-            tags: { component: 'order_actions', severity: 'high' },
-            extra: {
-              expected: expectedFee,
-              received: yupValidation.data.applicationFee,
-              applicationId,
-            },
-          });
-
-          return {
-            success: false,
-            message: 'Erreur de montant. Veuillez actualiser la page.',
-            code: 'PRICE_MISMATCH',
-          };
-        }
-
-        const hasCashPayment = platformCheck.rows.some(
-          (p) => p.is_cash_payment,
-        );
-        const platformNames = platformCheck.rows.map((p) => p.platform_name);
-
-        const insertResult = await withTimeout(
-          client.query(
-            `INSERT INTO admin.orders (
-              order_client_name,
-              order_client_email,
-              order_client_phone,
-              order_platform_ids,
-              order_application_id,
-              order_price,
-              order_payment_status
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-            RETURNING order_id, order_created, order_payment_status`,
-            [
-              yupValidation.data.name,
-              yupValidation.data.email,
-              yupValidation.data.phone,
-              platformIds,
-              yupValidation.data.applicationId,
-              yupValidation.data.applicationFee,
-              'unpaid',
-            ],
-          ),
-          5000,
-          'Order insert timeout',
-        );
-
-        const newOrder = insertResult.rows[0];
 
         if (!newOrder?.order_id) {
           return {
@@ -325,8 +319,9 @@ export async function createOrder(formData, applicationId, applicationFee) {
         // Log du temps de traitement
         const processingTime = Date.now() - startTime;
         if (processingTime > 5000) {
-          captureException(new Error('Slow order creation'), {
-            tags: { component: 'order_actions', severity: 'warning' },
+          captureMessage('Slow order creation', {
+            level: 'warning',
+            tags: { component: 'order_actions', operation: 'create_order' },
             extra: { processingTime, orderId: newOrder.order_id },
           });
         }
@@ -354,9 +349,8 @@ export async function createOrder(formData, applicationId, applicationFee) {
         captureException(error, {
           tags: { component: 'order_actions', operation: 'create_order' },
           extra: {
-            applicationId,
-            applicationFee,
             processingTime: Date.now() - startTime,
+            errorCode: error.code,
           },
         });
 
@@ -423,6 +417,22 @@ export async function createOrder(formData, applicationId, applicationFee) {
  * @returns {Promise<Object>}
  */
 export async function createOrderFromObject(data) {
+  if (!data || typeof data !== 'object') {
+    return {
+      success: false,
+      message: 'Données manquantes.',
+      code: 'INVALID_DATA',
+    };
+  }
+
+  if (!data.applicationId || !data.applicationFee) {
+    return {
+      success: false,
+      message: 'Données de commande incomplètes.',
+      code: 'MISSING_FIELDS',
+    };
+  }
+
   try {
     const formData = new FormData();
 

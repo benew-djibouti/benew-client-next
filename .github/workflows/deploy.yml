@@ -106,6 +106,9 @@ jobs:
               exit 1
             fi
             echo "✅ .env file found"
+            # Mettre à jour SENTRY_RELEASE dans .env
+            sed -i "s/^SENTRY_RELEASE=.*/SENTRY_RELEASE=${{ env.SENTRY_RELEASE }}/" /var/www/benew/.env || \
+            echo "SENTRY_RELEASE=${{ env.SENTRY_RELEASE }}" >> /var/www/benew/.env
 
             # Supprimer l'ancien build
             echo "🧹 Cleaning old build..."
