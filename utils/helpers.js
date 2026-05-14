@@ -1,6 +1,23 @@
 // utils/helpers.js
 
 /**
+ * Formate un montant sans devise (juste les espaces)
+ * Utile pour les calculs ou affichages intermédiaires
+ *
+ * @param {number|string} amount - Montant à formater
+ * @returns {string} Montant formaté avec espaces
+ */
+export function formatAmount(amount) {
+  let numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+  if (isNaN(numAmount) || numAmount == null || numAmount < 0) return '0';
+  return Math.round(numAmount).toLocaleString('fr-FR', {
+    useGrouping: true,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+}
+
+/**
  * Formate un prix avec séparateurs de milliers et devise FDJ
  * Exemples:
  *   66000.00 → "66 000 FDJ"
@@ -12,26 +29,8 @@
  * @returns {string} Prix formaté avec espaces et devise
  */
 export const formatPrice = (price) => {
-  // Convertir en nombre si c'est une string
-  let numPrice = typeof price === 'string' ? parseFloat(price) : price;
-
-  // Gérer les cas invalides
-  if (isNaN(numPrice) || numPrice === null || numPrice === undefined) {
-    return '0 FDJ';
-  }
-
-  // Arrondir à l'entier le plus proche (supprimer les décimales)
-  numPrice = Math.round(numPrice);
-
-  // Formater avec séparateurs d'espaces pour les milliers
-  const formattedNumber = numPrice.toLocaleString('fr-FR', {
-    useGrouping: true,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-
-  // Retourner avec la devise FDJ
-  return `${formattedNumber} FDJ`;
+  const formatted = formatAmount(price);
+  return formatted === '0' ? '0 FDJ' : `${formatted} FDJ`;
 };
 
 /**
@@ -144,34 +143,6 @@ export function getPlatformDisplayName(platform) {
 export function isEmptyObject(obj) {
   if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return false;
   return Object.keys(obj).length === 0;
-}
-
-/**
- * Formate un montant sans devise (juste les espaces)
- * Utile pour les calculs ou affichages intermédiaires
- *
- * @param {number|string} amount - Montant à formater
- * @returns {string} Montant formaté avec espaces
- */
-export function formatAmount(amount) {
-  let numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-
-  if (
-    isNaN(numAmount) ||
-    numAmount === null ||
-    numAmount === undefined ||
-    numAmount < 0
-  ) {
-    return '0';
-  }
-
-  numAmount = Math.round(numAmount);
-
-  return numAmount.toLocaleString('fr-FR', {
-    useGrouping: true,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
 }
 
 /**
