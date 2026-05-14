@@ -14,6 +14,7 @@ import {
 } from '@/backend/rateLimiter';
 import { getClient } from '@/backend/dbConnect';
 import { captureException, captureMessage } from '../sentry.server.config';
+import { withTimeout } from '@/utils/asyncUtils';
 // ← import Sentry et headers SUPPRIMÉS
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -106,9 +107,11 @@ function checkDuplicate(email, subject) {
   const now = Date.now();
 
   // Nettoyage des anciens (> 5 minutes)
-  for (const [k, timestamp] of recentEmails.entries()) {
-    if (now - timestamp > 5 * 60 * 1000) {
-      recentEmails.delete(k);
+  if (recentEmails.size > 0) {
+    for (const [k, timestamp] of recentEmails.entries()) {
+      if (now - timestamp > 5 * 60 * 1000) {
+        recentEmails.delete(k);
+      }
     }
   }
 
@@ -233,7 +236,11 @@ async function saveContactSubmission(data, metadata = {}) {
       metadata.botRiskScore || 0,
     ];
 
-    const result = await client.query(query, values);
+    const result = await withTimeout(
+      client.query(query, values),
+      5000,
+      'Contact submission save timeout',
+    );
 
     if (process.env.NODE_ENV === 'development') {
       console.log('[DB] Contact saved:', result.rows[0]);
@@ -251,7 +258,7 @@ async function saveContactSubmission(data, metadata = {}) {
         operation: 'save_submission',
       },
       extra: {
-        email: data.email,
+        emailDomain: data.email?.split('@')[1] || 'unknown',
         errorMessage: error.message,
         pgErrorCode: error.code,
       },
@@ -295,7 +302,11 @@ export async function sendContactEmail(formData) {
   }
 
   // 2. Rate limiting — email comme identifiant
-  const identifier = formData.get('email') || 'anonymous';
+  const rawIdentifier = formData.get('email') || 'anonymous';
+  const identifier =
+    typeof rawIdentifier === 'string'
+      ? rawIdentifier.trim().substring(0, 100)
+      : 'anonymous';
   const rateLimitResult = await checkServerActionRateLimit(
     identifier,
     'contact',
@@ -330,8 +341,9 @@ export async function sendContactEmail(formData) {
     message: formData.get('message') || '',
   };
 
+  const parsedFillTime = parseInt(formData.get('_fillTime') || '0', 10);
   const metadata = {
-    fillTime: parseInt(formData.get('_fillTime') || '0', 10),
+    fillTime: Number.isNaN(parsedFillTime) ? 0 : parsedFillTime,
     honeypotFilled: !!(formData.get('website') || '').trim(),
   };
 
@@ -393,7 +405,7 @@ export async function sendContactEmail(formData) {
       return await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL,
         to: process.env.RESEND_TO_EMAIL,
-        subject: `[Contact Benew] ${data.subject}`,
+        subject: `[Contact Benew] ${data.subject.replace(/[\r\n]/g, ' ')}`,
         html: `
           <h2>Nouveau message de contact</h2>
           <p><strong>Date:</strong> ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Djibouti' })}</p>
@@ -466,7 +478,10 @@ export async function sendContactEmail(formData) {
 
     captureEmailError(error, {
       tags: { error_code: errorCode },
-      extra: { email: data.email, subject: data.subject },
+      extra: {
+        emailDomain: data.email?.split('@')[1] || 'unknown',
+        subjectLength: data.subject?.length || 0,
+      },
     });
 
     await saveContactSubmission(data, {
