@@ -67,17 +67,6 @@ export function getApplicationLevelLabel(level) {
 }
 
 /**
- * Valide un UUID v4
- * @param {string} uuid - UUID à valider
- * @returns {boolean}
- */
-export function isValidUUID(uuid) {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(uuid);
-}
-
-/**
  * Tronque un texte à une longueur donnée
  * @param {string} text - Texte à tronquer
  * @param {number} maxLength - Longueur maximale
@@ -114,9 +103,9 @@ export function formatDate(date) {
  * Génère un ID unique côté client
  * @returns {string}
  */
-export function generateClientId() {
-  return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-}
+// export function generateClientId() {
+//   return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+// }
 
 /**
  * Vérifie si une URL est valide
@@ -153,7 +142,8 @@ export function getPlatformDisplayName(platform) {
  * @returns {boolean}
  */
 export function isEmptyObject(obj) {
-  return obj && Object.keys(obj).length === 0 && obj.constructor === Object;
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return false;
+  return Object.keys(obj).length === 0;
 }
 
 /**
@@ -166,7 +156,12 @@ export function isEmptyObject(obj) {
 export function formatAmount(amount) {
   let numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
 
-  if (isNaN(numAmount) || numAmount === null || numAmount === undefined) {
+  if (
+    isNaN(numAmount) ||
+    numAmount === null ||
+    numAmount === undefined ||
+    numAmount < 0
+  ) {
     return '0';
   }
 
@@ -188,7 +183,12 @@ export function formatAmount(amount) {
 export function formatPriceWithDecimals(price, decimals = 2) {
   let numPrice = typeof price === 'string' ? parseFloat(price) : price;
 
-  if (isNaN(numPrice) || numPrice === null || numPrice === undefined) {
+  if (
+    isNaN(numPrice) ||
+    numPrice === null ||
+    numPrice === undefined ||
+    numPrice < 0
+  ) {
     return '0.00 FDJ';
   }
 
