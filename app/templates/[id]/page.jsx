@@ -58,13 +58,14 @@ const getTemplateData = cache(async function getTemplateData(templateId) {
   const startTime = Date.now();
 
   try {
-    return await executeWithRetry(async () => {
-      const client = await getClient();
+    return await executeWithRetry(
+      async () => {
+        const client = await getClient();
 
-      try {
-        // ✅ QUERY FUSIONNÉE - Template + Applications en un seul LEFT JOIN
-        const queryPromise = client.query(
-          `SELECT
+        try {
+          // ✅ QUERY FUSIONNÉE - Template + Applications en un seul LEFT JOIN
+          const queryPromise = client.query(
+            `SELECT
             -- Template info
             t.template_id,
             t.template_name,
@@ -87,98 +88,102 @@ const getTemplateData = cache(async function getTemplateData(templateId) {
           WHERE t.template_id = $1
             AND t.is_active = true
           ORDER BY a.application_level ASC, a.created_at DESC`,
-          [templateId],
-        );
+            [templateId],
+          );
 
-        // Query platforms séparée (comme avant)
-        const platformsQueryPromise = client.query(
-          `SELECT platform_id, platform_name, account_name, account_number, is_cash_payment, description
+          // Query platforms séparée (comme avant)
+          const platformsQueryPromise = client.query(
+            `SELECT platform_id, platform_name, account_name, account_number, is_cash_payment, description
            FROM admin.platforms
            WHERE is_active = true
            ORDER BY CASE WHEN is_cash_payment = true THEN 0 ELSE 1 END, platform_name ASC`,
-        );
-
-        const [result, platformsResult] = await Promise.all([
-          withTimeout(
-            queryPromise,
-            CONFIG.performance.queryTimeout,
-            'Database query timeout',
-          ),
-          withTimeout(
-            platformsQueryPromise,
-            CONFIG.performance.queryTimeout,
-            'Platforms query timeout',
-          ),
-        ]);
-
-        const queryDuration = Date.now() - startTime;
-
-        if (queryDuration > CONFIG.performance.slowQueryThreshold) {
-          captureMessage('Slow template query', {
-            level: 'warning',
-            tags: { component: 'single_template', performance: true },
-            extra: {
-              templateId,
-              duration: queryDuration,
-              timeout: CONFIG.performance.queryTimeout,
-            },
-          });
-        }
-
-        if (process.env.NODE_ENV === 'development') {
-          console.log(
-            `[Template] Query: ${Math.round(queryDuration)}ms (timeout: ${CONFIG.performance.queryTimeout}ms)`,
           );
-        }
 
-        // Template non trouvé
-        if (result.rows.length === 0) {
-          return {
-            template: null,
-            applications: [],
-            platforms: [],
-            success: false,
-            errorType: ERROR_TYPES.NOT_FOUND,
-            httpStatus: 404,
-            userMessage: 'Template introuvable.',
+          const [result, platformsResult] = await Promise.all([
+            withTimeout(
+              queryPromise,
+              CONFIG.performance.queryTimeout,
+              'Database query timeout',
+            ),
+            withTimeout(
+              platformsQueryPromise,
+              CONFIG.performance.queryTimeout,
+              'Platforms query timeout',
+            ),
+          ]);
+
+          const queryDuration = Date.now() - startTime;
+
+          if (queryDuration > CONFIG.performance.slowQueryThreshold) {
+            captureMessage('Slow template query', {
+              level: 'warning',
+              tags: { component: 'single_template', performance: true },
+              extra: {
+                templateId,
+                duration: queryDuration,
+                timeout: CONFIG.performance.queryTimeout,
+              },
+            });
+          }
+
+          if (process.env.NODE_ENV === 'development') {
+            console.log(
+              `[Template] Query: ${Math.round(queryDuration)}ms (timeout: ${CONFIG.performance.queryTimeout}ms)`,
+            );
+          }
+
+          // Template non trouvé
+          if (result.rows.length === 0) {
+            return {
+              template: null,
+              applications: [],
+              platforms: [],
+              success: false,
+              errorType: ERROR_TYPES.NOT_FOUND,
+              httpStatus: 404,
+              userMessage: 'Template introuvable.',
+            };
+          }
+
+          // Extraire template (première ligne)
+          const firstRow = result.rows[0];
+          const template = {
+            template_id: firstRow.template_id,
+            template_name: firstRow.template_name,
           };
+
+          // Extraire applications (si application_id != null)
+          const applications = result.rows
+            .filter((row) => row.application_id !== null)
+            .map((row) => ({
+              application_id: row.application_id,
+              application_name: row.application_name,
+              application_category: row.application_category,
+              application_fee: row.application_fee,
+              application_rent: row.application_rent,
+              application_images: row.application_images,
+              application_other_versions: row.application_other_versions,
+              application_level: row.application_level,
+              sales_count: row.sales_count,
+            }));
+
+          const platforms = platformsResult.rows;
+
+          return {
+            template,
+            applications,
+            platforms,
+            success: true,
+            queryDuration,
+          };
+        } finally {
+          client.release();
         }
-
-        // Extraire template (première ligne)
-        const firstRow = result.rows[0];
-        const template = {
-          template_id: firstRow.template_id,
-          template_name: firstRow.template_name,
-        };
-
-        // Extraire applications (si application_id != null)
-        const applications = result.rows
-          .filter((row) => row.application_id !== null)
-          .map((row) => ({
-            application_id: row.application_id,
-            application_name: row.application_name,
-            application_category: row.application_category,
-            application_fee: row.application_fee,
-            application_rent: row.application_rent,
-            application_images: row.application_images,
-            application_other_versions: row.application_other_versions,
-            application_level: row.application_level,
-            sales_count: row.sales_count,
-          }));
-
-        const platforms = platformsResult.rows;
-
-        return {
-          template,
-          applications,
-          platforms,
-          success: true,
-          queryDuration,
-        };
-      } finally {
-        client.release();
-      }
-    });
+      },
+      CONFIG.retry.maxAttempts,
+      CONFIG.retry.baseDelay,
+      classifyError,
+    );
   } catch (error) {
     const errorInfo = classifyError(error);
     const queryDuration = Date.now() - startTime;

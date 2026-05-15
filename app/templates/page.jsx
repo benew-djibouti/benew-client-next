@@ -32,12 +32,13 @@ async function getTemplates() {
   const startTime = Date.now();
 
   try {
-    return await executeWithRetry(async () => {
-      const client = await getClient();
+    return await executeWithRetry(
+      async () => {
+        const client = await getClient();
 
-      try {
-        // Query avec timeout intégré - ✅ CORRIGÉ: template_images (pluriel)
-        const queryPromise = client.query(`
+        try {
+          // Query avec timeout intégré - ✅ CORRIGÉ: template_images (pluriel)
+          const queryPromise = client.query(`
           SELECT
             t.template_id,
             t.template_name,
@@ -59,47 +60,51 @@ async function getTemplates() {
           ORDER BY t.template_added DESC
         `);
 
-        const result = await withTimeout(
-          queryPromise,
-          CONFIG.performance.queryTimeout,
-          'Database query timeout',
-        );
-
-        const queryDuration = Date.now() - startTime;
-
-        // Log performance avec monitoring complet
-        if (queryDuration > CONFIG.performance.slowQueryThreshold) {
-          captureMessage('Slow templates query detected', {
-            level: 'warning',
-            tags: {
-              component: 'templates_page',
-              performance: true,
-            },
-            extra: {
-              duration: queryDuration,
-              templatesCount: result.rows.length,
-              queryTimeout: CONFIG.performance.queryTimeout,
-            },
-          });
-        }
-
-        // Log de succès en dev
-        if (process.env.NODE_ENV === 'development') {
-          console.log(
-            `[Templates] Query exécutée en ${Math.round(queryDuration)}ms (timeout: ${CONFIG.performance.queryTimeout}ms)`,
+          const result = await withTimeout(
+            queryPromise,
+            CONFIG.performance.queryTimeout,
+            'Database query timeout',
           );
-        }
 
-        // Succès
-        return {
-          templates: result.rows,
-          success: true,
-          queryDuration,
-        };
-      } finally {
-        client.release();
-      }
-    });
+          const queryDuration = Date.now() - startTime;
+
+          // Log performance avec monitoring complet
+          if (queryDuration > CONFIG.performance.slowQueryThreshold) {
+            captureMessage('Slow templates query detected', {
+              level: 'warning',
+              tags: {
+                component: 'templates_page',
+                performance: true,
+              },
+              extra: {
+                duration: queryDuration,
+                templatesCount: result.rows.length,
+                queryTimeout: CONFIG.performance.queryTimeout,
+              },
+            });
+          }
+
+          // Log de succès en dev
+          if (process.env.NODE_ENV === 'development') {
+            console.log(
+              `[Templates] Query exécutée en ${Math.round(queryDuration)}ms (timeout: ${CONFIG.performance.queryTimeout}ms)`,
+            );
+          }
+
+          // Succès
+          return {
+            templates: result.rows,
+            success: true,
+            queryDuration,
+          };
+        } finally {
+          client.release();
+        }
+      },
+      CONFIG.retry.maxAttempts,
+      CONFIG.retry.baseDelay,
+      classifyError,
+    );
   } catch (error) {
     const errorInfo = classifyError(error);
     const queryDuration = Date.now() - startTime;
@@ -127,7 +132,7 @@ async function getTemplates() {
       httpStatus: errorInfo.httpStatus,
       userMessage: errorInfo.userMessage,
       shouldRetry: errorInfo.shouldRetry,
-      error: process.env.NODE_ENV === 'production' ? undefined : error.message,
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
     };
   }
 }
