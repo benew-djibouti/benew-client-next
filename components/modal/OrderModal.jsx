@@ -63,6 +63,19 @@ const OrderModal = ({
     [platforms],
   );
 
+  const closeModal = useCallback(
+    (reason = 'user_close') => {
+      if (isSubmitting) return;
+      try {
+        trackModalClose('order_modal', reason);
+      } catch (error) {
+        console.warn('[Analytics] Error tracking modal close:', error);
+      }
+      onClose();
+    },
+    [isSubmitting, onClose],
+  );
+
   // Focus trap + focus initial à l'ouverture
   useEffect(() => {
     if (!isOpen) return;
@@ -149,19 +162,6 @@ const OrderModal = ({
       }
     }
   }, [isOpen, applicationId]);
-
-  const closeModal = useCallback(
-    (reason = 'user_close') => {
-      if (isSubmitting) return;
-      try {
-        trackModalClose('order_modal', reason);
-      } catch (error) {
-        console.warn('[Analytics] Error tracking modal close:', error);
-      }
-      onClose();
-    },
-    [isSubmitting, onClose],
-  );
 
   // Par :
   const handleInputChange = useCallback(
