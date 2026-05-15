@@ -14,15 +14,13 @@ import {
 import { sanitizeAndValidateUUID } from '@/utils/validation';
 import Loading from './loading';
 import ReloadButton from '@/components/reloadButton';
+import { withTimeout, executeWithRetry } from '@/utils/asyncUtils';
+import { classifyError, ERROR_TYPES } from '@/utils/errorUtils';
 
 // =============================
 // CONFIGURATION
 // =============================
 const CONFIG = {
-  cache: {
-    revalidate: 300,
-    errorRevalidate: 60,
-  },
   performance: {
     slowQueryThreshold: 1000,
     queryTimeout: 8000,
@@ -32,141 +30,6 @@ const CONFIG = {
     baseDelay: 100,
   },
 };
-
-// =============================
-// TYPES D'ERREURS
-// =============================
-const ERROR_TYPES = {
-  NOT_FOUND: 'not_found',
-  DATABASE_ERROR: 'database_error',
-  TIMEOUT: 'timeout',
-  CONNECTION_ERROR: 'connection_error',
-  VALIDATION_ERROR: 'validation_error',
-  UNKNOWN_ERROR: 'unknown_error',
-};
-
-// =============================
-// CODES ERREURS POSTGRESQL
-// =============================
-const PG_ERROR_CODES = {
-  CONNECTION_FAILURE: '08001',
-  CONNECTION_EXCEPTION: '08000',
-  QUERY_CANCELED: '57014',
-  UNDEFINED_TABLE: '42P01',
-  INSUFFICIENT_PRIVILEGE: '42501',
-};
-
-/**
- * Classification des erreurs
- */
-function classifyError(error) {
-  if (!error) {
-    return {
-      type: ERROR_TYPES.UNKNOWN_ERROR,
-      shouldRetry: false,
-      httpStatus: 500,
-    };
-  }
-
-  const code = error.code;
-  const message = error.message?.toLowerCase() || '';
-
-  if (
-    [
-      PG_ERROR_CODES.CONNECTION_FAILURE,
-      PG_ERROR_CODES.CONNECTION_EXCEPTION,
-    ].includes(code)
-  ) {
-    return {
-      type: ERROR_TYPES.CONNECTION_ERROR,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage: 'Service temporairement indisponible.',
-    };
-  }
-
-  if (code === PG_ERROR_CODES.QUERY_CANCELED || message.includes('timeout')) {
-    return {
-      type: ERROR_TYPES.TIMEOUT,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage: 'La requête a pris trop de temps.',
-    };
-  }
-
-  if (
-    message.includes('not found') ||
-    message.includes('introuvable') ||
-    message.includes('template not found')
-  ) {
-    return {
-      type: ERROR_TYPES.NOT_FOUND,
-      shouldRetry: false,
-      httpStatus: 404,
-      userMessage: 'Template introuvable.',
-    };
-  }
-
-  return {
-    type: ERROR_TYPES.DATABASE_ERROR,
-    shouldRetry: false,
-    httpStatus: 500,
-    userMessage: 'Erreur lors du chargement.',
-  };
-}
-
-/**
- * Promise avec timeout
- */
-function withTimeout(promise, timeoutMs, errorMessage = 'Timeout') {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => {
-      setTimeout(() => {
-        const timeoutError = new Error(errorMessage);
-        timeoutError.name = 'TimeoutError';
-        reject(timeoutError);
-      }, timeoutMs);
-    }),
-  ]);
-}
-
-/**
- * Retry logic avec backoff exponentiel
- */
-async function executeWithRetry(
-  operation,
-  maxAttempts = CONFIG.retry.maxAttempts,
-) {
-  let lastError;
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      return await operation();
-    } catch (error) {
-      lastError = error;
-      const errorInfo = classifyError(error);
-
-      if (!errorInfo.shouldRetry || attempt === maxAttempts) {
-        throw error;
-      }
-
-      const delay = CONFIG.retry.baseDelay * Math.pow(2, attempt - 1);
-      await new Promise((resolve) => setTimeout(resolve, delay));
-
-      captureMessage(
-        `Retry template fetch (attempt ${attempt}/${maxAttempts})`,
-        {
-          level: 'info',
-          tags: { component: 'single_template', retry: true },
-          extra: { attempt, maxAttempts, errorType: errorInfo.type },
-        },
-      );
-    }
-  }
-
-  throw lastError;
-}
 
 /**
  * Validation robuste de l'ID
@@ -192,7 +55,7 @@ function validateTemplateId(templateId) {
  * Récupère template + applications en un seul appel
  */
 const getTemplateData = cache(async function getTemplateData(templateId) {
-  const startTime = performance.now();
+  const startTime = Date.now();
 
   try {
     return await executeWithRetry(async () => {
@@ -248,7 +111,7 @@ const getTemplateData = cache(async function getTemplateData(templateId) {
           ),
         ]);
 
-        const queryDuration = performance.now() - startTime;
+        const queryDuration = Date.now() - startTime;
 
         if (queryDuration > CONFIG.performance.slowQueryThreshold) {
           captureMessage('Slow template query', {
@@ -318,7 +181,7 @@ const getTemplateData = cache(async function getTemplateData(templateId) {
     });
   } catch (error) {
     const errorInfo = classifyError(error);
-    const queryDuration = performance.now() - startTime;
+    const queryDuration = Date.now() - startTime;
 
     captureException(error, {
       tags: {
@@ -331,7 +194,7 @@ const getTemplateData = cache(async function getTemplateData(templateId) {
         templateId,
         queryDuration,
         pgErrorCode: error.code,
-        errorMessage: error.message,
+        errorType: errorInfo.type,
       },
     });
 

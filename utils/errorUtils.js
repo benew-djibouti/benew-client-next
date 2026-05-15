@@ -7,6 +7,8 @@ export const ERROR_TYPES = {
   NETWORK_ERROR: 'network_error',
   UNKNOWN_ERROR: 'unknown_error',
   IMAGE_LOADING_ERROR: 'image_loading_error',
+  NOT_FOUND: 'not_found',
+  VALIDATION_ERROR: 'validation_error',
 };
 
 export const PG_ERROR_CODES = {

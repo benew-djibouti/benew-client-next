@@ -11,7 +11,7 @@ import { captureException, captureMessage } from '../../sentry.server.config';
 import Loading from './loading';
 import ReloadButton from '@/components/reloadButton';
 import { classifyError, ERROR_TYPES } from '@/utils/errorUtils';
-import { withTimeout } from '@/utils/asyncUtils';
+import { withTimeout, executeWithRetry } from '@/utils/asyncUtils';
 
 // Configuration étendue avec gestion d'erreurs avancée
 const CONFIG = {
@@ -24,50 +24,6 @@ const CONFIG = {
     baseDelay: 100,
   },
 };
-
-/**
- * Exécute une requête avec retry logic
- */
-async function executeWithRetry(
-  operation,
-  maxAttempts = CONFIG.retry.maxAttempts,
-) {
-  let lastError;
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      return await operation();
-    } catch (error) {
-      lastError = error;
-      const errorInfo = classifyError(error);
-
-      // Ne pas retry si c'est pas une erreur temporaire
-      if (!errorInfo.shouldRetry || attempt === maxAttempts) {
-        throw error;
-      }
-
-      // Délai exponentiel pour retry
-      const delay = CONFIG.retry.baseDelay * Math.pow(2, attempt - 1);
-      await new Promise((resolve) => setTimeout(resolve, delay));
-
-      captureMessage(
-        `Retrying templates data fetch (attempt ${attempt}/${maxAttempts})`,
-        {
-          level: 'info',
-          tags: { component: 'templates_page', retry: true },
-          extra: {
-            attempt,
-            maxAttempts,
-            errorType: errorInfo.type,
-            delay,
-          },
-        },
-      );
-    }
-  }
-
-  throw lastError;
-}
 
 /**
  * Fonction principale avec gestion d'erreurs avancée et retry
@@ -146,7 +102,7 @@ async function getTemplates() {
     });
   } catch (error) {
     const errorInfo = classifyError(error);
-    const queryDuration = performance.now() - startTime;
+    const queryDuration = Date.now() - startTime;
 
     // Log détaillé pour monitoring avec tous les contextes
     captureException(error, {
@@ -159,7 +115,6 @@ async function getTemplates() {
       extra: {
         queryDuration,
         pgErrorCode: error.code,
-        errorCode: error.code,
         errorType: errorInfo.type,
         timeout: CONFIG.performance.queryTimeout,
       },
