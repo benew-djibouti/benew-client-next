@@ -9,7 +9,7 @@ import './page.scss'; // ← importé dans le Server Component
 import ChannelList from '@/components/channel/ChannelList';
 import { getVideos } from '@/lib/channelQueries';
 import { captureMessage } from '../../sentry.server.config';
-import Loading from './loading';
+import { classifyError, ERROR_TYPES } from '@/utils/errorUtils';
 import ReloadButton from '@/components/reloadButton';
 
 // =============================

@@ -6,6 +6,7 @@ export const ERROR_TYPES = {
   PERMISSION_ERROR: 'permission_error',
   NETWORK_ERROR: 'network_error',
   UNKNOWN_ERROR: 'unknown_error',
+  IMAGE_LOADING_ERROR: 'image_loading_error',
 };
 
 export const PG_ERROR_CODES = {
@@ -19,6 +20,7 @@ export const PG_ERROR_CODES = {
   INSUFFICIENT_PRIVILEGE: '42501',
   AUTHENTICATION_FAILED: '28000',
   INVALID_PASSWORD: '28P01',
+  DATABASE_DROPPED: '57P04',
 };
 
 // =============================
@@ -45,6 +47,7 @@ export function classifyError(error) {
       PG_ERROR_CODES.CANNOT_CONNECT,
       PG_ERROR_CODES.ADMIN_SHUTDOWN,
       PG_ERROR_CODES.CRASH_SHUTDOWN,
+      PG_ERROR_CODES.DATABASE_DROPPED, // ← ajouter
     ].includes(code)
   ) {
     return {
@@ -56,7 +59,11 @@ export function classifyError(error) {
     };
   }
 
-  if (code === PG_ERROR_CODES.QUERY_CANCELED || message.includes('timeout')) {
+  if (
+    code === PG_ERROR_CODES.QUERY_CANCELED ||
+    message.includes('timeout') ||
+    error.name === 'TimeoutError'
+  ) {
     return {
       type: ERROR_TYPES.TIMEOUT,
       shouldRetry: true,
@@ -103,11 +110,19 @@ export function classifyError(error) {
     };
   }
 
+  if (message.includes('cloudinary') || message.includes('image')) {
+    return {
+      type: ERROR_TYPES.IMAGE_LOADING_ERROR,
+      shouldRetry: true,
+      httpStatus: 503,
+      userMessage: 'Problème de chargement des images.',
+    };
+  }
+
   return {
     type: ERROR_TYPES.DATABASE_ERROR,
     shouldRetry: false,
     httpStatus: 500,
-    userMessage:
-      'Une erreur inattendue est survenue lors du chargement des vidéos.',
+    userMessage: 'Une erreur inattendue est survenue lors du chargement.',
   };
 }
