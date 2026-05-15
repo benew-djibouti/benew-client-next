@@ -526,14 +526,6 @@ const SingleTemplateShops = ({
     }
   }, [templateID]);
 
-  // Cleanup au démontage pour éviter les timers orphelins
-  useEffect(() => {
-    return () => {
-      if (paymentErrorTimerRef.current)
-        clearTimeout(paymentErrorTimerRef.current);
-    };
-  }, []);
-
   const handleOrderClick = useCallback(
     (app) => {
       if (!platforms || platforms.length === 0) {
