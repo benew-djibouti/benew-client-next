@@ -10,7 +10,7 @@ const AppImage = memo(
   ({ src, alt, width, height, className, loading, crop, quality, format }) => {
     const [hasError, setHasError] = useState(false);
 
-    if (hasError) {
+    if (hasError || !src) {
       return (
         <img
           src={PLACEHOLDER}

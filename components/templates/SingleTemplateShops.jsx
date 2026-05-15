@@ -511,6 +511,8 @@ const SingleTemplateShops = ({
 
   const viewedAppsRef = useRef(new Set());
   const selectedAppRef = useRef(null);
+  const paymentErrorTimerRef = useRef(null); // ← ajouter cette ligne
+  const galleryCloseTimerRef = useRef(null);
 
   useEffect(() => {
     if (templateID && applications.length > 0) {
@@ -587,13 +589,24 @@ const SingleTemplateShops = ({
     [templateID],
   );
 
+  // Ajouter au cleanup de démontage :
+  useEffect(() => {
+    return () => {
+      if (paymentErrorTimerRef.current)
+        clearTimeout(paymentErrorTimerRef.current);
+      if (galleryCloseTimerRef.current)
+        clearTimeout(galleryCloseTimerRef.current); // ← ajouter
+    };
+  }, []);
+
   const handleGalleryClose = useCallback(() => {
     setIsGalleryOpen(false);
-    const timeout = setTimeout(() => {
+    if (galleryCloseTimerRef.current)
+      clearTimeout(galleryCloseTimerRef.current);
+    galleryCloseTimerRef.current = setTimeout(() => {
       setGalleryApp(null);
       setGalleryImages([]);
     }, 300);
-    return () => clearTimeout(timeout);
   }, []);
 
   const handleApplicationView = useCallback(
@@ -622,7 +635,8 @@ const SingleTemplateShops = ({
   }, [selectedApp]);
 
   const handleModalClose = useCallback(() => {
-    if (selectedApp) {
+    if (selectedAppRef.current) {
+      // ← utiliser la ref
       try {
         trackEvent('order_modal_close', {
           event_category: 'ecommerce',
@@ -633,10 +647,9 @@ const SingleTemplateShops = ({
         console.warn('[Analytics] Error tracking modal close:', error);
       }
     }
-
     setIsModalOpen(false);
     setSelectedApp(null);
-  }, []);
+  }, []); // ← dépendances vides correctes désormais
 
   if (!applications || applications.length === 0) {
     return (
