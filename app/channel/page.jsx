@@ -17,127 +17,10 @@ import ReloadButton from '@/components/reloadButton';
 // =============================
 
 const CONFIG = {
-  cache: {
-    revalidate: 120, // 2 minutes — les vidéos changent moins souvent que les templates
-  },
   performance: {
     slowQueryThreshold: 1500,
   },
 };
-
-// Types d'erreurs (même pattern que templates)
-const ERROR_TYPES = {
-  DATABASE_ERROR: 'database_error',
-  TIMEOUT: 'timeout',
-  CONNECTION_ERROR: 'connection_error',
-  PERMISSION_ERROR: 'permission_error',
-  NETWORK_ERROR: 'network_error',
-  UNKNOWN_ERROR: 'unknown_error',
-};
-
-const PG_ERROR_CODES = {
-  CONNECTION_FAILURE: '08001',
-  CONNECTION_EXCEPTION: '08000',
-  QUERY_CANCELED: '57014',
-  ADMIN_SHUTDOWN: '57P01',
-  CRASH_SHUTDOWN: '57P02',
-  CANNOT_CONNECT: '57P03',
-  UNDEFINED_TABLE: '42P01',
-  INSUFFICIENT_PRIVILEGE: '42501',
-  AUTHENTICATION_FAILED: '28000',
-  INVALID_PASSWORD: '28P01',
-};
-
-// =============================
-// CLASSIFICATION D'ERREURS
-// =============================
-
-function classifyError(error) {
-  if (!error) {
-    return {
-      type: ERROR_TYPES.UNKNOWN_ERROR,
-      shouldRetry: false,
-      httpStatus: 500,
-      userMessage: 'Une erreur inattendue est survenue.',
-    };
-  }
-
-  const code = error.code;
-  const message = (error.message || '').toLowerCase();
-
-  if (
-    [
-      PG_ERROR_CODES.CONNECTION_FAILURE,
-      PG_ERROR_CODES.CONNECTION_EXCEPTION,
-      PG_ERROR_CODES.CANNOT_CONNECT,
-      PG_ERROR_CODES.ADMIN_SHUTDOWN,
-      PG_ERROR_CODES.CRASH_SHUTDOWN,
-    ].includes(code)
-  ) {
-    return {
-      type: ERROR_TYPES.CONNECTION_ERROR,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage:
-        'Service temporairement indisponible. Veuillez réessayer dans quelques instants.',
-    };
-  }
-
-  if (code === PG_ERROR_CODES.QUERY_CANCELED || message.includes('timeout')) {
-    return {
-      type: ERROR_TYPES.TIMEOUT,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage:
-        'Le chargement a pris trop de temps. Le serveur est peut-être surchargé.',
-    };
-  }
-
-  if (
-    [
-      PG_ERROR_CODES.INSUFFICIENT_PRIVILEGE,
-      PG_ERROR_CODES.AUTHENTICATION_FAILED,
-      PG_ERROR_CODES.INVALID_PASSWORD,
-    ].includes(code)
-  ) {
-    return {
-      type: ERROR_TYPES.PERMISSION_ERROR,
-      shouldRetry: false,
-      httpStatus: 500,
-      userMessage: 'Erreur de configuration serveur.',
-    };
-  }
-
-  if (code === PG_ERROR_CODES.UNDEFINED_TABLE) {
-    return {
-      type: ERROR_TYPES.DATABASE_ERROR,
-      shouldRetry: false,
-      httpStatus: 500,
-      userMessage: 'Erreur de configuration serveur.',
-    };
-  }
-
-  if (
-    message.includes('network') ||
-    message.includes('fetch') ||
-    message.includes('econnrefused')
-  ) {
-    return {
-      type: ERROR_TYPES.NETWORK_ERROR,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage: 'Problème de connexion réseau.',
-    };
-  }
-
-  return {
-    type: ERROR_TYPES.DATABASE_ERROR,
-    shouldRetry: false,
-    httpStatus: 500,
-    userMessage:
-      'Une erreur inattendue est survenue lors du chargement des vidéos.',
-  };
-}
 
 // =============================
 // COMPOSANT ERREUR INLINE
@@ -198,17 +81,15 @@ function ChannelErrorDisplay({ errorType, userMessage, shouldRetry }) {
 // =============================
 
 export default async function ChannelPage() {
-  const startTime = performance.now();
+  const startTime = Date.now();
 
   const data = await getVideos();
 
-  const queryDuration = performance.now() - startTime;
+  const pageLoadDuration = Date.now() - startTime;
 
-  if (queryDuration > CONFIG.performance.slowQueryThreshold) {
+  if (pageLoadDuration > CONFIG.performance.slowQueryThreshold) {
     captureMessage('Slow channel page load', {
-      level: 'warning',
-      tags: { component: 'channel_page', performance: true },
-      extra: { queryDuration, videosCount: data.videos?.length },
+      extra: { pageLoadDuration, videosCount: data.videos?.length },
     });
   }
 

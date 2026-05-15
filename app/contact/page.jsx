@@ -4,10 +4,7 @@
 
 import Contact from '@/components/contact';
 
-/**
- * Composant principal avec validation et gestion d'erreurs avancée
- */
-export default async function ContactPage() {
+export default function ContactPage() {
   // Rendu normal avec Suspense - Error Boundary géré par error.jsx
   return <Contact />;
 }
@@ -25,18 +22,13 @@ export const metadata = {
     'projet digital',
     'Djibouti',
   ],
-  robots: { index: true, follow: true },
   openGraph: {
     title: 'Contact Benew - Démarrez votre projet',
     description:
       'Contactez-nous pour transformer vos idées en solutions digitales.',
     url: `/contact`,
-    type: 'website',
-    locale: 'fr_FR',
   },
   alternates: {
     canonical: `/contact`,
   },
 };
-
-export const revalidate = 600;
