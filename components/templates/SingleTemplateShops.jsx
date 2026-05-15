@@ -37,19 +37,57 @@ const OrderModal = dynamic(() => import('../modal/OrderModal'), {
 // =============================
 const GalleryModal = memo(({ isOpen, onClose, images, applicationName }) => {
   const [selectedImage, setSelectedImage] = useState(0);
+  const modalRef = useRef(null);
+  const previousFocusRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      setSelectedImage(0);
+      previousFocusRef.current = document.activeElement;
+      modalRef.current?.focus();
     } else {
-      document.body.style.overflow = ''; // ← supprime le style inline
+      previousFocusRef.current?.focus();
     }
+  }, [isOpen]);
 
+  useEffect(() => {
+    setSelectedImage(0);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = ''; // ← cleanup aussi
+      document.body.style.overflow = '';
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const focusable = Array.from(
+        modalRef.current?.querySelectorAll(
+          'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
+        ) || [],
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (!isOpen || !images || images.length <= 1) return;
@@ -67,6 +105,11 @@ const GalleryModal = memo(({ isOpen, onClose, images, applicationName }) => {
     <div className="gallery-modal-overlay" onClick={onClose}>
       <div
         className="gallery-modal-content"
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="gallery-modal-title"
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -79,7 +122,7 @@ const GalleryModal = memo(({ isOpen, onClose, images, applicationName }) => {
 
         <div className="gallery-header">
           <div className="gallery-header-left">
-            <h3>{applicationName} - Galerie</h3>
+            <h3 id="gallery-modal-title">{applicationName} - Galerie</h3>
             <p className="gallery-counter">
               {selectedImage + 1} / {images.length}
             </p>
@@ -467,31 +510,38 @@ const SingleTemplateShops = ({
   const [paymentError, setPaymentError] = useState(false);
 
   const viewedAppsRef = useRef(new Set());
+  const selectedAppRef = useRef(null);
 
   useEffect(() => {
     if (templateID && applications.length > 0) {
-      const templateName = applications[0]?.template_name || 'Template';
-
-      try {
-        trackEvent('template_detail_view', {
-          event_category: 'ecommerce',
-          event_label: templateName,
-          template_id: templateID,
-          template_name: templateName,
-          applications_count: applications.length,
-          has_payment_methods: platforms.length > 0,
-        });
-      } catch (error) {
-        console.warn('[Analytics] Error tracking page view:', error);
-      }
+      trackEvent('template_detail_view', {
+        event_category: 'ecommerce',
+        event_label: applications[0]?.template_name || 'Template',
+        template_id: templateID,
+        applications_count: applications.length,
+        has_payment_methods: platforms.length > 0,
+      });
     }
-  }, [templateID, applications, platforms]);
+  }, [templateID]);
+
+  // Cleanup au démontage pour éviter les timers orphelins
+  useEffect(() => {
+    return () => {
+      if (paymentErrorTimerRef.current)
+        clearTimeout(paymentErrorTimerRef.current);
+    };
+  }, []);
 
   const handleOrderClick = useCallback(
     (app) => {
       if (!platforms || platforms.length === 0) {
         setPaymentError(true);
-        setTimeout(() => setPaymentError(false), 4000); // disparaît après 4s
+        if (paymentErrorTimerRef.current)
+          clearTimeout(paymentErrorTimerRef.current);
+        paymentErrorTimerRef.current = setTimeout(
+          () => setPaymentError(false),
+          4000,
+        );
         return;
       }
 
@@ -539,10 +589,11 @@ const SingleTemplateShops = ({
 
   const handleGalleryClose = useCallback(() => {
     setIsGalleryOpen(false);
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setGalleryApp(null);
       setGalleryImages([]);
     }, 300);
+    return () => clearTimeout(timeout);
   }, []);
 
   const handleApplicationView = useCallback(
@@ -565,13 +616,18 @@ const SingleTemplateShops = ({
     [templateID], // ← stable pour toute la durée de vie du composant
   );
 
+  // Quand selectedApp change, mettre à jour la ref
+  useEffect(() => {
+    selectedAppRef.current = selectedApp;
+  }, [selectedApp]);
+
   const handleModalClose = useCallback(() => {
     if (selectedApp) {
       try {
         trackEvent('order_modal_close', {
           event_category: 'ecommerce',
           event_label: 'modal_closed',
-          application_id: selectedApp.application_id,
+          application_id: selectedAppRef.current.application_id,
         });
       } catch (error) {
         console.warn('[Analytics] Error tracking modal close:', error);
@@ -580,7 +636,7 @@ const SingleTemplateShops = ({
 
     setIsModalOpen(false);
     setSelectedApp(null);
-  }, [selectedApp]);
+  }, []);
 
   if (!applications || applications.length === 0) {
     return (
