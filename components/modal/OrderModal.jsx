@@ -32,33 +32,36 @@ const OrderModal = ({
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    paymentMethods: [],
-  });
+  const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
   // Ajouter une ref sur la modale
   const modalRef = useRef(null);
 
   // Plateformes sélectionnées par l'utilisateur
-  const selectedPlatforms =
-    platforms?.filter((p) => formData.paymentMethods.includes(p.platform_id)) ||
-    [];
+  const selectedPlatforms = useMemo(
+    () =>
+      platforms?.filter((p) =>
+        formData.paymentMethods.includes(p.platform_id),
+      ) || [],
+    [platforms, formData.paymentMethods],
+  );
 
   // Y a-t-il du cash parmi les sélections ?
-  const hasCashPayment = selectedPlatforms.some((p) => p.is_cash_payment);
+  const hasCashPayment = useMemo(
+    () => selectedPlatforms.some((p) => p.is_cash_payment),
+    [selectedPlatforms],
+  );
 
   // Toutes les plateformes électroniques disponibles (pour l'étape 4)
-  const electronicPlatforms = !platforms
-    ? []
-    : platforms.filter(
-        (platform) =>
-          !platform.is_cash_payment &&
-          platform.account_name &&
-          platform.account_number,
-      );
+  const electronicPlatforms = useMemo(
+    () =>
+      !platforms
+        ? []
+        : platforms.filter(
+            (p) => !p.is_cash_payment && p.account_name && p.account_number,
+          ),
+    [platforms],
+  );
 
   // Focus trap + focus initial à l'ouverture
   useEffect(() => {
@@ -119,7 +122,7 @@ const OrderModal = ({
       // Rendre le focus à l'élément qui avait le focus avant l'ouverture
       previousFocus?.focus();
     };
-  }, [isOpen, step]); // ← step en dépendance car les éléments focusables changent entre étapes
+  }, [isOpen, step, closeModal]); // ← step en dépendance car les éléments focusables changent entre étapes
 
   // Reset à chaque fermeture
   useEffect(() => {
@@ -147,33 +150,36 @@ const OrderModal = ({
     }
   }, [isOpen, applicationId]);
 
-  const closeModal = () => {
-    if (isSubmitting) return; // ← ne pas fermer pendant le traitement
-
-    try {
-      trackModalClose('order_modal', 'user_close');
-    } catch (error) {
-      console.warn('[Analytics] Error tracking modal close:', error);
-    }
-    onClose();
-  };
+  const closeModal = useCallback(
+    (reason = 'user_close') => {
+      if (isSubmitting) return;
+      try {
+        trackModalClose('order_modal', reason);
+      } catch (error) {
+        console.warn('[Analytics] Error tracking modal close:', error);
+      }
+      onClose();
+    },
+    [isSubmitting, onClose],
+  );
 
   // Par :
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleInputChange = useCallback(
+    (e) => {
+      const { name, value, type, checked } = e.target;
+      if (name === 'paymentMethods') {
+        const updated = checked
+          ? [...formData.paymentMethods, value]
+          : formData.paymentMethods.filter((id) => id !== value);
+        setFormData((prev) => ({ ...prev, paymentMethods: updated }));
+      } else {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      }
+    },
+    [formData.paymentMethods],
+  );
 
-    if (name === 'paymentMethods') {
-      // checkbox — ajouter ou retirer du tableau
-      const updated = checked
-        ? [...formData.paymentMethods, value]
-        : formData.paymentMethods.filter((id) => id !== value);
-      setFormData({ ...formData, paymentMethods: updated });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
-
-  const validateStep1 = () => {
+  const validateStep1 = useCallback(() => {
     if (!formData.name || !formData.email || !formData.phone) {
       setError('Veuillez remplir tous les champs requis');
       return false;
@@ -184,7 +190,7 @@ const OrderModal = ({
       return false;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(formData.email)) {
       setError('Veuillez fournir une adresse email valide');
       return false;
@@ -212,10 +218,10 @@ const OrderModal = ({
 
     setError('');
     return true;
-  };
+  }, [formData]);
 
   // Par :
-  const validateStep2 = () => {
+  const validateStep2 = useCallback(() => {
     if (formData.paymentMethods.length === 0) {
       setError('Veuillez sélectionner au moins une méthode de paiement');
       return false;
@@ -223,23 +229,15 @@ const OrderModal = ({
 
     setError('');
     return true;
-  };
+  }, [formData.paymentMethods]);
 
-  const handleNext = () => {
-    if (step === 1) {
-      if (validateStep1()) {
-        setStep(2);
-      }
-    } else if (step === 2) {
-      if (validateStep2()) {
-        setStep(3);
-      }
-    } else if (step === 3) {
-      submitOrder();
-    }
-  };
+  const handleNext = useCallback(() => {
+    if (step === 1 && validateStep1()) setStep(2);
+    else if (step === 2 && validateStep2()) setStep(3);
+    else if (step === 3) submitOrder();
+  }, [step, validateStep1, validateStep2, submitOrder]);
 
-  const submitOrder = async () => {
+  const submitOrder = useCallback(async () => {
     setIsSubmitting(true);
     setError('');
 
@@ -288,12 +286,20 @@ const OrderModal = ({
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [
+    formData,
+    hasCashPayment,
+    applicationId,
+    applicationFee,
+    applicationName,
+    applicationCategory,
+    onClose,
+  ]);
 
-  const handleBack = () => {
-    setStep(step - 1);
+  const handleBack = useCallback(() => {
+    setStep((prev) => prev - 1);
     setError('');
-  };
+  }, []);
 
   if (!isOpen) return null;
 
@@ -309,6 +315,7 @@ const OrderModal = ({
         className="modal"
         onClick={(e) => e.stopPropagation()} // ← empêche la propagation vers l'overlay
         ref={modalRef}
+        aria-labelledby="modal-step-title"
         tabIndex={-1} // ← permet de recevoir le focus programmatiquement sans être dans l'ordre Tab naturel
       >
         <div className="modal-content">
@@ -317,7 +324,7 @@ const OrderModal = ({
           {/* ÉTAPE 1 : Informations personnelles */}
           {step === 1 && (
             <div className="step">
-              <h2>Étape 1: Informations personnelles</h2>
+              <h2 id="modal-step-title">Étape 1: Informations personnelles</h2>
 
               <input
                 type="text"
@@ -364,7 +371,7 @@ const OrderModal = ({
           {/* ÉTAPE 2 : Méthode de paiement */}
           {step === 2 && (
             <div className="step">
-              <h2>Étape 2: Méthode de paiement</h2>
+              <h2 id="modal-step-title">Étape 2: Méthode de paiement</h2>
               <p style={{ fontSize: '0.875rem', opacity: 0.7 }}>
                 Vous pouvez sélectionner une ou plusieurs méthodes.
               </p>
@@ -418,7 +425,7 @@ const OrderModal = ({
           {/* ÉTAPE 3 : Récapitulatif */}
           {step === 3 && (
             <div className="step">
-              <h2>Étape 3: Récapitulatif</h2>
+              <h2 id="modal-step-title">Étape 3: Récapitulatif</h2>
 
               <div className="summary-section">
                 <h3 className="summary-title">Informations personnelles</h3>
@@ -481,7 +488,7 @@ const OrderModal = ({
           {/* ÉTAPE 4 : Confirmation avec plateformes de paiement */}
           {step === 4 && (
             <div className="step confirmationStep">
-              <h2>Étape 4: Confirmation</h2>
+              <h2 id="modal-step-title">Étape 4: Confirmation</h2>
 
               <div className="confirmation-icon">✅</div>
 
