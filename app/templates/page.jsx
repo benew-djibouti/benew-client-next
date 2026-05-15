@@ -10,13 +10,11 @@ import { getClient } from '@/backend/dbConnect';
 import { captureException, captureMessage } from '../../sentry.server.config';
 import Loading from './loading';
 import ReloadButton from '@/components/reloadButton';
+import { classifyError, ERROR_TYPES } from '@/utils/errorUtils';
+import { withTimeout } from '@/utils/asyncUtils';
 
 // Configuration étendue avec gestion d'erreurs avancée
 const CONFIG = {
-  cache: {
-    revalidate: 300, // 5 minutes ISR pour succès
-    errorRevalidate: 60, // 1 minute pour erreurs temporaires
-  },
   performance: {
     slowQueryThreshold: 1500, // Alerte pour queries lentes
     queryTimeout: 5000, // 5 secondes timeout
@@ -26,164 +24,6 @@ const CONFIG = {
     baseDelay: 100,
   },
 };
-
-// Types d'erreurs standardisés
-const ERROR_TYPES = {
-  DATABASE_ERROR: 'database_error',
-  TIMEOUT: 'timeout',
-  CONNECTION_ERROR: 'connection_error',
-  PERMISSION_ERROR: 'permission_error',
-  IMAGE_LOADING_ERROR: 'image_loading_error',
-  NETWORK_ERROR: 'network_error',
-  UNKNOWN_ERROR: 'unknown_error',
-};
-
-// Codes d'erreur PostgreSQL
-const PG_ERROR_CODES = {
-  CONNECTION_FAILURE: '08001',
-  CONNECTION_EXCEPTION: '08000',
-  QUERY_CANCELED: '57014',
-  ADMIN_SHUTDOWN: '57P01',
-  CRASH_SHUTDOWN: '57P02',
-  CANNOT_CONNECT: '57P03',
-  DATABASE_DROPPED: '57P04',
-  UNDEFINED_TABLE: '42P01',
-  INSUFFICIENT_PRIVILEGE: '42501',
-  AUTHENTICATION_FAILED: '28000',
-  INVALID_PASSWORD: '28P01',
-};
-
-/**
- * Classifie les erreurs PostgreSQL et autres erreurs système
- */
-function classifyError(error) {
-  if (!error) {
-    return {
-      type: ERROR_TYPES.UNKNOWN_ERROR,
-      shouldRetry: false,
-      httpStatus: 500,
-    };
-  }
-
-  const code = error.code;
-  const message = error.message?.toLowerCase() || '';
-
-  // Erreurs de connexion (temporaires)
-  if (
-    [
-      PG_ERROR_CODES.CONNECTION_FAILURE,
-      PG_ERROR_CODES.CONNECTION_EXCEPTION,
-      PG_ERROR_CODES.CANNOT_CONNECT,
-      PG_ERROR_CODES.ADMIN_SHUTDOWN,
-      PG_ERROR_CODES.CRASH_SHUTDOWN,
-    ].includes(code)
-  ) {
-    return {
-      type: ERROR_TYPES.CONNECTION_ERROR,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage:
-        'Service temporairement indisponible. Veuillez réessayer dans quelques instants.',
-    };
-  }
-
-  // Timeout de requête
-  if (code === PG_ERROR_CODES.QUERY_CANCELED || message.includes('timeout')) {
-    return {
-      type: ERROR_TYPES.TIMEOUT,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage:
-        'Le chargement a pris trop de temps. Le serveur est peut-être surchargé.',
-    };
-  }
-
-  // Erreurs de permissions
-  if (
-    [
-      PG_ERROR_CODES.INSUFFICIENT_PRIVILEGE,
-      PG_ERROR_CODES.AUTHENTICATION_FAILED,
-      PG_ERROR_CODES.INVALID_PASSWORD,
-    ].includes(code)
-  ) {
-    return {
-      type: ERROR_TYPES.PERMISSION_ERROR,
-      shouldRetry: false,
-      httpStatus: 500,
-      userMessage: 'Erreur de configuration serveur.',
-    };
-  }
-
-  // Erreurs de configuration (table inexistante, etc.)
-  if (code === PG_ERROR_CODES.UNDEFINED_TABLE) {
-    return {
-      type: ERROR_TYPES.DATABASE_ERROR,
-      shouldRetry: false,
-      httpStatus: 500,
-      userMessage: 'Erreur de configuration serveur.',
-    };
-  }
-
-  // Erreurs réseau
-  if (
-    message.includes('network') ||
-    message.includes('fetch') ||
-    message.includes('connexion')
-  ) {
-    return {
-      type: ERROR_TYPES.NETWORK_ERROR,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage:
-        'Problème de connexion réseau. Vérifiez votre connexion internet.',
-    };
-  }
-
-  // Erreurs d'images
-  if (message.includes('cloudinary') || message.includes('image')) {
-    return {
-      type: ERROR_TYPES.IMAGE_LOADING_ERROR,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage: 'Problème de chargement des images des templates.',
-    };
-  }
-
-  // Timeout général (pas PostgreSQL)
-  if (message.includes('timeout') || error.name === 'TimeoutError') {
-    return {
-      type: ERROR_TYPES.TIMEOUT,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage: 'Le chargement a pris trop de temps. Veuillez réessayer.',
-    };
-  }
-
-  // Erreur de base de données générique
-  return {
-    type: ERROR_TYPES.DATABASE_ERROR,
-    shouldRetry: false,
-    httpStatus: 500,
-    userMessage:
-      'Une erreur inattendue est survenue lors du chargement des templates.',
-  };
-}
-
-/**
- * Promise avec timeout
- */
-function withTimeout(promise, timeoutMs, errorMessage = 'Operation timed out') {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => {
-      setTimeout(() => {
-        const timeoutError = new Error(errorMessage);
-        timeoutError.name = 'TimeoutError';
-        reject(timeoutError);
-      }, timeoutMs);
-    }),
-  ]);
-}
 
 /**
  * Exécute une requête avec retry logic
@@ -233,7 +73,7 @@ async function executeWithRetry(
  * Fonction principale avec gestion d'erreurs avancée et retry
  */
 async function getTemplates() {
-  const startTime = performance.now();
+  const startTime = Date.now();
 
   try {
     return await executeWithRetry(async () => {
@@ -269,7 +109,7 @@ async function getTemplates() {
           'Database query timeout',
         );
 
-        const queryDuration = performance.now() - startTime;
+        const queryDuration = Date.now() - startTime;
 
         // Log performance avec monitoring complet
         if (queryDuration > CONFIG.performance.slowQueryThreshold) {
@@ -319,7 +159,8 @@ async function getTemplates() {
       extra: {
         queryDuration,
         pgErrorCode: error.code,
-        errorMessage: error.message,
+        errorCode: error.code,
+        errorType: errorInfo.type,
         timeout: CONFIG.performance.queryTimeout,
       },
     });
@@ -331,7 +172,7 @@ async function getTemplates() {
       httpStatus: errorInfo.httpStatus,
       userMessage: errorInfo.userMessage,
       shouldRetry: errorInfo.shouldRetry,
-      error: error.message,
+      error: process.env.NODE_ENV === 'production' ? undefined : error.message,
     };
   }
 }
