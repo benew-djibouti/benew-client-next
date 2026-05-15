@@ -15,15 +15,13 @@ import {
 import { sanitizeAndValidateUUID } from '@/utils/validation';
 import Loading from './loading';
 import ReloadButton from '@/components/reloadButton';
+import { withTimeout, executeWithRetry } from '@/utils/asyncUtils';
+import { classifyError, ERROR_TYPES } from '@/utils/errorUtils';
 
 // =============================
 // ✅ CONFIGURATION OPTIMISÉE
 // =============================
 const CONFIG = {
-  cache: {
-    revalidate: 300, // 5 minutes ISR
-    errorRevalidate: 60, // 1 minute pour erreurs
-  },
   performance: {
     slowQueryThreshold: 1000, // Alerte si > 1s
     queryTimeout: 5000, // Timeout 5s (réduit de 8s)
@@ -33,145 +31,6 @@ const CONFIG = {
     baseDelay: 100,
   },
 };
-
-// =============================
-// ✅ TYPES D'ERREURS
-// =============================
-const ERROR_TYPES = {
-  NOT_FOUND: 'not_found',
-  DATABASE_ERROR: 'database_error',
-  TIMEOUT: 'timeout',
-  CONNECTION_ERROR: 'connection_error',
-  VALIDATION_ERROR: 'validation_error',
-  UNKNOWN_ERROR: 'unknown_error',
-};
-
-// =============================
-// ✅ CODES ERREURS POSTGRESQL
-// =============================
-const PG_ERROR_CODES = {
-  CONNECTION_FAILURE: '08001',
-  CONNECTION_EXCEPTION: '08000',
-  QUERY_CANCELED: '57014',
-  UNDEFINED_TABLE: '42P01',
-  INSUFFICIENT_PRIVILEGE: '42501',
-};
-
-/**
- * ✅ Classification intelligente des erreurs
- */
-function classifyError(error) {
-  if (!error) {
-    return {
-      type: ERROR_TYPES.UNKNOWN_ERROR,
-      shouldRetry: false,
-      httpStatus: 500,
-    };
-  }
-
-  const code = error.code;
-  const message = error.message?.toLowerCase() || '';
-
-  // Erreurs de connexion (temporaires)
-  if (
-    [
-      PG_ERROR_CODES.CONNECTION_FAILURE,
-      PG_ERROR_CODES.CONNECTION_EXCEPTION,
-    ].includes(code)
-  ) {
-    return {
-      type: ERROR_TYPES.CONNECTION_ERROR,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage: 'Service temporairement indisponible.',
-    };
-  }
-
-  // Timeout
-  if (code === PG_ERROR_CODES.QUERY_CANCELED || message.includes('timeout')) {
-    return {
-      type: ERROR_TYPES.TIMEOUT,
-      shouldRetry: true,
-      httpStatus: 503,
-      userMessage: 'La requête a pris trop de temps.',
-    };
-  }
-
-  // Application non trouvée
-  if (
-    message.includes('not found') ||
-    message.includes('introuvable') ||
-    message.includes('application not found')
-  ) {
-    return {
-      type: ERROR_TYPES.NOT_FOUND,
-      shouldRetry: false,
-      httpStatus: 404,
-      userMessage: 'Application introuvable.',
-    };
-  }
-
-  // Erreur générique
-  return {
-    type: ERROR_TYPES.DATABASE_ERROR,
-    shouldRetry: false,
-    httpStatus: 500,
-    userMessage: 'Erreur lors du chargement.',
-  };
-}
-
-/**
- * ✅ Promise avec timeout
- */
-function withTimeout(promise, timeoutMs, errorMessage = 'Timeout') {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => {
-      setTimeout(() => {
-        const timeoutError = new Error(errorMessage);
-        timeoutError.name = 'TimeoutError';
-        reject(timeoutError);
-      }, timeoutMs);
-    }),
-  ]);
-}
-
-/**
- * ✅ Retry logic avec backoff exponentiel
- */
-async function executeWithRetry(
-  operation,
-  maxAttempts = CONFIG.retry.maxAttempts,
-) {
-  let lastError;
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      return await operation();
-    } catch (error) {
-      lastError = error;
-      const errorInfo = classifyError(error);
-
-      if (!errorInfo.shouldRetry || attempt === maxAttempts) {
-        throw error;
-      }
-
-      const delay = CONFIG.retry.baseDelay * Math.pow(2, attempt - 1);
-      await new Promise((resolve) => setTimeout(resolve, delay));
-
-      captureMessage(
-        `Retry application fetch (attempt ${attempt}/${maxAttempts})`,
-        {
-          level: 'info',
-          tags: { component: 'single_application', retry: true },
-          extra: { attempt, maxAttempts, errorType: errorInfo.type },
-        },
-      );
-    }
-  }
-
-  throw lastError;
-}
 
 /**
  * ✅ Validation robuste des IDs
@@ -210,16 +69,17 @@ function validateIds(appId, templateId) {
  */
 const getApplicationData = cache(
   async function getApplicationData(applicationId, templateId) {
-    const startTime = performance.now();
+    const startTime = Date.now();
 
     try {
-      return await executeWithRetry(async () => {
-        const client = await getClient();
+      return await executeWithRetry(
+        async () => {
+          const client = await getClient();
 
-        try {
-          // ✅ QUERY OPTIMISÉE - Une seule requête avec tous les JOIN nécessaires
-          const queryPromise = client.query(
-            `SELECT
+          try {
+            // ✅ QUERY OPTIMISÉE - Une seule requête avec tous les JOIN nécessaires
+            const queryPromise = client.query(
+              `SELECT
             -- ✅ Application complète
             a.application_id,
             a.application_name,
@@ -267,106 +127,110 @@ const getApplicationData = cache(
             AND a.application_template_id = $2
             AND a.is_active = true
             AND t.is_active = true`,
-            [applicationId, templateId],
-          );
-
-          const result = await withTimeout(
-            queryPromise,
-            CONFIG.performance.queryTimeout,
-            'Database query timeout',
-          );
-
-          const queryDuration = performance.now() - startTime;
-
-          // ✅ Log performance si lent
-          if (queryDuration > CONFIG.performance.slowQueryThreshold) {
-            captureMessage('Slow application query', {
-              level: 'warning',
-              tags: { component: 'single_application', performance: true },
-              extra: {
-                applicationId,
-                templateId,
-                duration: queryDuration,
-                timeout: CONFIG.performance.queryTimeout,
-              },
-            });
-          }
-
-          // ✅ Log succès en dev
-          if (process.env.NODE_ENV === 'development') {
-            console.log(
-              `[Application] Query: ${Math.round(queryDuration)}ms (timeout: ${CONFIG.performance.queryTimeout}ms)`,
+              [applicationId, templateId],
             );
-          }
 
-          // ✅ Application non trouvée
-          if (result.rows.length === 0) {
-            return {
-              application: null,
-              template: null,
-              platforms: [],
-              success: false,
-              errorType: ERROR_TYPES.NOT_FOUND,
-              httpStatus: 404,
-              userMessage: 'Application introuvable.',
-            };
-          }
+            const result = await withTimeout(
+              queryPromise,
+              CONFIG.performance.queryTimeout,
+              'Database query timeout',
+            );
 
-          const data = result.rows[0];
+            const queryDuration = Date.now() - startTime;
 
-          // ✅ Parse JSON aggregations
-          const parseJsonAgg = (value) => {
-            if (Array.isArray(value)) return value; // driver a déjà parsé → tableau JS
-            if (typeof value === 'string') {
-              try {
-                const parsed = JSON.parse(value);
-                return Array.isArray(parsed) ? parsed : []; // string JSON → parser
-              } catch {
-                return []; // JSON invalide → tableau vide
-              }
+            // ✅ Log performance si lent
+            if (queryDuration > CONFIG.performance.slowQueryThreshold) {
+              captureMessage('Slow application query', {
+                level: 'warning',
+                tags: { component: 'single_application', performance: true },
+                extra: {
+                  applicationId,
+                  templateId,
+                  duration: queryDuration,
+                  timeout: CONFIG.performance.queryTimeout,
+                },
+              });
             }
-            return []; // null, undefined, objet inattendu
-          };
 
-          const platforms = parseJsonAgg(data.platforms);
+            // ✅ Log succès en dev
+            if (process.env.NODE_ENV === 'development') {
+              console.log(
+                `[Application] Query: ${Math.round(queryDuration)}ms (timeout: ${CONFIG.performance.queryTimeout}ms)`,
+              );
+            }
 
-          // ✅ Construire l'objet application
-          const application = {
-            application_id: data.application_id,
-            application_name: data.application_name,
-            application_link: data.application_link,
-            application_admin_link: data.application_admin_link,
-            application_description: data.application_description,
-            application_category: data.application_category,
-            application_fee: data.application_fee,
-            application_rent: data.application_rent,
-            application_images: data.application_images,
-            application_other_versions: data.application_other_versions,
-            application_level: data.application_level,
-            application_sales: data.application_sales,
-          };
+            // ✅ Application non trouvée
+            if (result.rows.length === 0) {
+              return {
+                application: null,
+                template: null,
+                platforms: [],
+                success: false,
+                errorType: ERROR_TYPES.NOT_FOUND,
+                httpStatus: 404,
+                userMessage: 'Application introuvable.',
+              };
+            }
 
-          const template = {
-            template_id: data.template_id,
-            template_name: data.template_name,
-            template_total_applications: data.template_total_applications,
-          };
+            const data = result.rows[0];
 
-          // ✅ Succès
-          return {
-            application,
-            template,
-            platforms,
-            success: true,
-            queryDuration,
-          };
-        } finally {
-          client.release();
-        }
-      });
+            // ✅ Parse JSON aggregations
+            const parseJsonAgg = (value) => {
+              if (Array.isArray(value)) return value; // driver a déjà parsé → tableau JS
+              if (typeof value === 'string') {
+                try {
+                  const parsed = JSON.parse(value);
+                  return Array.isArray(parsed) ? parsed : []; // string JSON → parser
+                } catch {
+                  return []; // JSON invalide → tableau vide
+                }
+              }
+              return []; // null, undefined, objet inattendu
+            };
+
+            const platforms = parseJsonAgg(data.platforms);
+
+            // ✅ Construire l'objet application
+            const application = {
+              application_id: data.application_id,
+              application_name: data.application_name,
+              application_link: data.application_link,
+              application_admin_link: data.application_admin_link,
+              application_description: data.application_description,
+              application_category: data.application_category,
+              application_fee: data.application_fee,
+              application_rent: data.application_rent,
+              application_images: data.application_images,
+              application_other_versions: data.application_other_versions,
+              application_level: data.application_level,
+              application_sales: data.application_sales,
+            };
+
+            const template = {
+              template_id: data.template_id,
+              template_name: data.template_name,
+              template_total_applications: data.template_total_applications,
+            };
+
+            // ✅ Succès
+            return {
+              application,
+              template,
+              platforms,
+              success: true,
+              queryDuration,
+            };
+          } finally {
+            client.release();
+          }
+        },
+        CONFIG.retry.maxAttempts,
+        CONFIG.retry.baseDelay,
+        classifyError,
+      );
     } catch (error) {
       const errorInfo = classifyError(error);
-      const queryDuration = performance.now() - startTime;
+      const queryDuration = Date.now() - startTime;
 
       // ✅ Log erreur détaillé
       captureException(error, {
@@ -381,7 +245,7 @@ const getApplicationData = cache(
           templateId,
           queryDuration,
           pgErrorCode: error.code,
-          errorMessage: error.message,
+          errorType: errorInfo.type,
         },
       });
 
