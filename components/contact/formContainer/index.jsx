@@ -80,7 +80,13 @@ FormField.displayName = 'FormField';
 
 // Composant de message de statut mémorisé
 const StatusMessage = memo(({ type, message }) => (
-  <div className={`${type}-message`}>{message}</div>
+  <div
+    className={`${type}-message`}
+    role={type === 'error' ? 'alert' : 'status'}
+    aria-atomic="true"
+  >
+    {message}
+  </div>
 ));
 
 StatusMessage.displayName = 'StatusMessage';
@@ -174,6 +180,10 @@ const FormContainer = () => {
         error_type: 'network_error',
       });
     }
+
+    // Dépendances vides intentionnelles :
+    // formRef et formOpenedAt sont des refs stables (useRef)
+    // sendContactEmail et trackEvent sont des imports statiques
   }, []);
 
   return (
@@ -224,8 +234,7 @@ const FormContainer = () => {
         <input
           type="text"
           name="website"
-          value=""
-          onChange={() => {}}
+          defaultValue="" // ← non contrôlé, pas de warning
           style={{ display: 'none' }}
           tabIndex={-1}
           autoComplete="off"

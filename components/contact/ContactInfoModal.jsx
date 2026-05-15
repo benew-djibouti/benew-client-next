@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MdMail, MdPhone, MdWhatsapp } from 'react-icons/md';
 
@@ -49,12 +49,55 @@ const modalVariants = {
 };
 
 const ContactInfoModal = ({ isOpen, onClose }) => {
-  // Fermeture au clic sur l'overlay
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
+  const modalRef = useRef(null);
+  const previousFocusRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement;
+      modalRef.current?.focus();
+      document.body.style.overflow = 'hidden';
+
+      return () => {
+        document.body.style.overflow = '';
+      };
+    } else {
+      previousFocusRef.current?.focus();
     }
-  };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      const focusable = Array.from(
+        modalRef.current?.querySelectorAll(
+          'button, a[href], input, [tabindex]:not([tabindex="-1"])',
+        ) || [],
+      ).filter((el) => !el.disabled);
+
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
@@ -69,12 +112,17 @@ const ContactInfoModal = ({ isOpen, onClose }) => {
         >
           <motion.div
             className="contact-info-modal-content"
+            ref={modalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="contact-modal-title"
+            tabIndex={-1}
             variants={modalVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
           >
-            <h2>Coordonnées</h2>
+            <h2 id="contact-modal-title">Coordonnées</h2>
 
             <div className="modal-contact-items">
               <ContactItem icon={MdPhone} text="77.86.00.64" />

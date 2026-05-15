@@ -3,31 +3,13 @@
 import './styles/index.scss';
 import { useRef, useState, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
-import {
-  MdMail,
-  MdPhone,
-  MdWhatsapp,
-  MdKeyboardArrowDown,
-  MdContactPage,
-} from 'react-icons/md';
+import { MdMail, MdPhone, MdWhatsapp, MdContactPage } from 'react-icons/md';
 
 import FormContainer from './formContainer';
 import ContactInfoModal from './ContactInfoModal';
 import { trackEvent } from '@/utils/analytics';
 import PageTracker from '../analytics/PageTracker';
 import Parallax from '../layouts/parallax';
-
-// Composant d'en-tête de contact mémorisé
-// const ContactHeader = memo(({ isCollapsed, onToggle }) => (
-//   <div className="collapsible-header" onClick={onToggle}>
-//     <h2>Coordonnées</h2>
-//     <MdKeyboardArrowDown
-//       className={`toggle-icon ${!isCollapsed ? 'open' : ''}`}
-//     />
-//   </div>
-// ));
-
-// ContactHeader.displayName = 'ContactHeader';
 
 // Composant d'élément de contact mémorisé
 const ContactItem = memo(({ icon: Icon, text, variants }) => (
@@ -84,17 +66,6 @@ const Contact = () => {
   const ref = useRef();
   // const [isCollapsed, setIsCollapsed] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Handler pour le toggle optimisé
-  // const handleToggle = useCallback(() => {
-  //   trackEvent('contact_info_toggle', {
-  //     event_category: 'contact',
-  //     event_label: isCollapsed ? 'expand' : 'collapse',
-  //     action: isCollapsed ? 'expand' : 'collapse',
-  //   });
-
-  //   setIsCollapsed((prev) => !prev);
-  // }, [isCollapsed]);
 
   // Handler pour l'ouverture de la modal
   const handleOpenModal = useCallback(() => {
