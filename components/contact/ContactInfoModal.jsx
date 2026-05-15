@@ -52,18 +52,23 @@ const ContactInfoModal = ({ isOpen, onClose }) => {
   const modalRef = useRef(null);
   const previousFocusRef = useRef(null);
 
+  // Effect 1 — focus management uniquement
   useEffect(() => {
     if (isOpen) {
       previousFocusRef.current = document.activeElement;
       modalRef.current?.focus();
-      document.body.style.overflow = 'hidden';
-
-      return () => {
-        document.body.style.overflow = '';
-      };
     } else {
       previousFocusRef.current?.focus();
     }
+  }, [isOpen]);
+
+  // Effect 2 — overflow uniquement, avec cleanup garanti
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -98,6 +103,12 @@ const ContactInfoModal = ({ isOpen, onClose }) => {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
   return (
     <AnimatePresence>

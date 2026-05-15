@@ -118,6 +118,7 @@ const FormContainer = () => {
       error: false,
       success: false,
       loading: true,
+      message: '',
     });
 
     // Tracker le début de soumission

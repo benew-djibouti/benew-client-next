@@ -1,7 +1,7 @@
 // components/modal/OrderModal.jsx
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { createOrder } from '../../actions/orderActions';
 import './orderStyles/index.scss';
 
@@ -231,12 +231,6 @@ const OrderModal = ({
     return true;
   }, [formData.paymentMethods]);
 
-  const handleNext = useCallback(() => {
-    if (step === 1 && validateStep1()) setStep(2);
-    else if (step === 2 && validateStep2()) setStep(3);
-    else if (step === 3) submitOrder();
-  }, [step, validateStep1, validateStep2, submitOrder]);
-
   const submitOrder = useCallback(async () => {
     setIsSubmitting(true);
     setError('');
@@ -296,6 +290,12 @@ const OrderModal = ({
     onClose,
   ]);
 
+  const handleNext = useCallback(() => {
+    if (step === 1 && validateStep1()) setStep(2);
+    else if (step === 2 && validateStep2()) setStep(3);
+    else if (step === 3) submitOrder();
+  }, [step, validateStep1, validateStep2, submitOrder]);
+
   const handleBack = useCallback(() => {
     setStep((prev) => prev - 1);
     setError('');
@@ -307,14 +307,13 @@ const OrderModal = ({
     <div
       className="modalOverlay"
       onClick={closeModal} // ← clic overlay ferme la modale
-      role="dialog"
-      aria-modal="true"
-      aria-label="Formulaire de commande"
     >
       <div
         className="modal"
         onClick={(e) => e.stopPropagation()} // ← empêche la propagation vers l'overlay
         ref={modalRef}
+        role="dialog"
+        aria-modal="true"
         aria-labelledby="modal-step-title"
         tabIndex={-1} // ← permet de recevoir le focus programmatiquement sans être dans l'ordre Tab naturel
       >
