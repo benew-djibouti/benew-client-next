@@ -126,6 +126,7 @@ function Navbar() {
 
           <div className="mobile-social-container">
             <button
+              ref={buttonRef}
               type="button"
               className="social-dropdown-trigger"
               onClick={toggleDropdown}
