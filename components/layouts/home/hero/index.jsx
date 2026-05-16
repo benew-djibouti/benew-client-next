@@ -89,6 +89,8 @@ function Hero() {
             src="/scroll.png"
             alt="Défiler vers le bas"
             title="Défiler vers le bas"
+            width={30}
+            height={30}
             variants={textVariants}
             animate="scrollButton"
           />
