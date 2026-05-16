@@ -24,6 +24,34 @@ import { trackEvent } from '@/utils/analytics';
 import PageTracker from '../analytics/PageTracker';
 import AppImage from './AppImage';
 
+// Hors du composant, au niveau module
+const CARDS_CONFIG = [
+  {
+    id: 'description',
+    title: 'Description',
+    icon: MdDescription,
+    color: 'orange',
+  },
+  {
+    id: 'technical',
+    title: 'Informations Techniques',
+    icon: MdSettings,
+    color: 'purple',
+  },
+  {
+    id: 'needs',
+    title: 'Besoins Spécifiques',
+    icon: MdChecklist,
+    color: 'pink',
+  },
+  {
+    id: 'pricing',
+    title: 'Tarification',
+    icon: MdAttachMoney,
+    color: 'orange',
+  },
+];
+
 // =============================
 // ✅ CAROUSEL GALERIE OPTIMISÉ - SANS FLÈCHES
 // =============================
@@ -36,6 +64,8 @@ const ApplicationGalleryCarousel = memo(
     const touchEndRef = useRef(null); // ← useRef
 
     const isTransitioningRef = useRef(false); // ← à ajouter
+
+    const transitionTimerRef = useRef(null);
 
     const imageList = useMemo(() => {
       if (!images || images.length === 0) {
@@ -50,13 +80,23 @@ const ApplicationGalleryCarousel = memo(
       setIsTransitioning(value);
     }, []);
 
+    // Cleanup au démontage
+    useEffect(() => {
+      return () => {
+        if (transitionTimerRef.current)
+          clearTimeout(transitionTimerRef.current);
+      };
+    }, []);
+
     // ✅ 2. handleSlideChange — déclaré AVANT les useEffect
     const handleSlideChange = useCallback(
       (newIndex) => {
         if (isTransitioningRef.current) return;
         setIsTransitioningSync(true);
         setCurrentSlide(newIndex);
-        setTimeout(() => {
+        if (transitionTimerRef.current)
+          clearTimeout(transitionTimerRef.current);
+        transitionTimerRef.current = setTimeout(() => {
           setIsTransitioningSync(false);
         }, 600);
       },
@@ -221,17 +261,56 @@ ApplicationGalleryCarousel.displayName = 'ApplicationGalleryCarousel';
 // ✅ MODAL CONTENU - NOUVEAU DESIGN
 // =============================
 const ContentModal = memo(({ isOpen, onClose, title, children }) => {
+  const modalRef = useRef(null);
+  const previousFocusRef = useRef(null);
+
+  // Focus management
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      previousFocusRef.current = document.activeElement;
+      modalRef.current?.focus();
     } else {
-      document.body.style.overflow = '';
+      previousFocusRef.current?.focus();
     }
+  }, [isOpen]);
 
+  // Overflow séparé avec cleanup garanti
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
+
+  // Keyboard handler
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const focusable = Array.from(
+        modalRef.current?.querySelectorAll(
+          'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
+        ) || [],
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -239,6 +318,11 @@ const ContentModal = memo(({ isOpen, onClose, title, children }) => {
     <div className="content-modal-overlay" onClick={onClose}>
       <div
         className="content-modal-container"
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="content-modal-title"
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -248,11 +332,11 @@ const ContentModal = memo(({ isOpen, onClose, title, children }) => {
         >
           <FaX />
         </button>
-
         <div className="content-modal-header">
-          <h2 className="content-modal-title">{title}</h2>
+          <h2 id="content-modal-title" className="content-modal-title">
+            {title}
+          </h2>
         </div>
-
         <div className="content-modal-body">{children}</div>
       </div>
     </div>
@@ -433,6 +517,18 @@ const SingleApplication = ({ application, template, platforms, context }) => {
   // Ajouter avec les autres états :
   const [paymentError, setPaymentError] = useState(false);
 
+  const paymentErrorTimerRef = useRef(null);
+
+  const applicationId = context?.applicationId;
+
+  // Cleanup au démontage
+  useEffect(() => {
+    return () => {
+      if (paymentErrorTimerRef.current)
+        clearTimeout(paymentErrorTimerRef.current);
+    };
+  }, []);
+
   useEffect(() => {
     if (context?.applicationId && application?.application_name) {
       try {
@@ -446,7 +542,7 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         console.warn('[Analytics] Error:', error);
       }
     }
-  }, [context?.applicationId, application?.application_name, allImages.length]);
+  }, []);
 
   const handleCardClick = useCallback(
     (cardType) => {
@@ -486,7 +582,12 @@ const SingleApplication = ({ application, template, platforms, context }) => {
   const handleOrderModalOpen = useCallback(() => {
     if (!platforms || platforms.length === 0) {
       setPaymentError(true);
-      setTimeout(() => setPaymentError(false), 4000);
+      if (paymentErrorTimerRef.current)
+        clearTimeout(paymentErrorTimerRef.current);
+      paymentErrorTimerRef.current = setTimeout(
+        () => setPaymentError(false),
+        4000,
+      );
       return;
     }
 
@@ -495,14 +596,14 @@ const SingleApplication = ({ application, template, platforms, context }) => {
     try {
       trackEvent('order_modal_open', {
         event_category: 'ecommerce',
-        application_id: context?.applicationId,
+        application_id: applicationId,
       });
     } catch (error) {
       console.warn('[Analytics] Error:', error);
     }
 
     setIsModalOpen(true);
-  }, [platforms, context]);
+  }, [platforms, applicationId]);
 
   const handleOrderModalClose = useCallback(() => {
     setIsModalOpen(false);
@@ -527,33 +628,6 @@ const SingleApplication = ({ application, template, platforms, context }) => {
   }
 
   const hasPaymentMethods = platforms && platforms.length > 0;
-
-  const cards = [
-    {
-      id: 'description',
-      title: 'Description',
-      icon: MdDescription,
-      color: 'orange',
-    },
-    {
-      id: 'technical',
-      title: 'Informations Techniques',
-      icon: MdSettings,
-      color: 'purple',
-    },
-    {
-      id: 'needs',
-      title: 'Besoins Spécifiques',
-      icon: MdChecklist,
-      color: 'pink',
-    },
-    {
-      id: 'pricing',
-      title: 'Tarification',
-      icon: MdAttachMoney,
-      color: 'orange',
-    },
-  ];
 
   return (
     <div>
@@ -602,7 +676,7 @@ const SingleApplication = ({ application, template, platforms, context }) => {
           </div>
 
           <div className="cards-grid">
-            {cards.map((card) => {
+            {CARDS_CONFIG.map((card) => {
               const IconComponent = card.icon;
               return (
                 <button
