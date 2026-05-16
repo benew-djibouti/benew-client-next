@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import './index.scss';
 import Sidebar from '../sidebar';
 import Image from 'next/image';
@@ -35,6 +35,14 @@ function Navbar() {
 
   const buttonRef = useRef(null);
 
+  const toggleDropdown = useCallback(() => {
+    setIsDropdownOpen((prev) => !prev);
+  }, []);
+
+  const closeDropdown = useCallback(() => {
+    setIsDropdownOpen(false);
+  }, []);
+
   useEffect(() => {
     if (!isDropdownOpen) return;
     const handleKeyDown = (e) => {
@@ -46,14 +54,6 @@ function Navbar() {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isDropdownOpen, closeDropdown]);
-
-  const toggleDropdown = useCallback(() => {
-    setIsDropdownOpen((prev) => !prev);
-  }, []);
-
-  const closeDropdown = useCallback(() => {
-    setIsDropdownOpen(false);
-  }, []);
 
   return (
     <div className="navbar">
@@ -154,7 +154,7 @@ function Navbar() {
             {isDropdownOpen && (
               <div className="social-dropdown">
                 <div className="dropdown-backdrop" onClick={closeDropdown} />
-                <div className="dropdown-content">
+                <div id="social-dropdown-menu" className="dropdown-content">
                   {SOCIAL_LINKS.map((social) => (
                     <a
                       key={social.name}
