@@ -169,7 +169,7 @@ const VideoModal = memo(({ video, onClose }) => {
         ref={modalRef}
         role="dialog"
         aria-modal="true"
-        aria-label={`Lecteur : ${video.video_title}`}
+        aria-labelledby="video-modal-title"
         tabIndex={-1} // ← permet focus programmatique
         onClick={(e) => e.stopPropagation()}
       >
@@ -205,7 +205,9 @@ const VideoModal = memo(({ video, onClose }) => {
 
         {/* Infos sous le lecteur */}
         <div className="video-modal__info">
-          <h2 className="video-modal__title">{video.video_title}</h2>
+          <h2 id="video-modal-title" className="video-modal__title">
+            {video.video_title}
+          </h2>
           <div className="video-modal__meta">
             <span className="video-modal__date">
               Publiée le {formatDate(video.created_at)}
