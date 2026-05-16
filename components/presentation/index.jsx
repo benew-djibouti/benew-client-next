@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import './index.scss';
 import Image from 'next/image';
 
@@ -24,13 +24,6 @@ const PresentationComponent = () => {
 
   const closeTimerRef = useRef(null);
 
-  // Cleanup au démontage
-  useEffect(() => {
-    return () => {
-      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-    };
-  }, []);
-
   // Ouvrir le modal pour la carte "SKY IS THE LIMIT"
   const handleCardClick = useCallback(() => {
     try {
@@ -49,29 +42,41 @@ const PresentationComponent = () => {
 
   // Ouvrir le modal pour une catégorie spécifique
   const handleCategoryClick = useCallback((category) => {
-    trackEvent('presentation_category_click', {
-      event_category: 'presentation',
-      event_label: category.id,
-      category_type: category.id,
-      page_section: 'categories',
-    });
-
-    // Charger le contenu de la catégorie
+    try {
+      trackEvent('presentation_category_click', {
+        event_category: 'presentation',
+        event_label: category.id,
+        category_type: category.id,
+        page_section: 'categories',
+      });
+    } catch (e) {
+      console.warn('[Analytics] Error tracking category click:', e);
+    }
     setModalContent(categoryContents[category.contentKey]);
     setIsModalOpen(true);
   }, []);
 
   const closeModal = useCallback(() => {
-    trackEvent('presentation_modal_close', {
-      event_category: 'presentation',
-      event_label: modalContent?.title || 'unknown',
-      modal_type: modalContent?.title || 'unknown',
-    });
-
+    try {
+      trackEvent('presentation_modal_close', {
+        event_category: 'presentation',
+        event_label: modalContent?.title || 'unknown',
+        modal_type: modalContent?.title || 'unknown',
+      });
+    } catch (e) {
+      console.warn('[Analytics] Error tracking modal close:', e);
+    }
     setIsModalOpen(false);
     if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
     closeTimerRef.current = setTimeout(() => setModalContent(null), 300);
   }, [modalContent]);
+
+  // Cleanup au démontage
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
 
   return (
     <>
