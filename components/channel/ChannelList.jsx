@@ -245,7 +245,7 @@ const VideoCard = memo(({ video, onPlay }) => {
               width={520}
               height={293}
               className="video-card__thumb-img"
-              loading="lazy"
+              preload
               quality="auto"
               format="auto"
               crop={{ type: 'fill', gravity: 'auto' }}
