@@ -113,6 +113,14 @@ const VideoModal = memo(({ video, onClose }) => {
     };
   }, []);
 
+  // Effect 1 — overflow uniquement
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []); // ← [] car la modal est montée/démontée entière, pas toggleée
+
   // Escape + focus trap + overflow
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -151,12 +159,7 @@ const VideoModal = memo(({ video, onClose }) => {
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-    };
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
   return (
@@ -311,7 +314,7 @@ const ChannelList = ({ videos: initialVideos = [] }) => {
         console.warn('[Analytics] Error tracking channel page view:', e);
       }
     }
-  }, [initialVideos.length]);
+  }, []);
 
   const handleVideoPlay = useCallback((video) => {
     setActiveVideo(video);
