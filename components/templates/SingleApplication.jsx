@@ -530,12 +530,12 @@ const SingleApplication = ({ application, template, platforms, context }) => {
   }, []);
 
   useEffect(() => {
-    if (context?.applicationId && application?.application_name) {
+    if (applicationId && application?.application_name) {
       try {
         trackEvent('application_page_view', {
           event_category: 'application',
           event_label: application.application_name,
-          application_id: context.applicationId,
+          application_id: applicationId,
           total_images: allImages.length,
         });
       } catch (error) {
@@ -551,13 +551,13 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         trackEvent('card_click', {
           event_category: 'ui',
           event_label: cardType,
-          application_id: context?.applicationId,
+          application_id: applicationId,
         });
       } catch (error) {
         console.warn('[Analytics] Error:', error);
       }
     },
-    [context?.applicationId],
+    [applicationId],
   );
 
   const handleModalClose = useCallback(() => {
@@ -570,13 +570,13 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         trackEvent('external_link', {
           event_category: 'navigation',
           event_label: linkType,
-          application_id: context?.applicationId,
+          application_id: applicationId,
         });
       } catch (error) {
         console.warn('[Analytics] Error:', error);
       }
     },
-    [context?.applicationId],
+    [applicationId],
   );
 
   const handleOrderModalOpen = useCallback(() => {
