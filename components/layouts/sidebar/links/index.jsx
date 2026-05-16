@@ -1,7 +1,18 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+const MotionLink = motion.create(Link);
+
+const NAV_ITEMS = [
+  { title: 'Accueil', path: '' },
+  { title: 'Modèles', path: 'templates' },
+  { title: 'Chaîne Tuto', path: 'channel' },
+  { title: 'Présentation', path: 'presentation' },
+  { title: 'Contact', path: 'contact' },
+];
 
 const variants = {
   open: {
@@ -28,31 +39,8 @@ const itemVariants = {
   },
 };
 
-function Links() {
+function Links({ setOpen }) {
   const pathname = usePathname();
-
-  const items = [
-    {
-      title: 'Accueil',
-      path: '',
-    },
-    {
-      title: 'Modèles',
-      path: 'templates',
-    },
-    {
-      title: 'Chaîne Tuto',
-      path: 'channel',
-    },
-    {
-      title: 'Présentation',
-      path: 'presentation',
-    },
-    {
-      title: 'Contact',
-      path: 'contact',
-    },
-  ];
 
   // Fonction pour vérifier si le lien est actif
   const isActive = (itemPath) => {
@@ -66,7 +54,7 @@ function Links() {
 
   return (
     <motion.div className="links" variants={variants}>
-      {items.map((item) => {
+      {NAV_ITEMS.map((item) => {
         const active = isActive(item.path);
 
         return (
@@ -76,9 +64,13 @@ function Links() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
-            <motion.a href={`/${item.path}`} variants={itemVariants}>
+            <MotionLink
+              href={`/${item.path}`}
+              variants={itemVariants}
+              onClick={() => setOpen(false)}
+            >
               {item.title}
-            </motion.a>
+            </MotionLink>
           </motion.div>
         );
       })}
