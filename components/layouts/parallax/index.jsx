@@ -1,49 +1,47 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import './parallax.scss';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+} from 'framer-motion';
 
 function Parallax({ bgColor, title, planets }) {
-  const ref = useRef();
-  const [backgroundStyle, setBackgroundStyle] = useState({});
-  const [planetsStyle, setPlanetsStyle] = useState({});
+  const ref = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start start', 'end start'],
   });
 
-  const yText = useTransform(scrollYProgress, [0, 1], ['0%', '500%']);
-  const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  // Si reduced motion préféré → valeurs statiques (0 mouvement)
+  const yText = useTransform(
+    scrollYProgress,
+    [0, 1],
+    shouldReduceMotion ? ['0%', '0%'] : ['0%', '500%'],
+  );
+  const yBg = useTransform(
+    scrollYProgress,
+    [0, 1],
+    shouldReduceMotion ? ['0%', '0%'] : ['0%', '100%'],
+  );
 
-  // Mise à jour du style de background via useEffect
-  useEffect(() => {
-    setBackgroundStyle({
-      background: bgColor,
-    });
-  }, [bgColor]);
-
-  // Mise à jour du style des planets via useEffect
-  useEffect(() => {
-    if (planets) {
-      setPlanetsStyle({
-        backgroundImage: `url(${planets})`,
-      });
-    }
-  }, [planets]);
+  // Calculé directement — pas de useState ni useEffect
+  const backgroundStyle = bgColor ? { background: bgColor } : {};
+  const planetsStyle =
+    planets && typeof planets === 'string'
+      ? { backgroundImage: `url(${planets})` }
+      : {};
 
   return (
     <div className="parallax" ref={ref} style={backgroundStyle}>
-      <motion.h1 style={{ y: yText }}>{title}</motion.h1>
+      {title && <motion.h1 style={{ y: yText }}>{title}</motion.h1>}
       <motion.div className="mountains" />
-      <motion.div
-        className="planets"
-        style={{
-          y: yBg,
-          ...planetsStyle,
-        }}
-      />
+      <motion.div className="planets" style={{ y: yBg, ...planetsStyle }} />
       <motion.div style={{ x: yBg }} className="stars" />
     </div>
   );
