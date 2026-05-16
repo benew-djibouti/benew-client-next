@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import './index.scss';
 import { trackEvent } from '@/utils/analytics';
+import Link from 'next/link';
 
 const textVariants = {
   initial: {
@@ -42,6 +43,9 @@ const sliderVariants = {
   },
 };
 
+const MotionLink = motion.create(Link);
+const MotionImage = motion.create(Image);
+
 function Hero() {
   return (
     <div className="hero">
@@ -59,25 +63,29 @@ function Hero() {
             COMMENCES TON HISTOIRE !
           </motion.h1>
           <motion.div className="buttonGroup" variants={textVariants}>
-            <motion.a
+            <MotionLink
               href="/templates"
               className="primaryButton"
-              onClick={() =>
-                trackEvent('cta_click', {
-                  event_category: 'hero',
-                  event_label: 'discover_templates',
-                  button_type: 'primary',
-                  page_section: 'hero',
-                })
-              }
+              onClick={() => {
+                try {
+                  trackEvent('cta_click', {
+                    event_category: 'hero',
+                    event_label: 'discover_templates',
+                    button_type: 'primary',
+                    page_section: 'hero',
+                  });
+                } catch (e) {
+                  console.warn('[Analytics] Error tracking CTA click:', e);
+                }
+              }}
             >
               Découvrez Nos Magasins
-            </motion.a>
-            <motion.a href="/presentation" className="secondaryButton">
+            </MotionLink>
+            <MotionLink href="/presentation" className="secondaryButton">
               BENEW
-            </motion.a>
+            </MotionLink>
           </motion.div>
-          <motion.img
+          <MotionImage
             src="/scroll.png"
             alt="Défiler vers le bas"
             title="Défiler vers le bas"
