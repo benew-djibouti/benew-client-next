@@ -2,22 +2,58 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import './index.scss';
 import Sidebar from '../sidebar';
 import Image from 'next/image';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 
+// En dehors du composant
+const SOCIAL_LINKS = [
+  {
+    name: 'Facebook',
+    href: process.env.NEXT_PUBLIC_FACEBOOK_URL || '#',
+    icon: '/facebook.png',
+    alt: 'Facebook logo',
+  },
+  {
+    name: 'Instagram',
+    href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || '#',
+    icon: '/instagram.png',
+    alt: 'Instagram logo',
+  },
+  {
+    name: 'TikTok',
+    href: process.env.NEXT_PUBLIC_TIKTOK_URL || '#',
+    icon: '/tik-tok.png',
+    alt: 'TikTok logo',
+  },
+];
+
 function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+  const buttonRef = useRef(null);
 
-  const closeDropdown = () => {
+  useEffect(() => {
+    if (!isDropdownOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        closeDropdown();
+        buttonRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isDropdownOpen, closeDropdown]);
+
+  const toggleDropdown = useCallback(() => {
+    setIsDropdownOpen((prev) => !prev);
+  }, []);
+
+  const closeDropdown = useCallback(() => {
     setIsDropdownOpen(false);
-  };
+  }, []);
 
   return (
     <div className="navbar">
@@ -46,36 +82,22 @@ function Navbar() {
           </motion.div>
 
           <div className="social">
-            <Link href="#">
-              <Image
-                src="/facebook.png"
-                alt="Facebook logo"
-                width={24}
-                height={24}
-                className="social-icon"
-                unoptimized
-              />
-            </Link>
-            <Link href="#">
-              <Image
-                src="/instagram.png"
-                alt="Instagram logo"
-                width={24}
-                height={24}
-                className="social-icon"
-                unoptimized
-              />
-            </Link>
-            <Link href="#">
-              <Image
-                src="/tik-tok.png"
-                alt="TikTok logo"
-                width={24}
-                height={24}
-                className="social-icon"
-                unoptimized
-              />
-            </Link>
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                key={social.name}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src={social.icon}
+                  alt={social.alt}
+                  width={24}
+                  height={24}
+                  unoptimized
+                />
+              </a>
+            ))}
           </div>
         </div>
 
@@ -104,9 +126,17 @@ function Navbar() {
 
           <div className="mobile-social-container">
             <button
+              type="button"
               className="social-dropdown-trigger"
               onClick={toggleDropdown}
-              aria-label="Ouvrir le menu des réseaux sociaux"
+              aria-label={
+                isDropdownOpen
+                  ? 'Fermer le menu des réseaux sociaux'
+                  : 'Ouvrir le menu des réseaux sociaux'
+              }
+              aria-expanded={isDropdownOpen}
+              aria-haspopup="true"
+              aria-controls="social-dropdown-menu"
             >
               <Image
                 src="/social_websites.png"
@@ -125,51 +155,25 @@ function Navbar() {
               <div className="social-dropdown">
                 <div className="dropdown-backdrop" onClick={closeDropdown} />
                 <div className="dropdown-content">
-                  <Link
-                    href="#"
-                    className="dropdown-item"
-                    onClick={closeDropdown}
-                  >
-                    <Image
-                      src="/facebook.png"
-                      alt="Facebook"
-                      width={20}
-                      height={20}
-                      className="dropdown-icon"
-                      unoptimized
-                    />
-                    <span>Facebook</span>
-                  </Link>
-                  <Link
-                    href="#"
-                    className="dropdown-item"
-                    onClick={closeDropdown}
-                  >
-                    <Image
-                      src="/instagram.png"
-                      alt="Instagram"
-                      width={20}
-                      height={20}
-                      className="dropdown-icon"
-                      unoptimized
-                    />
-                    <span>Instagram</span>
-                  </Link>
-                  <Link
-                    href="#"
-                    className="dropdown-item"
-                    onClick={closeDropdown}
-                  >
-                    <Image
-                      src="/tik-tok.png"
-                      alt="TikTok"
-                      width={20}
-                      height={20}
-                      className="dropdown-icon"
-                      unoptimized
-                    />
-                    <span>Tik Tok</span>
-                  </Link>
+                  {SOCIAL_LINKS.map((social) => (
+                    <a
+                      key={social.name}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="dropdown-item"
+                      onClick={closeDropdown}
+                    >
+                      <Image
+                        src={social.icon}
+                        alt={social.alt}
+                        width={20}
+                        height={20}
+                        unoptimized
+                      />
+                      <span>{social.name}</span>
+                    </a>
+                  ))}
                 </div>
               </div>
             )}
