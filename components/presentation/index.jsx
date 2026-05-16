@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import './index.scss';
 import Image from 'next/image';
 
@@ -22,21 +22,33 @@ const PresentationComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
 
-  // Ouvrir le modal pour la carte "SKY IS THE LIMIT"
-  const handleCardClick = () => {
-    trackEvent('presentation_modal_open', {
-      event_category: 'presentation',
-      event_label: 'sky_is_the_limit',
-      modal_type: 'vision',
-      page_section: 'main_card',
-    });
+  const closeTimerRef = useRef(null);
 
+  // Cleanup au démontage
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
+
+  // Ouvrir le modal pour la carte "SKY IS THE LIMIT"
+  const handleCardClick = useCallback(() => {
+    try {
+      trackEvent('presentation_modal_open', {
+        event_category: 'presentation',
+        event_label: 'sky_is_the_limit',
+        modal_type: 'vision',
+        page_section: 'main_card',
+      });
+    } catch (e) {
+      console.warn('[Analytics] Error tracking card click:', e);
+    }
     setModalContent(categoryContents.vision);
     setIsModalOpen(true);
-  };
+  }, []);
 
   // Ouvrir le modal pour une catégorie spécifique
-  const handleCategoryClick = (category) => {
+  const handleCategoryClick = useCallback((category) => {
     trackEvent('presentation_category_click', {
       event_category: 'presentation',
       event_label: category.id,
@@ -47,9 +59,9 @@ const PresentationComponent = () => {
     // Charger le contenu de la catégorie
     setModalContent(categoryContents[category.contentKey]);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     trackEvent('presentation_modal_close', {
       event_category: 'presentation',
       event_label: modalContent?.title || 'unknown',
@@ -57,9 +69,9 @@ const PresentationComponent = () => {
     });
 
     setIsModalOpen(false);
-    // Réinitialiser le contenu après la fermeture (optionnel)
-    setTimeout(() => setModalContent(null), 300);
-  };
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = setTimeout(() => setModalContent(null), 300);
+  }, [modalContent]);
 
   return (
     <>

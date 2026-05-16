@@ -7,6 +7,14 @@ const PresentationModal = ({ isOpen, onClose, content }) => {
   const modalRef = useRef(null);
   const previousFocusRef = useRef(null);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   // Focus management — ouverture et fermeture
   useEffect(() => {
     if (isOpen) {
@@ -63,7 +71,7 @@ const PresentationModal = ({ isOpen, onClose, content }) => {
   if (!isOpen || !content) return null;
 
   return (
-    <div className="modalOverlay" onClick={onClose} aria-hidden="true">
+    <div className="modalOverlay" onClick={onClose}>
       <div
         className="modal"
         ref={modalRef}
@@ -74,7 +82,7 @@ const PresentationModal = ({ isOpen, onClose, content }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modalContent">
-          <h2>{content.title}</h2>
+          <h2 id="modal-title">{content.title}</h2>
           <div className="modalText">
             {content.paragraphs
               .filter((paragraph) => paragraph !== '')
