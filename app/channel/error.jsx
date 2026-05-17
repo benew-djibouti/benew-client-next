@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import * as Sentry from '@sentry/nextjs';
 import { trackEvent } from '@/utils/analytics';
@@ -22,6 +22,7 @@ export default function ChannelError({ error, reset }) {
 
     Sentry.captureException(error, {
       tags: {
+        digest: error?.digest,
         component: 'channel_error_boundary',
         page: 'channel',
         error_type: 'client_side_error',
@@ -29,8 +30,6 @@ export default function ChannelError({ error, reset }) {
       extra: {
         errorName: error?.name || 'Unknown',
         errorMessage: error?.message || 'No message',
-        errorStack: error?.stack?.substring(0, 500),
-        // retryCount retiré — toujours 0 ici
       },
       level: 'error',
     });
@@ -39,14 +38,17 @@ export default function ChannelError({ error, reset }) {
   // Analytics — séparé
   useEffect(() => {
     if (!error) return;
-
-    trackEvent('error_boundary_shown', {
-      event_category: 'errors',
-      event_label: 'channel_error',
-      error_name: error?.name || 'Unknown',
-      error_message: error?.message?.substring(0, 100) || 'No message',
-      page: 'channel',
-    });
+    try {
+      trackEvent('error_boundary_shown', {
+        event_category: 'errors',
+        event_label: 'channel_error',
+        error_name: error?.name || 'Unknown',
+        error_message: error?.message?.substring(0, 100) || 'No message',
+        page: 'channel',
+      });
+    } catch (e) {
+      console.warn('[Analytics] Error tracking boundary shown:', e);
+    }
   }, [error]);
 
   // Cleanup au démontage
@@ -56,35 +58,40 @@ export default function ChannelError({ error, reset }) {
     };
   }, []);
 
-  const handleRetry = () => {
+  const handleRetry = useCallback(() => {
     if (retryCount >= MAX_RETRIES || isRetrying) return;
-
     setIsRetrying(true);
     setRetryCount((prev) => prev + 1);
-
-    trackEvent('error_retry_attempt', {
-      event_category: 'errors',
-      event_label: 'channel_retry',
-      retry_number: retryCount + 1,
-      max_retries: MAX_RETRIES,
-      page: 'channel',
-    });
-
+    try {
+      trackEvent('error_retry_attempt', {
+        event_category: 'errors',
+        event_label: 'channel_retry',
+        retry_number: retryCount + 1,
+        max_retries: MAX_RETRIES,
+        page: 'channel',
+      });
+    } catch (e) {
+      console.warn('[Analytics] Error tracking retry:', e);
+    }
     const delay = Math.min(1000 * (retryCount + 1), 3000);
-
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setIsRetrying(false);
       reset();
     }, delay);
-  };
+  }, [retryCount, isRetrying, reset]);
 
-  const handleGoHome = () => {
-    trackEvent('error_recovery_home', {
-      event_category: 'errors',
-      event_label: 'channel_home',
-      retry_count: retryCount,
-    });
-  };
+  const handleGoHome = useCallback(() => {
+    try {
+      trackEvent('error_recovery_home', {
+        event_category: 'errors',
+        event_label: 'channel_home',
+        retry_count: retryCount,
+      });
+    } catch (e) {
+      console.warn('[Analytics] Error tracking home:', e);
+    }
+  }, [retryCount]);
 
   const canRetry = retryCount < MAX_RETRIES;
   const isMaxRetriesReached = retryCount >= MAX_RETRIES;
@@ -139,6 +146,7 @@ export default function ChannelError({ error, reset }) {
           <div className="error-actions">
             {canRetry && (
               <button
+                type="button"
                 onClick={handleRetry}
                 disabled={isRetrying}
                 className="retry-button"
