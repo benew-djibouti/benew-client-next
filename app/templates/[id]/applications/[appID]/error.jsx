@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import './error.scss';
@@ -18,34 +18,45 @@ import { trackEvent } from '@/utils/analytics'; // ← utiliser trackEvent comme
 export default function ApplicationDetailError({ error, reset }) {
   const [retryCount, setRetryCount] = useState(0);
   const [isRetrying, setIsRetrying] = useState(false);
+
+  const timeoutRef = useRef(null);
+
   const params = useParams();
   const templateId = params?.id;
   const appId = params?.appID;
+
   const MAX_RETRIES = 3;
 
-  // ✅ Tracking analytics (simple et sécurisé)
+  // Cleanup au démontage
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   // useEffect Sentry — capture une seule fois
   useEffect(() => {
     if (!error) return;
-
-    Sentry.captureException(error, {
-      tags: {
-        component: 'application_detail_error_boundary',
-        page: 'application_detail',
-        error_type: 'client_side_error',
-        template_id: templateId || 'unknown',
-        app_id: appId || 'unknown',
-      },
-      extra: {
-        errorName: error?.name || 'Unknown',
-        errorMessage: error?.message || 'No message',
-        errorStack: error?.stack?.substring(0, 500),
-        templateId,
-        appId,
-      },
-      level: 'error',
-    });
+    try {
+      Sentry.captureException(error, {
+        tags: {
+          component: 'application_detail_error_boundary',
+          page: 'application_detail',
+          template_id: templateId || 'unknown',
+          app_id: appId || 'unknown',
+        },
+        extra: {
+          errorName: error?.name || 'Unknown',
+          errorMessage: error?.message || 'No message',
+          errorStack: error?.stack?.substring(0, 500),
+          templateId,
+          appId,
+        },
+        level: 'error',
+      });
+    } catch (sentryError) {
+      console.warn('[Sentry] Failed to capture exception:', sentryError);
+    }
   }, [error, templateId, appId]); // retryCount absent intentionnellement
 
   // useEffect Analytics — séparé
@@ -73,7 +84,7 @@ export default function ApplicationDetailError({ error, reset }) {
   /**
    * ✅ RETRY AVEC BACKOFF EXPONENTIEL
    */
-  const handleRetry = async () => {
+  const handleRetry = () => {
     if (retryCount >= MAX_RETRIES || isRetrying) return;
 
     setIsRetrying(true);
@@ -96,11 +107,26 @@ export default function ApplicationDetailError({ error, reset }) {
     // ✅ Backoff exponentiel: 1s, 2s, 4s
     const delay = Math.min(1000 * Math.pow(2, retryCount), 4000);
 
-    setTimeout(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
       setIsRetrying(false);
       reset();
     }, delay);
   };
+
+  const handleNavigationBack = useCallback(() => {
+    try {
+      trackEvent('error_recovery_navigation', {
+        event_category: 'errors',
+        event_label: 'application_detail_back_template',
+        retry_count: retryCount,
+        template_id: templateId,
+        app_id: appId,
+      });
+    } catch (e) {
+      console.warn('[Analytics] Navigation tracking failed:', e);
+    }
+  }, [retryCount, templateId, appId]);
 
   const canRetry = retryCount < MAX_RETRIES;
   const isMaxRetriesReached = retryCount >= MAX_RETRIES;
@@ -161,9 +187,14 @@ export default function ApplicationDetailError({ error, reset }) {
               </button>
             )}
 
-            <Link href={`/templates/${templateId}`} className="template-button">
-              🔙 Retour au template
-            </Link>
+            {templateId && (
+              <Link
+                href={`/templates/${templateId}`}
+                className="template-button"
+              >
+                🔙 Retour au template
+              </Link>
+            )}
 
             <Link href="/templates" className="templates-button">
               📋 Tous les templates

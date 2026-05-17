@@ -27,10 +27,16 @@ export default function PresentationError({ error, reset }) {
   // Log simple pour suivi des interactions utilisateur (tracking uniquement)
   useEffect(() => {
     if (error) {
-      trackEvent('error_boundary_shown', {
-        page: 'presentation',
-        error_name: error?.name || 'Unknown',
-      });
+      try {
+        trackEvent('error_retry_attempt', {
+          event_category: 'errors',
+          event_label: 'presentation_retry',
+          page: 'presentation',
+          retry_number: retryCount + 1,
+        });
+      } catch (e) {
+        console.warn('[Analytics] Retry tracking failed:', e);
+      }
     }
   }, [error]);
 
@@ -43,10 +49,14 @@ export default function PresentationError({ error, reset }) {
     setIsRetrying(true);
     setRetryCount((prev) => prev + 1);
 
-    trackEvent('error_retry_attempt', {
-      page: 'presentation',
-      retry_number: retryCount + 1,
-    });
+    try {
+      trackEvent('error_retry_attempt', {
+        page: 'presentation',
+        retry_number: retryCount + 1,
+      });
+    } catch (e) {
+      console.warn('[Analytics] Retry tracking failed:', e);
+    }
 
     const delay = Math.min(1000 * (retryCount + 1), 3000);
 
