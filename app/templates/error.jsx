@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import * as Sentry from '@sentry/nextjs';
 import { trackEvent } from '@/utils/analytics';
@@ -14,7 +14,17 @@ import './error.scss';
 export default function TemplatesError({ error, reset }) {
   const [retryCount, setRetryCount] = useState(0);
   const [isRetrying, setIsRetrying] = useState(false);
+
+  const timeoutRef = useRef(null);
+
   const MAX_RETRIES = 3;
+
+  // Cleanup au démontage
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   // useEffect Sentry — se déclenche une seule fois quand error apparaît
   useEffect(() => {
@@ -22,6 +32,7 @@ export default function TemplatesError({ error, reset }) {
 
     Sentry.captureException(error, {
       tags: {
+        digest: error?.digest,
         component: 'templates_error_boundary',
         page: 'templates_list',
         error_type: 'client_side_error',
@@ -29,8 +40,6 @@ export default function TemplatesError({ error, reset }) {
       extra: {
         errorName: error?.name || 'Unknown',
         errorMessage: error?.message || 'No message',
-        errorStack: error?.stack?.substring(0, 500),
-        // retryCount retiré — toujours 0 ici de toute façon
       },
       level: 'error',
     });
@@ -56,12 +65,10 @@ export default function TemplatesError({ error, reset }) {
     }
   }, [error]); // ← uniquement error
 
-  const handleRetry = async () => {
+  const handleRetry = useCallback(() => {
     if (retryCount >= MAX_RETRIES || isRetrying) return;
-
     setIsRetrying(true);
     setRetryCount((prev) => prev + 1);
-
     try {
       trackEvent('error_retry_attempt', {
         event_category: 'errors',
@@ -70,29 +77,28 @@ export default function TemplatesError({ error, reset }) {
         max_retries: MAX_RETRIES,
         page: 'templates_list',
       });
-    } catch (error) {
-      console.warn('[Analytics] Error tracking retry:', error);
+    } catch (e) {
+      console.warn('[Analytics] Error tracking retry:', e);
     }
-
     const delay = Math.min(1000 * (retryCount + 1), 3000);
-
-    setTimeout(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
       setIsRetrying(false);
       reset();
     }, delay);
-  };
+  }, [retryCount, isRetrying, reset]);
 
-  const handleGoHome = () => {
+  const handleGoHome = useCallback(() => {
     try {
       trackEvent('error_recovery_home', {
         event_category: 'errors',
         event_label: 'templates_list_home',
         retry_count: retryCount,
       });
-    } catch (error) {
-      console.warn('[Analytics] Error tracking home button:', error);
+    } catch (e) {
+      console.warn('[Analytics] Error tracking home:', e);
     }
-  };
+  }, [retryCount]);
 
   const canRetry = retryCount < MAX_RETRIES;
   const isMaxRetriesReached = retryCount >= MAX_RETRIES;
@@ -164,6 +170,7 @@ export default function TemplatesError({ error, reset }) {
           <div className="error-actions">
             {canRetry && (
               <button
+                type="button"
                 onClick={handleRetry}
                 disabled={isRetrying}
                 className="retry-button"
