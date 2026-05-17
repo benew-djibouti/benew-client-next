@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import * as Sentry from '@sentry/nextjs';
 import Link from 'next/link';
 import './error.scss';
 // Manquant en tête du fichier
@@ -24,26 +25,47 @@ export default function PresentationError({ error, reset }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!error) return;
+    try {
+      Sentry.captureException(error, {
+        tags: {
+          component: 'presentation_error_boundary',
+          page: 'presentation',
+          error_type: 'client_side_error',
+        },
+        extra: {
+          errorName: error?.name || 'Unknown',
+          errorMessage: error?.message || 'No message',
+          errorStack: error?.stack?.substring(0, 500),
+        },
+        level: 'error',
+      });
+    } catch (sentryError) {
+      console.warn('[Sentry] Failed to capture exception:', sentryError);
+    }
+  }, [error]);
+
   // Log simple pour suivi des interactions utilisateur (tracking uniquement)
   useEffect(() => {
-    if (error) {
-      try {
-        trackEvent('error_retry_attempt', {
-          event_category: 'errors',
-          event_label: 'presentation_retry',
-          page: 'presentation',
-          retry_number: retryCount + 1,
-        });
-      } catch (e) {
-        console.warn('[Analytics] Retry tracking failed:', e);
-      }
+    if (!error) return;
+    try {
+      trackEvent('error_boundary_shown', {
+        // ← nom correct
+        event_category: 'errors',
+        event_label: 'presentation_error',
+        page: 'presentation',
+        error_name: error?.name || 'Unknown',
+      });
+    } catch (e) {
+      console.warn('[Analytics] Error tracking failed:', e);
     }
   }, [error]);
 
   /**
    * Gestion du retry avec délai simple
    */
-  const handleRetry = async () => {
+  const handleRetry = () => {
     if (retryCount >= MAX_RETRIES || isRetrying) return;
 
     setIsRetrying(true);
