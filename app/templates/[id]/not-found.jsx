@@ -11,8 +11,9 @@ export default function TemplateDetailNotFound() {
   const params = useParams();
   const templateId = params?.id;
 
+  // useEffect Sentry
   useEffect(() => {
-    // ✅ Capture dans Sentry côté client
+    if (!templateId) return;
     try {
       Sentry.captureMessage('404 - Template not found', {
         level: 'info',
@@ -25,16 +26,18 @@ export default function TemplateDetailNotFound() {
         extra: {
           templateId,
           timestamp: new Date().toISOString(),
-          url: typeof window !== 'undefined' ? window.location.href : 'unknown',
-          referrer:
-            typeof document !== 'undefined' ? document.referrer : 'unknown',
+          url: window.location.href,
+          referrer: document.referrer,
         },
       });
     } catch (error) {
       console.warn('[Sentry] Error capturing 404:', error);
     }
+  }, [templateId]);
 
-    // Track dans Analytics
+  // useEffect Analytics
+  useEffect(() => {
+    if (!templateId) return;
     try {
       trackEvent('page_not_found', {
         event_category: 'errors',
@@ -45,7 +48,6 @@ export default function TemplateDetailNotFound() {
     } catch (error) {
       console.warn('[Analytics] Error tracking 404:', error);
     }
-
     if (process.env.NODE_ENV === 'development') {
       console.log('[TemplateDetailNotFound] 404 for template:', templateId);
     }
@@ -79,10 +81,12 @@ export default function TemplateDetailNotFound() {
               <p>
                 <strong>Template ID :</strong> {templateId || 'unknown'}
               </p>
-              <p>
-                <strong>URL :</strong>{' '}
-                {typeof window !== 'undefined' ? window.location.href : 'N/A'}
-              </p>
+
+              {typeof window !== 'undefined' && (
+                <p>
+                  <strong>URL :</strong> {window.location.href}
+                </p>
+              )}
             </div>
           )}
 
