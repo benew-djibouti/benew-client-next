@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import * as Sentry from '@sentry/nextjs'; // ✅ CORRECTION ICI
 import { trackEvent } from '@/utils/analytics';
@@ -18,8 +18,8 @@ export default function ApplicationDetailNotFound() {
   const templateId = params?.id;
   const appId = params?.appID;
 
+  // useEffect Sentry
   useEffect(() => {
-    // ✅ Capture Sentry (sécurisé)
     try {
       Sentry.captureMessage('404 - Application not found', {
         level: 'info',
@@ -34,16 +34,17 @@ export default function ApplicationDetailNotFound() {
           templateId,
           appId,
           timestamp: new Date().toISOString(),
-          url: typeof window !== 'undefined' ? window.location.href : 'unknown',
-          referrer:
-            typeof document !== 'undefined' ? document.referrer : 'unknown',
+          url: window.location.href,
+          referrer: document.referrer,
         },
       });
     } catch (error) {
       console.warn('[Sentry] Capture failed:', error);
     }
+  }, [templateId, appId]);
 
-    // ✅ Analytics tracking (sécurisé)
+  // useEffect Analytics
+  useEffect(() => {
     try {
       trackEvent('page_not_found', {
         event_category: 'errors',
@@ -55,33 +56,31 @@ export default function ApplicationDetailNotFound() {
     } catch (error) {
       console.warn('[Analytics] Tracking failed:', error);
     }
-
-    // Log dev
     if (process.env.NODE_ENV === 'development') {
-      console.log('[404] Application not found:', {
-        templateId,
-        appId,
-      });
+      console.log('[404] Application not found:', { templateId, appId });
     }
   }, [templateId, appId]);
 
   /**
    * ✅ Handler avec tracking
    */
-  const handleLinkClick = (destination, extra = {}) => {
-    try {
-      trackEvent('404_navigation', {
-        event_category: 'errors',
-        event_label: `404_to_${destination}`,
-        from_page: 'application_detail',
-        template_id: templateId,
-        application_id: appId,
-        ...extra,
-      });
-    } catch (error) {
-      console.warn('[Analytics] Navigation tracking failed:', error);
-    }
-  };
+  const handleLinkClick = useCallback(
+    (destination, extra = {}) => {
+      try {
+        trackEvent('404_navigation', {
+          event_category: 'errors',
+          event_label: `404_to_${destination}`,
+          from_page: 'application_detail',
+          template_id: templateId,
+          application_id: appId,
+          ...extra,
+        });
+      } catch (error) {
+        console.warn('[Analytics] Navigation tracking failed:', error);
+      }
+    },
+    [templateId, appId],
+  );
 
   return (
     <section className="first">
