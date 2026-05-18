@@ -14,8 +14,6 @@ const validateEnv = () => {
   const IS_BUILD_PHASE = process.env.NEXT_PHASE === 'phase-production-build';
 
   if (NODE_ENV !== 'production') {
-  console.log(`🔍 Environment Detection: ...`);
-
   console.log(`🔍 Environment Detection:
     - NODE_ENV: ${NODE_ENV}
     - IS_CI: ${IS_CI}
@@ -69,13 +67,15 @@ const validateEnv = () => {
   } else if (IS_CI && NODE_ENV === 'production') {
     // 🏗️ BUILD CI/CD : Seulement les variables nécessaires au build
     requiredVars = [...ALWAYS_REQUIRED, ...BUILD_TIME_VARS];
-    console.log(
-      '🏗️ CI Build mode: Validating ALWAYS_REQUIRED + BUILD_TIME_VARS',
-    );
+
+    if (NODE_ENV !== 'production') {
+      console.log(
+        '🏗️ CI Build mode: Validating ALWAYS_REQUIRED + BUILD_TIME_VARS',
+      );
+    }
   } else if (NODE_ENV === 'production' && !IS_CI) {
     // 🚀 PRODUCTION RUNTIME : Validation complète
     requiredVars = [...ALWAYS_REQUIRED, ...RUNTIME_VARS, ...BUILD_TIME_VARS];
-    console.log('🚀 Production runtime: Validating ALL variables');
   }
 
   // ✅ VÉRIFICATION DES VARIABLES
@@ -213,9 +213,18 @@ const nextConfig = {
         value: 'same-site',
       },
       {
+        key: 'Cross-Origin-Embedder-Policy',
+        value: 'credentialless',  // Compatible avec ressources tierces, Chrome/Edge
+        // ou ne pas l'ajouter si tu cibles Firefox également
+      },
+      {
         key: 'Permissions-Policy',
         value:
-          'geolocation=(), microphone=(), camera=(), payment=(self), usb=()',
+          'geolocation=(), microphone=(), camera=(), payment=(), usb=()',
+      },
+      {
+        key: 'Reporting-Endpoints',
+        value: `csp-endpoint="${process.env.NEXT_PUBLIC_SITE_URL}/api/csp-report"`,
       },
     ];
 
@@ -234,6 +243,7 @@ const nextConfig = {
     const buildDynamicPageCSP = (includeAnalytics = false) => {
       const baseCSP = [
         "default-src 'self'",
+        "upgrade-insecure-requests",
         `script-src 'self' ${isDev ? "'unsafe-eval'" : ''} 'unsafe-inline' https://*.googletagmanager.com https://*.google-analytics.com https://unpkg.com blob:`,
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com blob:",
         `img-src 'self' https://res.cloudinary.com${includeAnalytics ? ' https://www.google-analytics.com https://www.googletagmanager.com' : ''} data:`,
@@ -244,6 +254,7 @@ const nextConfig = {
         "frame-ancestors 'none'",
         "base-uri 'self'",
         "media-src 'self' https://res.cloudinary.com https://res.cloudinary.com/duzebhr9l blob:",
+        `report-to csp-endpoint`,
       ];
       return baseCSP.join('; ');
     };
@@ -314,6 +325,15 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value: buildDynamicPageCSP(true),
+          },
+        ],
+      },
+      {
+        source: '/(templates|channel|contact|presentation)(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=300, stale-while-revalidate=600',
           },
         ],
       },
