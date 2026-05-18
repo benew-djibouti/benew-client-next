@@ -11,12 +11,14 @@ export const contactEmailSchema = yup.object({
     .required('Le nom est obligatoire')
     .min(2, 'Le nom doit contenir au moins 2 caractères')
     .max(50, 'Le nom ne peut pas dépasser 50 caractères')
-    .trim(),
+    .trim()
+    .transform((val) => val.replace(/[<>'"]/g, '')),
 
   email: yup
     .string()
     .required("L'adresse email est obligatoire")
     .email("L'adresse email n'est pas valide")
+    .matches(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, 'Format email invalide')
     .max(100, "L'email ne peut pas dépasser 100 caractères")
     .trim(),
 
@@ -32,7 +34,8 @@ export const contactEmailSchema = yup.object({
     .required('Le message est obligatoire')
     .min(10, 'Le message doit contenir au moins 10 caractères')
     .max(1000, 'Le message ne peut pas dépasser 1000 caractères')
-    .trim(),
+    .trim()
+    .transform((val) => val.replace(/\0/g, '')),
 });
 
 // Fonction simple pour préparer les données du FormData

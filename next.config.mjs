@@ -13,12 +13,14 @@ const validateEnv = () => {
     process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
   const IS_BUILD_PHASE = process.env.NEXT_PHASE === 'phase-production-build';
 
+  if (NODE_ENV !== 'production') {
   console.log(`🔍 Environment Detection:
     - NODE_ENV: ${NODE_ENV}
     - IS_CI: ${IS_CI}
     - IS_BUILD_PHASE: ${IS_BUILD_PHASE}
     - GITHUB_ACTIONS: ${process.env.GITHUB_ACTIONS}
   `);
+}
 
   // 📋 CATÉGORISATION DES VARIABLES
   const BUILD_TIME_VARS = [
@@ -65,13 +67,15 @@ const validateEnv = () => {
   } else if (IS_CI && NODE_ENV === 'production') {
     // 🏗️ BUILD CI/CD : Seulement les variables nécessaires au build
     requiredVars = [...ALWAYS_REQUIRED, ...BUILD_TIME_VARS];
-    console.log(
-      '🏗️ CI Build mode: Validating ALWAYS_REQUIRED + BUILD_TIME_VARS',
-    );
+
+    if (NODE_ENV !== 'production') {
+      console.log(
+        '🏗️ CI Build mode: Validating ALWAYS_REQUIRED + BUILD_TIME_VARS',
+      );
+    }
   } else if (NODE_ENV === 'production' && !IS_CI) {
     // 🚀 PRODUCTION RUNTIME : Validation complète
     requiredVars = [...ALWAYS_REQUIRED, ...RUNTIME_VARS, ...BUILD_TIME_VARS];
-    console.log('🚀 Production runtime: Validating ALL variables');
   }
 
   // ✅ VÉRIFICATION DES VARIABLES
@@ -94,7 +98,7 @@ const validateEnv = () => {
     if (NODE_ENV === 'development') {
       console.log('🔧 Development mode: Continuing with missing variables...');
     }
-  } else {
+  } else if (NODE_ENV !== 'production') {
     const context = IS_CI ? 'CI Build' : NODE_ENV;
     console.log(
       `✅ [${context}] All required environment variables are present`,
@@ -127,7 +131,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
         port: '',
-        pathname: '**',
+    pathname: `/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/**`,
       },
     ],
     formats: ['image/avif', 'image/webp'],
@@ -149,7 +153,7 @@ const nextConfig = {
     removeConsole:
       process.env.NODE_ENV === 'production'
         ? {
-            exclude: ['error', 'warn', 'log'],
+            exclude: ['error', 'warn'],
           }
         : false,
 
@@ -160,9 +164,6 @@ const nextConfig = {
             properties: ['^data-testid$', '^data-test$', '^data-cy$'],
           }
         : false,
-
-    // Optimisation React en production
-    emotion: process.env.NODE_ENV === 'production',
   },
 
   // ✅ AJOUTER : Configuration Turbopack équivalente
@@ -172,10 +173,11 @@ const nextConfig = {
     },
   },
 
-  experimental: {
-    // ✅ OPTIONNEL : Cache filesystem pour builds AUSSI (beta)
-    turbopackFileSystemCacheForBuild: true,
-  },
+  optimizePackageImports: [
+    'react-icons',
+    'framer-motion',
+    'lucide-react',
+  ],
 
   // Timeout pour la génération de pages statiques
   staticPageGenerationTimeout: 60,
@@ -211,10 +213,19 @@ const nextConfig = {
         value: 'same-site',
       },
       {
+        key: 'Cross-Origin-Embedder-Policy',
+        value: 'credentialless',  // Compatible avec ressources tierces, Chrome/Edge
+        // ou ne pas l'ajouter si tu cibles Firefox également
+      },
+      {
         key: 'Permissions-Policy',
         value:
-          'geolocation=(), microphone=(), camera=(), payment=(self), usb=()',
+          'geolocation=(), microphone=(), camera=(), payment=(), usb=()',
       },
+      ...(process.env.NEXT_PUBLIC_SITE_URL ? [{
+        key: 'Reporting-Endpoints',
+        value: `csp-endpoint="${process.env.NEXT_PUBLIC_SITE_URL}/api/csp-report"`,
+      }] : []),
     ];
 
     // HSTS en production uniquement
@@ -232,17 +243,18 @@ const nextConfig = {
     const buildDynamicPageCSP = (includeAnalytics = false) => {
       const baseCSP = [
         "default-src 'self'",
+        "upgrade-insecure-requests",
         `script-src 'self' ${isDev ? "'unsafe-eval'" : ''} 'unsafe-inline' https://*.googletagmanager.com https://*.google-analytics.com https://unpkg.com blob:`,
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com blob:",
         `img-src 'self' https://res.cloudinary.com${includeAnalytics ? ' https://www.google-analytics.com https://www.googletagmanager.com' : ''} data:`,
         "font-src 'self' https://fonts.gstatic.com data:",
-        `connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.doubleclick.net https://unpkg.com https://*.cloudinary.com`,
+        `connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.doubleclick.net https://unpkg.com https://*.cloudinary.com https://*.sentry.io https://o*.ingest.sentry.io`,
         "worker-src 'self' blob:",
         "form-action 'self'",
         "frame-ancestors 'none'",
         "base-uri 'self'",
         "media-src 'self' https://res.cloudinary.com https://res.cloudinary.com/duzebhr9l blob:",
-        `script-src-elem 'self' 'unsafe-inline' https://*.googletagmanager.com https://*.google-analytics.com https://unpkg.com blob:`,
+        `report-to csp-endpoint`,
       ];
       return baseCSP.join('; ');
     };
@@ -313,6 +325,15 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value: buildDynamicPageCSP(true),
+          },
+        ],
+      },
+      {
+        source: '/(templates|channel|contact|presentation)(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=300, stale-while-revalidate=600',
           },
         ],
       },
@@ -464,7 +485,7 @@ const sentryWebpackPluginOptions = {
   include: '.next',
   ignore: ['node_modules', '*.map'],
 
-  release: process.env.SENTRY_RELEASE || '1.0.0',
+  release: process.env.SENTRY_RELEASE || process.env.NEXT_PUBLIC_SENTRY_RELEASE || undefined,
   deploy: {
     env: process.env.NODE_ENV,
   },

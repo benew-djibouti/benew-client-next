@@ -1,19 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion';
-// import { usePathname } from 'next/navigation';
 
-function ToggleButton({ setOpen }) {
-  // const pathname = usePathname();
-  // const isTemplateDetailPage =
-  //   pathname.startsWith('/templates/') &&
-  //   pathname.split('/').filter(Boolean).length >= 2 &&
-  //   pathname.split('/').filter(Boolean)[0] === 'templates';
-
+function ToggleButton({ setOpen, open }) {
   return (
     <button
+      type="button"
       onClick={() => setOpen((prev) => !prev)}
-      // className={isTemplateDetailPage ? 'template-detail-fix' : ''}
+      aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+      aria-expanded={open}
+      aria-controls="sidebar-menu"
     >
       <svg width="23" height="23" viewBox="0 0 23 23">
         <motion.path

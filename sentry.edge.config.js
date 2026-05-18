@@ -17,6 +17,7 @@ if (sentryDSN && isValidDSN(sentryDSN)) {
   Sentry.init({
     dsn: sentryDSN,
     environment: process.env.NODE_ENV || 'development',
+    release: process.env.SENTRY_RELEASE || '1.0.0',
     enabled: isProduction,
     debug: !isProduction,
 
@@ -26,6 +27,9 @@ if (sentryDSN && isValidDSN(sentryDSN)) {
     ignoreErrors: [
       'NEXT_REDIRECT',
       'NEXT_NOT_FOUND',
+      'ECONNREFUSED',
+      'ETIMEDOUT',
+      'ECONNRESET',
     ],
 
     beforeSend(event) {

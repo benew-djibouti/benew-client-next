@@ -101,35 +101,17 @@ export function assertValidUUID(value, fieldName = 'UUID') {
   return sanitized;
 }
 
-// Exemples d'utilisation :
+/**
+ * Valide un montant monétaire
+ * @param {number} amount - Montant à valider
+ * @returns {boolean} - true si le montant est valide
+ */
 
-/*
-// Dans vos composants Next.js :
-
-import { isValidPostgreSQLUUID, sanitizeAndValidateUUID } from '@/utils/validation';
-
-// Validation simple
-if (!isValidPostgreSQLUUID(templateId)) {
-  notFound();
+export function isValidAmount(amount) {
+  return (
+    typeof amount === 'number' &&
+    amount > 0 &&
+    amount <= 100000 &&
+    Number.isFinite(amount)
+  );
 }
-
-// Avec nettoyage
-const cleanTemplateId = sanitizeAndValidateUUID(templateId);
-if (!cleanTemplateId) {
-  notFound();
-}
-
-// Validation stricte avec erreur
-try {
-  const validatedId = assertValidUUID(templateId, 'Template ID');
-  // Continuer avec validatedId
-} catch (error) {
-  notFound();
-}
-
-// Pour plusieurs IDs
-const ids = ['id1', 'id2', 'id3'];
-if (!areValidUUIDs(ids)) {
-  notFound();
-}
-*/

@@ -113,6 +113,14 @@ const VideoModal = memo(({ video, onClose }) => {
     };
   }, []);
 
+  // Effect 1 — overflow uniquement
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []); // ← [] car la modal est montée/démontée entière, pas toggleée
+
   // Escape + focus trap + overflow
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -151,12 +159,7 @@ const VideoModal = memo(({ video, onClose }) => {
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-    };
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
   return (
@@ -166,7 +169,7 @@ const VideoModal = memo(({ video, onClose }) => {
         ref={modalRef}
         role="dialog"
         aria-modal="true"
-        aria-label={`Lecteur : ${video.video_title}`}
+        aria-labelledby="video-modal-title"
         tabIndex={-1} // ← permet focus programmatique
         onClick={(e) => e.stopPropagation()}
       >
@@ -202,7 +205,9 @@ const VideoModal = memo(({ video, onClose }) => {
 
         {/* Infos sous le lecteur */}
         <div className="video-modal__info">
-          <h2 className="video-modal__title">{video.video_title}</h2>
+          <h2 id="video-modal-title" className="video-modal__title">
+            {video.video_title}
+          </h2>
           <div className="video-modal__meta">
             <span className="video-modal__date">
               Publiée le {formatDate(video.created_at)}
@@ -240,7 +245,7 @@ const VideoCard = memo(({ video, onPlay }) => {
               width={520}
               height={293}
               className="video-card__thumb-img"
-              loading="lazy"
+              preload
               quality="auto"
               format="auto"
               crop={{ type: 'fill', gravity: 'auto' }}
@@ -311,7 +316,7 @@ const ChannelList = ({ videos: initialVideos = [] }) => {
         console.warn('[Analytics] Error tracking channel page view:', e);
       }
     }
-  }, [initialVideos.length]);
+  }, []);
 
   const handleVideoPlay = useCallback((video) => {
     setActiveVideo(video);

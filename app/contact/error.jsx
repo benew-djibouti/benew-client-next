@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import * as Sentry from '@sentry/nextjs';
 import { trackEvent } from '@/utils/analytics';
 import Link from 'next/link';
 import './error.scss';
@@ -18,11 +19,14 @@ export default function ContactError({ error, reset }) {
 
   // Log simple pour suivi des interactions utilisateur (tracking uniquement)
   useEffect(() => {
-    if (error) {
+    if (!error) return;
+    try {
       trackEvent('error_boundary_shown', {
         page: 'contact',
         error_name: error?.name || 'Unknown',
       });
+    } catch (e) {
+      console.warn('[Analytics] Error tracking failed:', e);
     }
   }, [error]);
 
@@ -33,21 +37,44 @@ export default function ContactError({ error, reset }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!error) return;
+    try {
+      Sentry.captureException(error, {
+        tags: {
+          component: 'contact_error_boundary',
+          page: 'contact',
+          error_type: 'client_side_error',
+        },
+        extra: {
+          errorName: error?.name || 'Unknown',
+          errorMessage: error?.message || 'No message',
+          errorStack: error?.stack?.substring(0, 500),
+        },
+        level: 'error',
+      });
+    } catch (sentryError) {
+      console.warn('[Sentry] Failed to capture exception:', sentryError);
+    }
+  }, [error]);
   /**
    * Gestion du retry avec délai simple
    */
-  const handleRetry = async () => {
+  const handleRetry = () => {
     if (retryCount >= MAX_RETRIES || isRetrying) return;
 
     setIsRetrying(true);
     setRetryCount((prev) => prev + 1);
 
-    if (typeof window !== 'undefined' && window.dataLayer) {
-      window.dataLayer.push({
-        event: 'error_retry_attempt',
-        page: 'contact',
+    try {
+      trackEvent('error_retry_attempt', {
+        event_category: 'errors',
+        event_label: 'contact_retry',
         retry_number: retryCount + 1,
+        page: 'contact',
       });
+    } catch (e) {
+      console.warn('[Analytics] Retry tracking failed:', e);
     }
 
     const delay = Math.min(1000 * (retryCount + 1), 3000);

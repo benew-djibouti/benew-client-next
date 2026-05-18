@@ -30,6 +30,10 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Get git commit hash
+        run: |
+          echo "SENTRY_RELEASE=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
       - name: Setup Node.js 24
         uses: actions/setup-node@v6
         with:
@@ -49,9 +53,11 @@ jobs:
         run: |
           echo "🏗️ Starting build..."
           echo "NODE_ENV: $NODE_ENV"
-          echo "CI: $CI"
-          echo "GITHUB_ACTIONS: $GITHUB_ACTIONS"
+          echo "SENTRY_RELEASE: $SENTRY_RELEASE"
           npm run build
+        env:
+          SENTRY_RELEASE: ${{ env.SENTRY_RELEASE }}
+          NEXT_PUBLIC_SENTRY_RELEASE: ${{ env.SENTRY_RELEASE }}
 
       - name: Package deployment artifact
         run: |
@@ -100,6 +106,9 @@ jobs:
               exit 1
             fi
             echo "✅ .env file found"
+            # Mettre à jour SENTRY_RELEASE dans .env
+            sed -i "s/^SENTRY_RELEASE=.*/SENTRY_RELEASE=${{ env.SENTRY_RELEASE }}/" /var/www/benew/.env || \
+            echo "SENTRY_RELEASE=${{ env.SENTRY_RELEASE }}" >> /var/www/benew/.env
 
             # Supprimer l'ancien build
             echo "🧹 Cleaning old build..."

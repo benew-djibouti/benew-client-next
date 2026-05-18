@@ -4,14 +4,16 @@
 import { useState, memo } from 'react';
 import { CldImage } from 'next-cloudinary';
 
+const PLACEHOLDER = '/placeholder-application.png';
+
 const AppImage = memo(
   ({ src, alt, width, height, className, loading, crop, quality, format }) => {
     const [hasError, setHasError] = useState(false);
 
-    if (hasError) {
+    if (hasError || !src) {
       return (
         <img
-          src="/placeholder-application.png"
+          src={PLACEHOLDER}
           alt={alt}
           width={width}
           height={height}
@@ -27,7 +29,7 @@ const AppImage = memo(
         width={width}
         height={height}
         className={className}
-        loading={loading}
+        loading={loading || 'lazy'}
         quality={quality || 'auto'}
         format={format || 'auto'}
         crop={crop || { type: 'fit', gravity: 'auto' }}

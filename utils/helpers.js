@@ -1,6 +1,23 @@
 // utils/helpers.js
 
 /**
+ * Formate un montant sans devise (juste les espaces)
+ * Utile pour les calculs ou affichages intermédiaires
+ *
+ * @param {number|string} amount - Montant à formater
+ * @returns {string} Montant formaté avec espaces
+ */
+export function formatAmount(amount) {
+  let numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+  if (isNaN(numAmount) || numAmount == null || numAmount < 0) return '0';
+  return Math.round(numAmount).toLocaleString('fr-FR', {
+    useGrouping: true,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+}
+
+/**
  * Formate un prix avec séparateurs de milliers et devise FDJ
  * Exemples:
  *   66000.00 → "66 000 FDJ"
@@ -12,26 +29,8 @@
  * @returns {string} Prix formaté avec espaces et devise
  */
 export const formatPrice = (price) => {
-  // Convertir en nombre si c'est une string
-  let numPrice = typeof price === 'string' ? parseFloat(price) : price;
-
-  // Gérer les cas invalides
-  if (isNaN(numPrice) || numPrice === null || numPrice === undefined) {
-    return '0 FDJ';
-  }
-
-  // Arrondir à l'entier le plus proche (supprimer les décimales)
-  numPrice = Math.round(numPrice);
-
-  // Formater avec séparateurs d'espaces pour les milliers
-  const formattedNumber = numPrice.toLocaleString('fr-FR', {
-    useGrouping: true,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-
-  // Retourner avec la devise FDJ
-  return `${formattedNumber} FDJ`;
+  const formatted = formatAmount(price);
+  return formatted === '0' ? '0 FDJ' : `${formatted} FDJ`;
 };
 
 /**
@@ -64,17 +63,6 @@ export function getApplicationLevelLabel(level) {
   };
 
   return levels[level] || { short: 'MS', long: 'MS / Magasin Simplifié' };
-}
-
-/**
- * Valide un UUID v4
- * @param {string} uuid - UUID à valider
- * @returns {boolean}
- */
-export function isValidUUID(uuid) {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(uuid);
 }
 
 /**
@@ -114,9 +102,9 @@ export function formatDate(date) {
  * Génère un ID unique côté client
  * @returns {string}
  */
-export function generateClientId() {
-  return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-}
+// export function generateClientId() {
+//   return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+// }
 
 /**
  * Vérifie si une URL est valide
@@ -153,30 +141,8 @@ export function getPlatformDisplayName(platform) {
  * @returns {boolean}
  */
 export function isEmptyObject(obj) {
-  return obj && Object.keys(obj).length === 0 && obj.constructor === Object;
-}
-
-/**
- * Formate un montant sans devise (juste les espaces)
- * Utile pour les calculs ou affichages intermédiaires
- *
- * @param {number|string} amount - Montant à formater
- * @returns {string} Montant formaté avec espaces
- */
-export function formatAmount(amount) {
-  let numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-
-  if (isNaN(numAmount) || numAmount === null || numAmount === undefined) {
-    return '0';
-  }
-
-  numAmount = Math.round(numAmount);
-
-  return numAmount.toLocaleString('fr-FR', {
-    useGrouping: true,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return false;
+  return Object.keys(obj).length === 0;
 }
 
 /**
@@ -188,7 +154,12 @@ export function formatAmount(amount) {
 export function formatPriceWithDecimals(price, decimals = 2) {
   let numPrice = typeof price === 'string' ? parseFloat(price) : price;
 
-  if (isNaN(numPrice) || numPrice === null || numPrice === undefined) {
+  if (
+    isNaN(numPrice) ||
+    numPrice === null ||
+    numPrice === undefined ||
+    numPrice < 0
+  ) {
     return '0.00 FDJ';
   }
 

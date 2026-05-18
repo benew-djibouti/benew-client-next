@@ -4,10 +4,7 @@
 
 import PresentationComponent from '@/components/presentation';
 
-/**
- * Composant principal avec validation et gestion d'erreurs avancée
- */
-export default async function PresentationPage() {
+export default function PresentationPage() {
   return <PresentationComponent />;
 }
 
@@ -27,8 +24,6 @@ export const metadata = {
     title: 'Présentation Benew - Notre Vision',
     description: 'Notre manifeste, nos produits et notre fondateur.',
     url: `/presentation`,
-    type: 'website',
-    locale: 'fr_FR',
   },
   alternates: {
     canonical: `/presentation`,

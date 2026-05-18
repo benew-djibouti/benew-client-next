@@ -16,18 +16,32 @@ import * as Sentry from '@sentry/nextjs';
 export async function register() {
   // Initialisation serveur Node.js
   if (process.env.NEXT_RUNTIME === 'nodejs') {
-    console.log('🔧 Loading Sentry server configuration...');
-    await import('./sentry.server.config');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('🔧 Loading Sentry server configuration...');
+    }
+
+    try {
+      await import('./sentry.server.config');
+    } catch (e) {
+      console.error('[Sentry] Failed to load server config:', e.message);
+    }
   }
 
   // Initialisation Edge Runtime (si nécessaire)
   if (process.env.NEXT_RUNTIME === 'edge') {
     console.log('🔧 Loading Sentry edge configuration...');
+
     // Note: Pas de config edge pour l'instant
-    await import('./sentry.edge.config');
+    try {
+      await import('./sentry.edge.config');
+    } catch (e) {
+      console.error('[Sentry] Failed to load edge config:', e.message);
+    }
   }
 
-  console.log('✅ Sentry instrumentation registered successfully');
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('✅ Sentry instrumentation registered successfully');
+  }
 }
 
 // =============================================

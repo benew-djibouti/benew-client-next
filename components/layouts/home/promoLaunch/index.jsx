@@ -130,7 +130,7 @@ const PromoLaunch = () => {
           <div className="promo-dots">
             {promoTiers.map((tier, index) => (
               <button
-                key={index}
+                key={tier.id}
                 className={`promo-dot promo-dot--${tier.color} ${
                   index === activeIndex ? 'promo-dot--active' : ''
                 }`}

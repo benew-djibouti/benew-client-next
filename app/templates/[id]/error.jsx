@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import * as Sentry from '@sentry/nextjs';
@@ -14,9 +14,19 @@ import './error.scss';
 export default function TemplateDetailError({ error, reset }) {
   const [retryCount, setRetryCount] = useState(0);
   const [isRetrying, setIsRetrying] = useState(false);
+
+  const timeoutRef = useRef(null);
+
   const params = useParams();
   const templateId = params?.id;
+
   const MAX_RETRIES = 3;
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   // useEffect Sentry — se déclenche quand error ou templateId change
   useEffect(() => {
@@ -24,6 +34,7 @@ export default function TemplateDetailError({ error, reset }) {
 
     Sentry.captureException(error, {
       tags: {
+        digest: error?.digest,
         component: 'template_detail_error_boundary',
         page: 'template_detail',
         error_type: 'client_side_error',
@@ -32,13 +43,11 @@ export default function TemplateDetailError({ error, reset }) {
       extra: {
         errorName: error?.name || 'Unknown',
         errorMessage: error?.message || 'No message',
-        errorStack: error?.stack?.substring(0, 500),
         templateId: templateId,
-        // retryCount retiré — toujours 0 au moment de la capture initiale
       },
       level: 'error',
     });
-  }, [error, templateId]); // ← retryCount retiré
+  }, [error]); // ← retryCount retiré
 
   // useEffect Analytics — séparé, même dépendances
   useEffect(() => {
@@ -59,14 +68,12 @@ export default function TemplateDetailError({ error, reset }) {
         analyticsError,
       );
     }
-  }, [error, templateId]);
+  }, [error]);
 
-  const handleRetry = async () => {
+  const handleRetry = useCallback(() => {
     if (retryCount >= MAX_RETRIES || isRetrying) return;
-
     setIsRetrying(true);
     setRetryCount((prev) => prev + 1);
-
     try {
       trackEvent('error_retry_attempt', {
         event_category: 'errors',
@@ -76,30 +83,32 @@ export default function TemplateDetailError({ error, reset }) {
         template_id: templateId || 'unknown',
         page: 'template_detail',
       });
-    } catch (error) {
-      console.warn('[Analytics] Error tracking retry:', error);
+    } catch (e) {
+      console.warn('[Analytics] Error tracking retry:', e);
     }
-
     const delay = Math.min(1000 * (retryCount + 1), 3000);
-
-    setTimeout(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
       setIsRetrying(false);
       reset();
     }, delay);
-  };
+  }, [retryCount, isRetrying, reset]);
 
-  const handleLinkClick = (destination) => {
-    try {
-      trackEvent('error_recovery_navigation', {
-        event_category: 'errors',
-        event_label: `template_detail_to_${destination}`,
-        retry_count: retryCount,
-        template_id: templateId || 'unknown',
-      });
-    } catch (error) {
-      console.warn('[Analytics] Error tracking navigation:', error);
-    }
-  };
+  const handleLinkClick = useCallback(
+    (destination) => {
+      try {
+        trackEvent('error_recovery_navigation', {
+          event_category: 'errors',
+          event_label: `template_detail_to_${destination}`,
+          retry_count: retryCount,
+          template_id: templateId || 'unknown',
+        });
+      } catch (e) {
+        console.warn('[Analytics] Error tracking navigation:', e);
+      }
+    },
+    [retryCount, templateId],
+  );
 
   const canRetry = retryCount < MAX_RETRIES;
   const isMaxRetriesReached = retryCount >= MAX_RETRIES;
@@ -171,6 +180,7 @@ export default function TemplateDetailError({ error, reset }) {
           <div className="error-actions">
             {canRetry && (
               <button
+                type="button"
                 onClick={handleRetry}
                 disabled={isRetrying}
                 className="retry-button"

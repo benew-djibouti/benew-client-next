@@ -9,9 +9,14 @@ import { captureException } from '../../sentry.server.config';
 // =============================
 
 // Patterns dangereux à bloquer
-const DANGEROUS_PATTERNS = {
-  script: /<script[^>]*>.*?<\/script>/gi,
-  sql: /(\b(DROP|DELETE|INSERT|UPDATE|SELECT|UNION|EXEC|EXECUTE)\b)/gi,
+// Pour les détections (test) — jamais de flag g
+const DETECT_PATTERNS = {
+  script: /<script[^>]*>.*?<\/script>/i,
+  sql: /(\b(DROP|DELETE|INSERT|UPDATE|SELECT|UNION|EXEC|EXECUTE)\b)/i,
+};
+
+// Pour le nettoyage (replace) — flag g nécessaire
+const CLEAN_PATTERNS = {
   xss: /[<>'"]/g,
   nullByte: /\0/g,
 };
@@ -33,8 +38,8 @@ function cleanString(input, maxLength = 200) {
     input
       .trim()
       // Supprimer les caractères dangereux
-      .replace(DANGEROUS_PATTERNS.xss, '')
-      .replace(DANGEROUS_PATTERNS.nullByte, '')
+      .replace(CLEAN_PATTERNS.xss, '')
+      .replace(CLEAN_PATTERNS.nullByte, '')
       .substring(0, maxLength)
   );
 }
@@ -234,11 +239,11 @@ export function validateSanitizedDataSafety(sanitizedData) {
   const allValues = Object.values(sanitizedData).join(' ');
 
   // Vérifier les patterns dangereux
-  if (DANGEROUS_PATTERNS.script.test(allValues)) {
+  if (DETECT_PATTERNS.script.test(allValues)) {
     threats.push('Script détecté');
   }
 
-  if (DANGEROUS_PATTERNS.sql.test(allValues)) {
+  if (DETECT_PATTERNS.sql.test(allValues)) {
     threats.push('SQL injection détecté');
   }
 
@@ -270,31 +275,6 @@ export function validateSanitizedDataSafety(sanitizedData) {
 // =============================
 
 /**
- * Valide un UUID v4
- * @param {string} uuid - UUID à valider
- * @returns {boolean}
- */
-export function isValidUUID(uuid) {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return typeof uuid === 'string' && uuidRegex.test(uuid);
-}
-
-/**
- * Valide un montant
- * @param {number} amount - Montant à valider
- * @returns {boolean}
- */
-export function isValidAmount(amount) {
-  return (
-    typeof amount === 'number' &&
-    amount > 0 &&
-    amount <= 100000 &&
-    Number.isFinite(amount)
-  );
-}
-
-/**
  * Détecte les tentatives d'injection
  * @param {string} input - Texte à vérifier
  * @returns {boolean}
@@ -303,8 +283,8 @@ export function hasInjectionAttempt(input) {
   if (typeof input !== 'string') return false;
 
   return (
-    DANGEROUS_PATTERNS.script.test(input) ||
-    DANGEROUS_PATTERNS.sql.test(input) ||
+    DETECT_PATTERNS.script.test(input) ||
+    DETECT_PATTERNS.sql.test(input) ||
     /\0/.test(input)
   );
 }

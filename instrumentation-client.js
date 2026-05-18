@@ -32,7 +32,11 @@ if (sentryDSN && isValidDSN(sentryDSN)) {
   Sentry.init({
     dsn: sentryDSN,
     environment,
-    release: process.env.SENTRY_RELEASE || '1.0.0',
+    // Correction
+    release:
+      process.env.NEXT_PUBLIC_SENTRY_RELEASE ||
+      process.env.SENTRY_RELEASE ||
+      '1.0.0',
 
     // ✅ CRITIQUE : Actif uniquement en production
     enabled: isProduction,

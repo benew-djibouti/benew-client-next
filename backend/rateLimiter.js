@@ -1,96 +1,96 @@
 // backend/rateLimiter.js
-// Rate limiting simple et pragmatique pour petites applications (500 visiteurs/jour)
-// Next.js 15 - Version optimisée sans suringénierie
+// Rate limiting robuste pour Next.js 16 — 500 visiteurs/jour
+// Single-process PM2 — architecture Kamatera avec Nginx
 
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-// Configuration simple adaptée au trafic réel
+// =============================================
+// CONFIGURATION
+// =============================================
+
 const CONFIG = {
-  // Limites raisonnables pour 500 visiteurs/jour
   limits: {
-    public: { requests: 30, window: 60 * 1000 }, // 30 req/minute pour pages publiques
-    api: { requests: 20, window: 60 * 1000 }, // 20 req/minute pour API
-    contact: { requests: 3, window: 10 * 60 * 1000 }, // 3 req/10min pour contact
-    order: { requests: 2, window: 5 * 60 * 1000 }, // 2 req/5min pour commandes
+    public: { requests: 30, window: 60 * 1000 }, // 30 req/min
+    api: { requests: 20, window: 60 * 1000 }, // 20 req/min
+    contact: { requests: 3, window: 10 * 60 * 1000 }, // 3 req/10min
+    order: { requests: 2, window: 5 * 60 * 1000 }, // 2 req/5min
   },
 
-  // Cache simple - pas besoin de milliers d'entrées
   cache: {
-    maxSize: 200, // 200 IPs max en cache (largement suffisant)
-    cleanupInterval: 10 * 60 * 1000, // Nettoyage toutes les 10 minutes
+    maxSize: 200,
+    cleanupInterval: 10 * 60 * 1000, // 10 minutes
   },
 
-  // Logging minimal
   logging: process.env.NODE_ENV === 'development',
 };
 
-// ⚠️ IMPORTANT : Ce rate limiter utilise la mémoire du process Node.js.
-// Il fonctionne correctement UNIQUEMENT en single-process (PM2 instances: 1).
-// En multi-process/cluster, chaque worker a sa propre Map indépendante,
-// ce qui multiplie effectivement les limites par le nombre de workers.
-// Si passage en multi-process → migrer vers Redis pour l'état partagé.
+// ⚠️ IMPORTANT : Rate limiter en mémoire — single-process uniquement (PM2 instances: 1).
+// En multi-process → migrer vers Redis.
+// Les données sont perdues au redémarrage du process.
+
 const requestsCache = new Map();
 const blockedIPs = new Map();
 
-// Liste blanche basique
-const WHITELIST_IPS = new Set(['127.0.0.1', '::1']);
+// Whitelist : IPs internes chargées depuis .env (jamais hardcodées dans le code)
+// 127.0.0.1 et ::1 sont EXCLUS car spoofables via x-forwarded-for
+// Dans .env : INTERNAL_WHITELIST_IPS=185.237.96.207,185.237.96.20
+const WHITELIST_IPS = new Set(
+  (process.env.INTERNAL_WHITELIST_IPS || '')
+    .split(',')
+    .map((ip) => ip.trim())
+    .filter(Boolean),
+);
 
 // =============================================
-// UTILITAIRES SIMPLIFIÉS
+// UTILITAIRES
 // =============================================
 
 /**
- * Extraction d'IP simplifiée
+ * Extraction d'IP sécurisée pour architecture Nginx + Next.js
+ * Nginx injecte x-real-ip avec $remote_addr — c'est le seul header fiable.
+ * x-forwarded-for est supprimé : même avec Nginx, un client peut le forger
+ * si la config Nginx utilise $proxy_add_x_forwarded_for au lieu de $remote_addr.
  */
 export function getClientIP(request) {
-  // Priorité aux headers de proxy les plus courants
-  const forwarded = request.headers.get('x-forwarded-for');
-  if (forwarded) {
-    return forwarded.split(',')[0].trim();
-  }
-
+  // x-real-ip est injecté par Nginx avec $remote_addr — seul header fiable
+  // x-forwarded-for supprimé : spoofable par le client même avec Nginx
   const realIP = request.headers.get('x-real-ip');
-  if (realIP) {
-    return realIP;
-  }
-
-  // Fallback
+  if (realIP) return realIP;
   return '127.0.0.1';
 }
 
-// ← NOUVELLE — pour les Server Actions (utilise next/headers)
+/**
+ * Extraction d'IP pour Server Actions (utilise next/headers)
+ */
 export async function getClientIPFromAction() {
   try {
     const headersList = await headers();
-    const forwarded = headersList.get('x-forwarded-for');
-    if (forwarded) return forwarded.split(',')[0].trim();
+    // x-real-ip est injecté par Nginx avec $remote_addr — seul header fiable
     const realIP = headersList.get('x-real-ip');
     if (realIP) return realIP;
     return '127.0.0.1';
   } catch {
-    // headers() peut throw hors du contexte d'une request
     return '127.0.0.1';
   }
 }
 
 /**
- * Anonymisation basique pour les logs
+ * Anonymisation IP pour les logs
  */
 function anonymizeIP(ip) {
-  if (!ip || ip === '127.0.0.1') return ip;
+  if (!ip) return 'unknown';
 
   const parts = ip.split('.');
   if (parts.length === 4) {
     return `${parts[0]}.${parts[1]}.xxx.xxx`;
   }
 
-  // IPv6 ou autre format
   return ip.substring(0, 8) + 'xxx';
 }
 
 /**
- * Log conditionnel simple
+ * Log conditionnel (développement uniquement)
  */
 function log(message, data = {}) {
   if (CONFIG.logging) {
@@ -99,31 +99,27 @@ function log(message, data = {}) {
 }
 
 // =============================================
-// LOGIQUE PRINCIPALE SIMPLIFIÉE
+// LOGIQUE PRINCIPALE
 // =============================================
 
 /**
- * Vérification de rate limit simple
+ * Vérification de rate limit
  */
 function checkRateLimit(ip, limit) {
   const now = Date.now();
   const windowStart = now - limit.window;
 
-  // Récupérer ou créer l'entrée pour cette IP
   let userData = requestsCache.get(ip);
   if (!userData) {
-    userData = { requests: [], blocked: false };
+    userData = { requests: [] };
     requestsCache.set(ip, userData);
   }
 
-  // Nettoyer les requêtes expirées
-  userData.requests = userData.requests.filter(
-    (timestamp) => timestamp > windowStart,
-  );
+  // Nettoyer les timestamps expirés
+  userData.requests = userData.requests.filter((ts) => ts > windowStart);
 
-  // Vérifier la limite
   if (userData.requests.length >= limit.requests) {
-    log(`Rate limit exceeded for IP: ${anonymizeIP(ip)}`, {
+    log(`Rate limit exceeded: ${anonymizeIP(ip)}`, {
       requests: userData.requests.length,
       limit: limit.requests,
       window: limit.window / 1000 + 's',
@@ -131,20 +127,18 @@ function checkRateLimit(ip, limit) {
     return false;
   }
 
-  // Enregistrer cette requête
   userData.requests.push(now);
   return true;
 }
 
 /**
- * Vérification des IPs bloquées
+ * Vérification si une IP est bloquée
  */
 function isIPBlocked(ip) {
   const blockInfo = blockedIPs.get(ip);
   if (!blockInfo) return false;
 
   if (Date.now() > blockInfo.until) {
-    // Le blocage a expiré
     blockedIPs.delete(ip);
     return false;
   }
@@ -153,26 +147,23 @@ function isIPBlocked(ip) {
 }
 
 /**
- * Bloquer une IP temporairement (pour les cas extrêmes)
+ * Bloquer une IP temporairement
  */
 function blockIP(ip, duration = 15 * 60 * 1000) {
-  // 15 minutes par défaut
   blockedIPs.set(ip, {
     until: Date.now() + duration,
     reason: 'Rate limit exceeded multiple times',
   });
 
-  log(`IP blocked temporarily: ${anonymizeIP(ip)}`, {
-    duration: duration / 1000 + 's',
-  });
+  log(`IP blocked: ${anonymizeIP(ip)}`, { duration: duration / 1000 + 's' });
 }
 
 // =============================================
-// MIDDLEWARE PRINCIPAL SIMPLIFIÉ
+// MIDDLEWARE PRINCIPAL
 // =============================================
 
 /**
- * Middleware de rate limiting adapté
+ * Crée un middleware de rate limiting pour les routes Next.js
  */
 export function createRateLimit(limitType = 'public') {
   const limit = CONFIG.limits[limitType] || CONFIG.limits.public;
@@ -182,18 +173,16 @@ export function createRateLimit(limitType = 'public') {
     const path = request.nextUrl?.pathname || request.url || '';
 
     try {
-      // Vérifier la whitelist
+      // Whitelist — IPs internes Kamatera uniquement
       if (WHITELIST_IPS.has(ip)) {
-        log(`Whitelisted IP allowed: ${anonymizeIP(ip)}`);
-        return null; // Requête autorisée
+        log(`Whitelisted IP: ${anonymizeIP(ip)}`);
+        return null;
       }
 
-      // Vérifier si l'IP est bloquée
+      // IP bloquée
       if (isIPBlocked(ip)) {
         const blockInfo = blockedIPs.get(ip);
         const remainingTime = Math.ceil((blockInfo.until - Date.now()) / 1000);
-
-        log(`Blocked IP rejected: ${anonymizeIP(ip)}`);
 
         return NextResponse.json(
           {
@@ -212,11 +201,11 @@ export function createRateLimit(limitType = 'public') {
         );
       }
 
-      // Vérifier le rate limit
+      // Rate limit dépassé
       if (!checkRateLimit(ip, limit)) {
         const userData = requestsCache.get(ip);
 
-        // Si c'est un récidiviste, le bloquer temporairement
+        // Récidiviste → bloquer temporairement
         if (userData && userData.requests.length > limit.requests * 2) {
           blockIP(ip);
           return NextResponse.json(
@@ -228,7 +217,6 @@ export function createRateLimit(limitType = 'public') {
           );
         }
 
-        // Rate limit standard
         const resetTime = Math.ceil((Date.now() + limit.window) / 1000);
 
         return NextResponse.json(
@@ -252,42 +240,28 @@ export function createRateLimit(limitType = 'public') {
       // Requête autorisée
       const userData = requestsCache.get(ip);
       const remaining = Math.max(0, limit.requests - userData.requests.length);
+      log(`Allowed: ${anonymizeIP(ip)} → ${path}`, { remaining });
 
-      log(`Request allowed: ${anonymizeIP(ip)} -> ${path}`, {
-        remaining,
-        limit: limit.requests,
-      });
-
-      return null; // Null = continuer la requête
-    } catch (error) {
-      log('Rate limit error:', { error: error.message, ip: anonymizeIP(ip) });
-
-      // En cas d'erreur, on laisse passer (fail open)
       return null;
+    } catch (error) {
+      log('Rate limit error:', { error: error.message });
+      return null; // fail open
     }
   };
 }
 
 /**
- * Messages contextualisés selon l'endpoint
+ * Messages contextualisés par endpoint
  */
 function getContextualMessage(path) {
-  if (path.includes('/contact')) {
+  if (path.includes('/contact'))
     return 'Trop de messages envoyés. Veuillez patienter avant de renvoyer.';
-  }
-
-  if (path.includes('/order') || path.includes('order')) {
+  if (path.includes('/order'))
     return 'Trop de tentatives de commande. Veuillez patienter.';
-  }
-
-  if (path.includes('/blog')) {
+  if (path.includes('/blog'))
     return 'Trop de requêtes sur le blog. Veuillez ralentir.';
-  }
-
-  if (path.includes('/templates')) {
+  if (path.includes('/templates'))
     return 'Trop de requêtes sur les templates. Veuillez patienter.';
-  }
-
   return 'Trop de requêtes. Veuillez réessayer plus tard.';
 }
 
@@ -301,35 +275,91 @@ export const contactRateLimit = createRateLimit('contact');
 export const orderRateLimit = createRateLimit('order');
 
 // =============================================
-// COMPATIBILITÉ AVEC L'ANCIENNE API
+// RATE LIMITING POUR SERVER ACTIONS
 // =============================================
 
 /**
- * Fonction pour maintenir la compatibilité avec limitBenewAPI
- * Utilisée dans les Server Actions
+ * Rate limiting pour Server Actions Next.js
+ * Retourne un objet simple au lieu de NextResponse
+ *
+ * @param {string} identifier - IP, email ou user ID
+ * @param {string} limitType  - 'contact' | 'order' | 'api' | 'public'
+ * @returns {Promise<{success: boolean, reset: number, message?: string}>}
  */
-export function limitBenewAPI(apiType = 'api') {
-  const limitFunction = createRateLimit(apiType);
+export async function checkServerActionRateLimit(
+  identifier,
+  limitType = 'api',
+) {
+  if (!identifier) {
+    return { success: true, reset: 0 };
+  }
 
-  return function (requestLike) {
-    // Adapter l'objet request pour notre système simplifié
-    const adaptedRequest = {
-      nextUrl: { pathname: requestLike.url || '/api' },
-      headers: requestLike.headers,
-      url: requestLike.url,
-    };
+  const limit = CONFIG.limits[limitType] || CONFIG.limits.api;
+  const now = Date.now();
 
-    return limitFunction(adaptedRequest);
-  };
+  try {
+    // Whitelist IPs internes
+    if (WHITELIST_IPS.has(identifier)) {
+      return { success: true, reset: 0 };
+    }
+
+    // Identifiant bloqué
+    if (isIPBlocked(identifier)) {
+      const blockInfo = blockedIPs.get(identifier);
+      const remainingTime = Math.ceil((blockInfo.until - now) / 1000);
+      return {
+        success: false,
+        reset: remainingTime,
+        message: 'Accès temporairement bloqué',
+        code: 'BLOCKED',
+      };
+    }
+
+    // Rate limit dépassé
+    if (!checkRateLimit(identifier, limit)) {
+      const userData = requestsCache.get(identifier);
+
+      // Récidiviste → bloquer
+      if (userData && userData.requests.length > limit.requests * 2) {
+        blockIP(identifier);
+        return {
+          success: false,
+          reset: 900,
+          message: 'Accès bloqué pour abus',
+          code: 'BLOCKED_ABUSE',
+        };
+      }
+
+      // FIX: resetTime minimum 1 seconde (évite les retry immédiats)
+      const oldestRequest = userData.requests[0];
+      const resetTime = Math.max(
+        1,
+        Math.ceil((oldestRequest + limit.window - now) / 1000),
+      );
+
+      return {
+        success: false,
+        reset: resetTime,
+        message: 'Trop de requêtes',
+        code: 'RATE_LIMITED',
+      };
+    }
+
+    // Autorisé
+    const userData = requestsCache.get(identifier);
+    const remaining = Math.max(0, limit.requests - userData.requests.length);
+
+    return { success: true, reset: 0, remaining };
+  } catch (error) {
+    log('Rate limit error:', { error: error.message });
+    return { success: true, reset: 0 }; // fail open
+  }
 }
 
 // =============================================
 // UTILITAIRES D'ADMINISTRATION
 // =============================================
 
-/**
- * Statistiques simples
- */
 export function getStats() {
   return {
     cache: {
@@ -346,55 +376,33 @@ export function getStats() {
   };
 }
 
-/**
- * Ajouter une IP à la whitelist
- */
 export function addToWhitelist(ip) {
   WHITELIST_IPS.add(ip);
-  log(`IP added to whitelist: ${anonymizeIP(ip)}`);
 }
-
-/**
- * Supprimer une IP de la whitelist
- */
 export function removeFromWhitelist(ip) {
   WHITELIST_IPS.delete(ip);
-  log(`IP removed from whitelist: ${anonymizeIP(ip)}`);
 }
-
-/**
- * Débloquer une IP manuellement
- */
 export function unblockIP(ip) {
   blockedIPs.delete(ip);
-  log(`IP manually unblocked: ${anonymizeIP(ip)}`);
 }
-
-/**
- * Réinitialiser le cache (pour les tests)
- */
 export function resetCache() {
-  const before = {
-    requests: requestsCache.size,
-    blocked: blockedIPs.size,
-  };
-
   requestsCache.clear();
   blockedIPs.clear();
-
-  log('Cache reset completed', before);
 }
 
 // =============================================
-// NETTOYAGE AUTOMATIQUE SIMPLE
+// NETTOYAGE AUTOMATIQUE
 // =============================================
 
-// Nettoyage périodique simple
-setInterval(() => {
+// FIX: .unref() évite que ce timer bloque le graceful shutdown du process
+const cleanupTimer = setInterval(() => {
   const now = Date.now();
+  const windowMax = Math.max(
+    ...Object.values(CONFIG.limits).map((l) => l.window),
+  );
   let cleaned = 0;
 
-  // Nettoyer les IPs bloquées expirées
+  // Supprimer les IPs bloquées expirées
   for (const [ip, blockInfo] of blockedIPs.entries()) {
     if (now > blockInfo.until) {
       blockedIPs.delete(ip);
@@ -402,141 +410,39 @@ setInterval(() => {
     }
   }
 
-  // Si le cache devient trop gros, nettoyer les anciennes entrées
+  // FIX: supprimer d'abord les entrées dont TOUS les timestamps sont expirés
+  // (évite de remettre à zéro des IPs actives en cours de rate limiting)
   if (requestsCache.size > CONFIG.cache.maxSize) {
-    const entries = Array.from(requestsCache.entries());
-    const toDelete = entries.slice(0, entries.length - CONFIG.cache.maxSize);
+    for (const [ip, userData] of requestsCache.entries()) {
+      if (userData.requests.every((ts) => now - ts > windowMax)) {
+        requestsCache.delete(ip);
+        cleaned++;
+      }
+      // Pas de break — parcourir toutes les entrées expirées
+    }
 
-    toDelete.forEach(([ip]) => {
-      requestsCache.delete(ip);
-      cleaned++;
-    });
+    // Si toujours trop grand, supprimer les plus anciennes en dernier recours
+    if (requestsCache.size > CONFIG.cache.maxSize) {
+      const entries = Array.from(requestsCache.entries());
+      const toDelete = entries.slice(0, entries.length - CONFIG.cache.maxSize);
+      toDelete.forEach(([ip]) => {
+        requestsCache.delete(ip);
+        cleaned++;
+      });
+    }
   }
 
   if (cleaned > 0) {
-    log(`Cleanup completed: ${cleaned} entries removed`);
+    log(`Cleanup: ${cleaned} entries removed`);
   }
 }, CONFIG.cache.cleanupInterval);
+
+// FIX: ne pas bloquer le graceful shutdown
+cleanupTimer.unref();
 
 // =============================================
 // EXPORT PAR DÉFAUT
 // =============================================
-
-// =============================================
-// RATE LIMITING POUR SERVER ACTIONS
-// =============================================
-
-/**
- * Rate limiting spécifique pour Server Actions Next.js
- * Retourne un objet simple { success, reset } au lieu de NextResponse
- *
- * @param {string} identifier - Identifiant unique (email, IP, user ID)
- * @param {string} limitType - Type de limite ('contact', 'order', 'api', 'public')
- * @returns {Promise<Object>} - { success: boolean, reset: number, message?: string }
- */
-export async function checkServerActionRateLimit(
-  identifier,
-  limitType = 'api',
-) {
-  if (!identifier) {
-    log('Rate limit check: No identifier provided', { limitType });
-    return {
-      success: true,
-      reset: 0,
-    };
-  }
-
-  const limit = CONFIG.limits[limitType] || CONFIG.limits.api;
-  const now = Date.now();
-
-  try {
-    // Vérifier la whitelist (optionnel pour Server Actions)
-    if (WHITELIST_IPS.has(identifier)) {
-      log(`Whitelisted identifier allowed: ${anonymizeIP(identifier)}`);
-      return {
-        success: true,
-        reset: 0,
-      };
-    }
-
-    // Vérifier si l'identifiant est bloqué
-    if (isIPBlocked(identifier)) {
-      const blockInfo = blockedIPs.get(identifier);
-      const remainingTime = Math.ceil((blockInfo.until - now) / 1000);
-
-      log(`Blocked identifier rejected: ${anonymizeIP(identifier)}`);
-
-      return {
-        success: false,
-        reset: remainingTime,
-        message: 'Accès temporairement bloqué',
-        code: 'BLOCKED',
-      };
-    }
-
-    // Vérifier le rate limit
-    if (!checkRateLimit(identifier, limit)) {
-      const userData = requestsCache.get(identifier);
-
-      // Calculer le temps avant reset (en secondes)
-      const oldestRequest = userData.requests[0];
-      const resetTime = Math.ceil((oldestRequest + limit.window - now) / 1000);
-
-      // Si c'est un récidiviste, le bloquer temporairement
-      if (userData && userData.requests.length > limit.requests * 2) {
-        blockIP(identifier);
-
-        return {
-          success: false,
-          reset: 900, // 15 minutes en secondes
-          message: 'Accès bloqué pour abus',
-          code: 'BLOCKED_ABUSE',
-        };
-      }
-
-      log(`Rate limit exceeded for identifier: ${anonymizeIP(identifier)}`, {
-        requests: userData.requests.length,
-        limit: limit.requests,
-        window: limit.window / 1000 + 's',
-        resetIn: resetTime + 's',
-      });
-
-      return {
-        success: false,
-        reset: resetTime,
-        message: 'Trop de requêtes',
-        code: 'RATE_LIMITED',
-      };
-    }
-
-    // Rate limit OK
-    const userData = requestsCache.get(identifier);
-    const remaining = Math.max(0, limit.requests - userData.requests.length);
-
-    log(`Request allowed: ${anonymizeIP(identifier)}`, {
-      remaining,
-      limit: limit.requests,
-    });
-
-    return {
-      success: true,
-      reset: 0,
-      remaining,
-    };
-  } catch (error) {
-    log('Rate limit error:', {
-      error: error.message,
-      identifier: anonymizeIP(identifier),
-    });
-
-    // En cas d'erreur, on laisse passer (fail open)
-    return {
-      success: true,
-      reset: 0,
-      error: error.message,
-    };
-  }
-}
 
 export default {
   createRateLimit,
@@ -544,7 +450,7 @@ export default {
   apiRateLimit,
   contactRateLimit,
   orderRateLimit,
-  checkServerActionRateLimit, // ← AJOUTER CETTE LIGNE
+  checkServerActionRateLimit,
   getStats,
   addToWhitelist,
   removeFromWhitelist,

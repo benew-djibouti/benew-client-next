@@ -9,6 +9,7 @@ const QualitiesHome = () => {
   const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef(null);
   const isTransitioning = useRef(false);
+  const transitionTimerRef = useRef(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(pointer: coarse)');
@@ -54,11 +55,19 @@ const QualitiesHome = () => {
         setPlaying(false);
       }
     } finally {
-      setTimeout(() => {
+      if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+      transitionTimerRef.current = setTimeout(() => {
         isTransitioning.current = false;
       }, 300);
     }
   }, [playing]);
+
+  // Cleanup au démontage
+  useEffect(() => {
+    return () => {
+      if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+    };
+  }, []);
 
   const handleEnded = useCallback(() => {
     setPlaying(false);
@@ -96,24 +105,11 @@ const QualitiesHome = () => {
           {!isMobile && (
             <div
               className={`video-overlay ${playing ? 'video-overlay--playing' : 'video-overlay--paused'}`}
-              onClick={handlePlayPause}
-              role="button"
-              tabIndex={0}
-              aria-label={playing ? 'Mettre en pause' : 'Lancer la vidéo'}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handlePlayPause();
-                }
-              }}
             >
               <button
                 className={`video-play-btn video-play-btn--ready ${playing ? 'video-play-btn--playing' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePlayPause();
-                }}
-                aria-label={playing ? 'Pause' : 'Play'}
+                onClick={handlePlayPause}
+                aria-label={playing ? 'Mettre en pause' : 'Lancer la vidéo'}
                 type="button"
               >
                 {playing ? (

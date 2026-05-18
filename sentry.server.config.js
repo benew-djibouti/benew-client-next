@@ -38,7 +38,6 @@ if (sentryDSN && isValidDSN(sentryDSN)) {
     environment,
     release:
       process.env.SENTRY_RELEASE ||
-      process.env.VERCEL_GIT_COMMIT_SHA ||
       '1.0.0',
 
     // ✅ Debug et activation
@@ -88,22 +87,17 @@ if (sentryDSN && isValidDSN(sentryDSN)) {
       'EHOSTUNREACH',
 
       // Erreurs Cloudinary serveur (normales)
-      'Upload failed',
-      'Resource not found',
-      'Invalid signature',
-      'Transformation failed',
-      'Upload timeout',
-      'Rate limit exceeded',
+      /cloudinary.*upload.*failed/i,
+      /cloudinary.*resource.*not.*found/i,
+      /cloudinary.*invalid.*signature/i,
+      /cloudinary.*transformation.*failed/i,
+      /cloudinary.*upload.*timeout/i,
+      /cloudinary.*rate.*limit/i,
 
       // Erreurs Resend (service email)
       'Email rate limit exceeded',
       'Invalid email address',
       'Recipient rejected',
-
-      // Erreurs de validation (Yup)
-      'ValidationError',
-      'yup validation error',
-      'Validation failed',
 
       // Erreurs paiement mobile (timeouts normaux)
       'Payment timeout',
@@ -445,16 +439,17 @@ export const captureMessage = (message, options = {}) => {
   const level = typeof options === 'string' ? options : (options.level || 'info');
 
   Sentry.withScope((scope) => {
-    if (options.tags && typeof options === 'object') {
-      Object.entries(options.tags).forEach(([key, value]) => {
-        scope.setTag(key, value);
-      });
-    }
-
-    if (options.extra && typeof options === 'object') {
-      Object.entries(options.extra).forEach(([key, value]) => {
-        scope.setExtra(key, value);
-      });
+    if (typeof options === 'object') {
+      if (options.tags) {
+        Object.entries(options.tags).forEach(([key, value]) => {
+          scope.setTag(key, value);
+        });
+      }
+      if (options.extra) {
+        Object.entries(options.extra).forEach(([key, value]) => {
+          scope.setExtra(key, value);
+        });
+      }
     }
 
     scope.setLevel(level);

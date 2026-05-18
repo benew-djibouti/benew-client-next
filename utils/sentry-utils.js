@@ -122,14 +122,43 @@ export function categorizeError(error) {
   const errorStack = (error.stack || '').toLowerCase();
 
   // Erreurs PostgreSQL
+  // Après
+  const PG_ERROR_CODES = [
+    '08001',
+    '08000',
+    '08006', // Connection failures
+    '57014',
+    '57P01',
+    '57P02', // Query canceled, shutdowns
+    '42P01',
+    '42501', // Undefined table, insufficient privilege
+    '23505',
+    '23503',
+    '23514', // Constraint violations
+    '28000',
+    '28P01', // Auth failures
+  ];
   if (
-    error.code ||
+    PG_ERROR_CODES.includes(error.code) ||
     errorString.includes('postgres') ||
-    errorString.includes('pg') ||
-    errorMessage.includes('database') ||
-    errorMessage.includes('connection')
+    errorMessage.includes('pg pool') ||
+    errorMessage.includes('database connection')
   ) {
     return 'database';
+  }
+
+  // Erreurs réseau système (Node.js error codes)
+  if (
+    error.code === 'ECONNREFUSED' ||
+    error.code === 'ECONNRESET' ||
+    error.code === 'ETIMEDOUT' ||
+    error.code === 'ENOTFOUND' ||
+    error.code === 'EHOSTUNREACH' ||
+    errorMessage.includes('network') ||
+    errorMessage.includes('fetch') ||
+    errorMessage.includes('timeout')
+  ) {
+    return 'network';
   }
 
   // Erreurs Cloudinary
@@ -316,7 +345,8 @@ export function anonymizeHeaders(headers) {
  * @param {string|Object} body - Body de la requête
  * @returns {string|Object} - Body filtré
  */
-export function filterRequestBody(body) {
+export function filterRequestBody(body, depth = 0) {
+  if (depth > 5) return '[DEEP_OBJECT]';
   if (!body) return body;
 
   // Si c'est une string, filtrer comme un message
@@ -357,7 +387,7 @@ export function filterRequestBody(body) {
       }
       // Récursion pour objets imbriqués
       else if (typeof body[key] === 'object' && body[key] !== null) {
-        filtered[key] = filterRequestBody(body[key]);
+        filtered[key] = filterRequestBody(body[key], depth + 1);
       }
       // Valeurs normales
       else {
