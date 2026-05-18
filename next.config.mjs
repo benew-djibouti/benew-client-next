@@ -98,7 +98,7 @@ const validateEnv = () => {
     if (NODE_ENV === 'development') {
       console.log('🔧 Development mode: Continuing with missing variables...');
     }
-  } else {
+  } else if (NODE_ENV !== 'production') {
     const context = IS_CI ? 'CI Build' : NODE_ENV;
     console.log(
       `✅ [${context}] All required environment variables are present`,
@@ -222,10 +222,10 @@ const nextConfig = {
         value:
           'geolocation=(), microphone=(), camera=(), payment=(), usb=()',
       },
-      {
+      ...(process.env.NEXT_PUBLIC_SITE_URL ? [{
         key: 'Reporting-Endpoints',
         value: `csp-endpoint="${process.env.NEXT_PUBLIC_SITE_URL}/api/csp-report"`,
-      },
+      }] : []),
     ];
 
     // HSTS en production uniquement
