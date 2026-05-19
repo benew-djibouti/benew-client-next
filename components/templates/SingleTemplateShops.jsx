@@ -226,14 +226,13 @@ const ApplicationCard = memo(
 
           <div className="price-section">
             <div className="price-item">
-              <span className="price-label price-label--orange">
-                Frais d&apos;acquisition
-              </span>
+              <span className="price-label">Frais d&apos;acquisition</span>
               <span className="price">{formatPrice(app.application_fee)}</span>
             </div>
             <div className="price-item">
               <span className="price-label">
-                Frais de gestion (hors charges)
+                <span className="price-label--orange">Frais de gestion</span>{' '}
+                (hors charges)
               </span>
               <span className="rent-price">
                 {formatPrice(app.application_rent)}/mois
