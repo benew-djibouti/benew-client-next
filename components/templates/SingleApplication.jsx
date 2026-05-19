@@ -476,9 +476,7 @@ const PricingSection = memo(({ application }) => (
           </tr>
           <tr className="pricing-row">
             <td className="pricing-label">Autres charges</td>
-            <td className="pricing-value">
-              A determiner selon les besoins spécifiques de l&apos;application
-            </td>
+            <td className="pricing-value">A determiner</td>
           </tr>
           <tr className="pricing-row total-row">
             <td className="pricing-label">Total</td>

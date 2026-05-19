@@ -29,23 +29,18 @@ $background-color-light: color.adjust($background-color, $lightness: 10%);
 // ✅ ARCHITECTURE FINALE AVEC NEXT/FONT - 2 POLICES
 // Les CSS variables sont générées automatiquement par next/font (voir app/fonts.js)
 //
-// 1. Orbitron (--font-display) : Titres (h1-h6) + UI (nav, boutons, liens)
-// 2. Inter (--font-content) : Contenu (paragraphes, texte, corps)
+// 1. JOSEFIN SANS (--font-display) : Titres (h1-h6) + UI (nav, boutons, liens)
+// 2. JOSEFIN SLAB (--font-content) : Contenu (paragraphes, texte, corps)
 
-// Orbitron - Pour titres (h1-h6) + UI (nav, boutons, liens)
+// Josefin Sans - Pour titres (h1-h6) + UI (nav, boutons, liens)
 $font-family-display:
   var(--font-display), 'Helvetica Neue', system-ui, sans-serif;
 
-// Orbitron également pour UI (nav, boutons, liens)
+// Josefin Sans également pour UI (nav, boutons, liens)
 $font-family-ui: var(--font-display), 'Helvetica Neue', system-ui, sans-serif;
 
-// Inter - Pour contenu (paragraphes, texte)
-$font-family-content:
-  var(--font-content),
-  -apple-system,
-  BlinkMacSystemFont,
-  'Segoe UI',
-  sans-serif;
+// Josefin Slab - Pour contenu (paragraphes, texte)
+$font-family-content: var(--font-content), Georgia, 'Times New Roman', serif;
 
 // ⚠️ RÉTROCOMPATIBILITÉ - Mapping vers l'ancien système
 $font-family-parallax: $font-family-display; // Alias pour parallax (Orbitron)

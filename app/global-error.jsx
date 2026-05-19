@@ -7,8 +7,7 @@ import './styles/global-error.scss';
 // 🔴 CRITIQUE - NEXT/FONT INTÉGRÉ
 // =============================
 import * as Sentry from '@sentry/nextjs';
-import { josefinSans, inter } from './fonts';
-// import { orbitron, inter } from './fonts';
+import { josefinSans, josefinSlab } from './fonts';
 
 /**
  * Composant de gestion d'erreurs globales pour Next.js 15
@@ -60,7 +59,10 @@ export default function GlobalError({ error, reset }) {
   };
 
   return (
-    <html lang="fr" className={`${josefinSans.variable} ${inter.variable}`}>
+    <html
+      lang="fr"
+      className={`${josefinSans.variable} ${josefinSlab.variable}`}
+    >
       <head>
         <title>Erreur - Benew</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
