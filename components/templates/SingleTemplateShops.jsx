@@ -226,7 +226,9 @@ const ApplicationCard = memo(
 
           <div className="price-section">
             <div className="price-item">
-              <span className="price-label">Frais d&apos;acquisition</span>
+              <span className="price-label price-label--orange">
+                Frais d&apos;acquisition
+              </span>
               <span className="price">{formatPrice(app.application_fee)}</span>
             </div>
             <div className="price-item">

@@ -26,6 +26,10 @@
   flex-shrink: 0;
 }
 
+.price-label--orange {
+  color: $color-orange;
+}
+
 // clamp : 0.85rem (360px) → 1.2rem (1280px)
 .price {
   font-weight: 700;
