@@ -177,11 +177,9 @@ const nextConfig = {
     },
   },
 
-  optimizePackageImports: [
-    'react-icons',
-    'framer-motion',
-    'lucide-react',
-  ],
+  experimental: {
+    optimizePackageImports: ['react-icons', 'framer-motion', 'lucide-react'],
+  },
 
   // Timeout pour la génération de pages statiques
   staticPageGenerationTimeout: 60,

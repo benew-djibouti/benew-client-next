@@ -53,7 +53,7 @@
     letter-spacing: clamp(0.03rem, 0.3vw, 0.19rem);
 
     @include from('large-1280') {
-      font-size: 1.3rem;
+      font-size: 1rem;
       letter-spacing: 0.188rem;
       margin-top: 0;
       max-width: 100%;
