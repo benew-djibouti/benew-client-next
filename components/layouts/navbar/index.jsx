@@ -28,6 +28,12 @@ const SOCIAL_LINKS = [
     icon: '/tik-tok.png',
     alt: 'TikTok logo',
   },
+  {
+    name: 'Youtube',
+    href: process.env.NEXT_PUBLIC_YOUTUBE_URL || '#',
+    icon: '/youtube.png',
+    alt: 'Youtube logo',
+  },
 ];
 
 function Navbar() {
