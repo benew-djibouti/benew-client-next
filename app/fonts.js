@@ -56,6 +56,6 @@ export const josefinSlab = localFont({
   ],
   variable: '--font-content',
   display: 'swap',
-  adjustFontFallback: 'Georgia',
+  adjustFontFallback: 'Times New Roman',
   preload: true,
 });
