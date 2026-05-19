@@ -7,7 +7,9 @@
 
 // ✅ Mixin pour les titres IMPORTANTS (Orbitron)
 @mixin heading($size: 1.5rem, $weight: 700) {
-  font-family: font-family('display') !important; // Orbitron
+  font-family: font-family(
+    'display'
+  ) !important; // JOSEFIN SANS pour tous les titres
   font-weight: $weight;
   font-size: $size;
   line-height: 1.2;
@@ -16,7 +18,7 @@
 
 // Mixin pour les liens (Exo 2)
 @mixin link-style($size: 1rem, $weight: 500) {
-  font-family: font-family('ui'); // Orbitron
+  font-family: font-family('ui'); // JOSEFIN SANS pour UI (nav, boutons, liens)
   font-weight: $weight;
   font-size: $size;
   text-decoration: none;
@@ -29,7 +31,7 @@
 
 // Mixin pour les boutons (Exo 2)
 @mixin button-style($size: 0.9rem, $weight: 600) {
-  font-family: font-family('ui'); // Orbitron
+  font-family: font-family('ui'); // JOSEFIN SANS pour UI (nav, boutons, liens)
   font-weight: $weight;
   font-size: $size;
   letter-spacing: 0.05em;
@@ -38,7 +40,7 @@
 
 // Mixin pour le contenu textuel (Inter)
 @mixin body-text($size: 1rem, $weight: 400) {
-  font-family: font-family('content'); // Inter
+  font-family: font-family('content'); // JOSEFIN SLAB pour contenu
   font-weight: $weight;
   font-size: $size;
   line-height: 1.6;
@@ -47,7 +49,9 @@
 
 // ✅ Mixin pour le parallax (Orbitron) - IMPACT MAXIMAL
 @mixin parallax-title($size: 4rem, $weight: 900) {
-  font-family: font-family('display') !important; // Orbitron
+  font-family: font-family(
+    'display'
+  ) !important; // JOSEFIN SANS pour tous les titres
   font-weight: $weight;
   font-size: $size;
   line-height: 1.1;

@@ -34,75 +34,28 @@ export const josefinSans = localFont({
 });
 
 // =============================
-// ORBITRON - Titres et UI
+// JOSEFIN SLAB - Contenu et corps de texte (LOCAL)
 // =============================
-export const orbitron = localFont({
+export const josefinSlab = localFont({
   src: [
     {
-      path: './fonts/Orbitron-Regular.ttf',
+      path: './fonts/JosefinSlab-Regular.ttf',
       weight: '400',
       style: 'normal',
     },
     {
-      path: './fonts/Orbitron-Medium.ttf',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Orbitron-SemiBold.ttf',
+      path: './fonts/JosefinSlab-SemiBold.ttf',
       weight: '600',
       style: 'normal',
     },
     {
-      path: './fonts/Orbitron-Bold.ttf',
-      weight: '700',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Orbitron-ExtraBold.ttf',
-      weight: '800',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Orbitron-Black.ttf',
-      weight: '900',
-      style: 'normal',
-    },
-  ],
-  variable: '--font-display',
-  display: 'swap',
-  adjustFontFallback: 'Arial',
-  preload: true,
-});
-
-// =============================
-// INTER - Contenu et corps de texte (LOCAL)
-// =============================
-export const inter = localFont({
-  src: [
-    {
-      path: './fonts/Inter_18pt-Regular.ttf',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Inter_18pt-Medium.ttf',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Inter_18pt-SemiBold.ttf',
-      weight: '600',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Inter_18pt-Bold.ttf',
+      path: './fonts/JosefinSlab-Bold.ttf',
       weight: '700',
       style: 'normal',
     },
   ],
   variable: '--font-content',
   display: 'swap',
-  adjustFontFallback: 'Arial',
+  adjustFontFallback: 'Georgia',
   preload: true,
 });
