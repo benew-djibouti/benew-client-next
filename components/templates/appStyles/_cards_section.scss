@@ -189,38 +189,38 @@
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
   }
 
-  &.card-orange {
+  &.app-card-orange {
     border-color: rgba($color-orange, 0.6);
     &:hover {
       border-color: $color-orange;
       background: rgba($color-orange, 0.08);
       box-shadow: 0 12px 40px rgba($color-orange, 0.4);
     }
-    .card-icon {
+    .app-card-icon {
       color: $color-orange;
     }
   }
 
-  &.card-purple {
+  &.app-card-purple {
     border-color: rgba($color-purple, 0.6);
     &:hover {
       border-color: $color-purple;
       background: rgba($color-purple, 0.08);
       box-shadow: 0 12px 40px rgba($color-purple, 0.4);
     }
-    .card-icon {
+    .app-card-icon {
       color: $color-purple;
     }
   }
 
-  &.card-pink {
+  &.app-card-pink {
     border-color: rgba($color-pink, 0.6);
     &:hover {
       border-color: $color-pink;
       background: rgba($color-pink, 0.08);
       box-shadow: 0 12px 40px rgba($color-pink, 0.4);
     }
-    .card-icon {
+    .app-card-icon {
       color: $color-pink;
     }
   }
