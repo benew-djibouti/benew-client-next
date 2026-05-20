@@ -87,7 +87,7 @@
   }
 }
 
-.template-carousel-dot {
+.template-carousel-indicators .template-carousel-dot {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
@@ -176,7 +176,7 @@
     bottom: 0.5rem;
   }
 
-  .template-carousel-dot {
+  .template-carousel-indicators .template-carousel-dot {
     width: 0.5rem !important;
     height: 0.5rem !important;
 
@@ -189,7 +189,7 @@
 
 // Écrans tactiles - Amélioration zones tactiles
 @media (pointer: coarse) {
-  .template-carousel-dot {
+  .template-carousel-indicators .template-carousel-dot {
     width: 0.5rem !important;
     height: 0.5rem !important;
 
@@ -210,7 +210,7 @@
     }
   }
 
-  .template-carousel-dot,
+  .template-carousel-indicators .template-carousel-dot,
   .template-count-badge {
     transition: none !important;
 
@@ -222,7 +222,7 @@
 
 // Contraste élevé
 @include high-contrast {
-  .template-carousel-dot {
+  .template-carousel-indicators .template-carousel-dot {
     border-width: 2px;
     background: rgba($text-color, 0.6);
 
