@@ -102,9 +102,9 @@ const GalleryModal = memo(({ isOpen, onClose, images, applicationName }) => {
   if (!isOpen || !images || images.length === 0) return null;
 
   return (
-    <div className="gallery-modal-overlay" onClick={onClose}>
+    <div className="shops-gallery-modal-overlay" onClick={onClose}>
       <div
-        className="gallery-modal-content"
+        className="shops-gallery-modal-content"
         ref={modalRef}
         role="dialog"
         aria-modal="true"
@@ -113,28 +113,28 @@ const GalleryModal = memo(({ isOpen, onClose, images, applicationName }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          className="gallery-close-btn"
+          className="shops-gallery-close-btn"
           onClick={onClose}
           aria-label="Fermer la galerie"
         >
-          <FaX className="close-icon" />
+          <FaX className="shops-close-icon" />
         </button>
 
-        <div className="gallery-header">
-          <div className="gallery-header-left">
+        <div className="shops-gallery-header">
+          <div className="shops-gallery-header-left">
             <h3 id="gallery-modal-title">{applicationName} - Galerie</h3>
-            <p className="gallery-counter">
+            <p className="shops-gallery-counter">
               {selectedImage + 1} / {images.length}
             </p>
           </div>
         </div>
 
-        <div className="gallery-body">
-          <div className="gallery-thumbnails">
+        <div className="shops-gallery-body">
+          <div className="shops-gallery-thumbnails">
             {images.map((img, index) => (
               <button
                 key={index}
-                className={`gallery-thumb ${index === selectedImage ? 'active' : ''}`}
+                className={`shops-gallery-thumb ${index === selectedImage ? 'active' : ''}`}
                 onClick={() => setSelectedImage(index)}
                 aria-label={`Aller à l'image ${index + 1}`}
               >
@@ -143,19 +143,19 @@ const GalleryModal = memo(({ isOpen, onClose, images, applicationName }) => {
                   alt={`${applicationName} - Miniature ${index + 1}`}
                   width={120}
                   height={120}
-                  className="gallery-image"
+                  className="shops-gallery-image"
                 />
               </button>
             ))}
           </div>
 
-          <div className="gallery-image-container">
+          <div className="shops-gallery-image-container">
             <AppImage
               src={images[selectedImage]}
               alt={`${applicationName} - Version ${selectedImage + 1}`}
               width={800}
               height={600}
-              className="gallery-image"
+              className="shops-gallery-image"
               crop={{ type: 'fit', gravity: 'center' }}
             />
           </div>
@@ -214,7 +214,7 @@ const ApplicationCard = memo(
         </div>
 
         <div className="card-content">
-          <h3 className="app-title">{app.application_name}</h3>
+          <h3 className="shops-app-title">{app.application_name}</h3>
 
           <p className="app-meta">
             <span className="level">
@@ -240,36 +240,36 @@ const ApplicationCard = memo(
             </div>
           </div>
 
-          <div className="action-buttons">
+          <div className="shops-action-buttons">
             <button
-              className="btn btn-cart"
+              className="shops-btn shops-btn-cart"
               onClick={() => onOrderClick(app)}
               disabled={!hasPaymentMethods}
               aria-label={`Commander ${app.application_name}`}
             >
               <FaDollarSign size={16} />
-              <span className="btn-text">Commander</span>
+              <span className="shops-btn-text">Commander</span>
             </button>
 
             {hasMultipleImages && (
               <button
-                className="btn btn-gallery"
+                className="shops-btn shops-btn-gallery"
                 onClick={() => onGalleryClick(app, allImages)}
                 aria-label={`Voir la galerie de ${app.application_name}`}
               >
                 <FaImages size={16} />
-                <span className="btn-text">Galerie</span>
+                <span className="shops-btn-text">Galerie</span>
               </button>
             )}
 
             <Link
               href={`/templates/${templateID}/applications/${app.application_id}`}
-              className="btn btn-preview"
+              className="shops-btn shops-btn-preview"
               onClick={() => onViewClick(app)}
               aria-label={`Voir détails de ${app.application_name}`}
             >
               <FaEye />
-              <span className="btn-text">Voir +</span>
+              <span className="shops-btn-text">Voir +</span>
             </Link>
           </div>
         </div>
@@ -417,13 +417,13 @@ const ApplicationsCarousel = memo(
 
     return (
       <div
-        className="applications-carousel-container"
+        className="shops-applications-carousel-container"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
         <button
-          className="applications-carousel-arrow applications-carousel-arrow-left"
+          className="shops-applications-carousel-arrow shops-applications-carousel-arrow-left"
           onClick={handlePrevSlide}
           disabled={isTransitioning}
           aria-label="Application précédente"
@@ -431,7 +431,7 @@ const ApplicationsCarousel = memo(
           <FaChevronLeft />
         </button>
 
-        <div className="applications-carousel-track">
+        <div className="shops-applications-carousel-track">
           {applications.map((app, index) => {
             const isActive = index === currentIndex;
             const isPrevious =
@@ -452,7 +452,7 @@ const ApplicationsCarousel = memo(
             return (
               <div
                 key={app.application_id}
-                className={`applications-carousel-slide ${slidePosition}`}
+                className={`shops-applications-carousel-slide ${slidePosition}`}
               >
                 <ApplicationCard
                   app={app}
@@ -468,7 +468,7 @@ const ApplicationsCarousel = memo(
         </div>
 
         <button
-          className="applications-carousel-arrow applications-carousel-arrow-right"
+          className="shops-applications-carousel-arrow shops-applications-carousel-arrow-right"
           onClick={handleNextSlide}
           disabled={isTransitioning}
           aria-label="Application suivante"
@@ -476,12 +476,12 @@ const ApplicationsCarousel = memo(
           <FaChevronRight />
         </button>
 
-        <div className="applications-carousel-indicators">
+        <div className="shops-applications-carousel-indicators">
           {applications.map((app, index) => (
             <button
               key={app.application_id}
               onClick={() => goToSlide(index)}
-              className={`applications-carousel-dot ${index === currentIndex ? 'active' : ''}`}
+              className={`shops-applications-carousel-dot ${index === currentIndex ? 'active' : ''}`}
               aria-label={`Application ${index + 1} - ${app.application_name}`}
               disabled={isTransitioning}
             />
@@ -681,7 +681,7 @@ const SingleTemplateShops = ({
       </section>
 
       {applications.length === 1 && (
-        <section className="others projectSection" role="article">
+        <section className="others shops-projectSection" role="article">
           <ApplicationCard
             app={applications[0]}
             templateID={templateID}
@@ -700,7 +700,7 @@ const SingleTemplateShops = ({
       )}
 
       {applications.length > 1 && (
-        <section className="others projectSection">
+        <section className="others shops-projectSection">
           <ApplicationsCarousel
             applications={applications}
             templateID={templateID}

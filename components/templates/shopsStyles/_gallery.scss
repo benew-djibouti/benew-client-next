@@ -14,7 +14,7 @@
 // OVERLAY MODAL
 // =============================
 
-.gallery-modal-overlay {
+.shops-gallery-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -49,7 +49,7 @@
 // MODAL CONTENT
 // =============================
 
-.gallery-modal-content {
+.shops-gallery-modal-content {
   background: linear-gradient(
     135deg,
     rgba($background-color, 0.95),
@@ -101,7 +101,7 @@
 // ✅ HEADER CORRIGÉ - TITRE + COMPTEUR GROUPÉS
 // =============================
 
-.gallery-header {
+.shops-gallery-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -134,7 +134,7 @@
 }
 
 // ✅ NOUVEAU : Conteneur pour titre + compteur (groupés ensemble)
-.gallery-header-left {
+.shops-gallery-header-left {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -164,7 +164,7 @@
     }
   }
 
-  .gallery-counter {
+  .shops-gallery-counter {
     color: rgba($text-color, 0.7);
     font-weight: 500;
     margin: 0;
@@ -187,7 +187,7 @@
 // ✅ BOUTON FERMETURE - POSITION ABSOLUE SANS CONFLIT
 // =============================
 
-.gallery-close-btn {
+.shops-gallery-close-btn {
   position: absolute;
   background: $primary-color;
   color: $background-color;
@@ -253,7 +253,7 @@
 // ✅ BODY AVEC LAYOUT ADAPTATIF
 // =============================
 
-.gallery-body {
+.shops-gallery-body {
   display: flex;
   flex-grow: 1;
   overflow: hidden;
@@ -282,7 +282,7 @@
 // ✅ THUMBNAILS - PRESQUE COLLÉES (BORDURE FINE)
 // =============================
 
-.gallery-thumbnails {
+.shops-gallery-thumbnails {
   display: flex;
   overflow: auto;
   flex-shrink: 0;
@@ -407,7 +407,7 @@
 // ✅ THUMBNAILS INDIVIDUELLES - BORDURE FINE + CONTENEUR EXACT
 // =============================
 
-.gallery-thumb {
+.shops-gallery-thumb {
   flex-shrink: 0;
   border: 1px solid rgba($text-color, 0.2); // ✅ 1px au lieu de 2px
   border-radius: 6px; // ✅ 4px au lieu de 8px (plus discret)
@@ -471,7 +471,7 @@
 // ✅ IMAGE CONTAINER - PREND L'ESPACE RESTANT
 // =============================
 
-.gallery-image-container {
+.shops-gallery-image-container {
   position: relative;
   display: flex;
   align-items: center;
@@ -530,7 +530,7 @@
 }
 
 // ✅ IMAGE CENTRALE - TOUJOURS EN CONTAIN
-.gallery-image {
+.shops-gallery-image {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -541,7 +541,7 @@
 // ✅ BOUTON GALLERY DANS CARTE
 // =============================
 
-.btn-gallery {
+.shops-btn-gallery {
   background: transparent;
   color: $secondary-color;
   border: 2px solid $secondary-color;
@@ -562,7 +562,7 @@
     transform: scale(1.1);
   }
 
-  .btn-text {
+  .shops-btn-text {
     display: inline;
   }
 }
@@ -572,23 +572,23 @@
 // =============================
 
 @include mobile-landscape {
-  .gallery-modal-content {
+  .shops-gallery-modal-content {
     max-height: 95vh;
   }
 
-  .gallery-image-container {
+  .shops-gallery-image-container {
     max-height: 65vh;
   }
 }
 
 @include reduced-motion {
-  .gallery-modal-overlay,
-  .gallery-modal-content {
+  .shops-gallery-modal-overlay,
+  .shops-gallery-modal-content {
     animation: none;
   }
 
-  .gallery-thumb,
-  .gallery-close-btn {
+  .shops-gallery-thumb,
+  .shops-gallery-close-btn {
     transition: none;
 
     &:hover {
@@ -598,7 +598,7 @@
 }
 
 @include dark-mode {
-  .gallery-modal-content {
+  .shops-gallery-modal-content {
     background: linear-gradient(
       135deg,
       rgba($background-color, 0.98),

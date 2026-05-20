@@ -178,13 +178,13 @@ const ApplicationGalleryCarousel = memo(
 
     if (imageList.length === 1) {
       return (
-        <div className="gallery-single-image">
+        <div className="app-gallery-single-image">
           <AppImage
             src={imageList[0]}
             alt={applicationName}
             width={800}
             height={600}
-            className="gallery-image-solo"
+            className="app-gallery-image-solo"
             loading="eager"
             crop={{ type: 'fit', gravity: 'center' }}
           />
@@ -194,12 +194,12 @@ const ApplicationGalleryCarousel = memo(
 
     return (
       <div
-        className="gallery-carousel-container"
+        className="app-gallery-carousel-container"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        <div className="gallery-carousel-track">
+        <div className="app-gallery-carousel-track">
           {imageList.map((imgUrl, index) => {
             let slidePosition = 'hidden-right';
 
@@ -215,14 +215,14 @@ const ApplicationGalleryCarousel = memo(
             return (
               <div
                 key={index}
-                className={`gallery-carousel-slide ${slidePosition}`}
+                className={`app-gallery-carousel-slide ${slidePosition}`}
               >
                 <AppImage
                   src={imgUrl}
                   alt={`${applicationName} - Image ${index + 1}`}
                   width={800}
                   height={600}
-                  className="gallery-carousel-image"
+                  className="app-gallery-carousel-image"
                   loading={index === 0 ? 'eager' : 'lazy'}
                   crop={{ type: 'fit', gravity: 'center' }}
                 />
@@ -232,12 +232,12 @@ const ApplicationGalleryCarousel = memo(
         </div>
 
         {imageList.length > 1 && (
-          <div className="gallery-carousel-indicators">
+          <div className="app-gallery-carousel-indicators">
             {imageList.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`gallery-carousel-dot ${index === currentSlide ? 'active' : ''}`}
+                className={`app-gallery-carousel-dot ${index === currentSlide ? 'active' : ''}`}
                 aria-label={`Image ${index + 1}`}
                 disabled={isTransitioning}
               />
@@ -246,7 +246,7 @@ const ApplicationGalleryCarousel = memo(
         )}
 
         {imageList.length > 1 && (
-          <div className="gallery-carousel-counter">
+          <div className="app-gallery-carousel-counter">
             {currentSlide + 1} / {imageList.length}
           </div>
         )}

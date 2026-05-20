@@ -6,7 +6,7 @@
 // ================================
 
 // clamp : 1.25rem (360px) → 1.4rem (1280px)
-.app-title {
+.shops-app-title {
   font-weight: 700;
   color: $text-color;
   margin: 0 0 clamp(0.875rem, 0.14vw + 0.82rem, 1rem) 0;
