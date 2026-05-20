@@ -109,6 +109,7 @@
     background: $primary-color;
     border-color: $primary-color;
     width: 0.8rem;
+    height: 0.5rem; // ← ajouter height explicite
     border-radius: 50%;
     box-shadow: 0 2px 8px rgba($primary-color, 0.4);
   }
@@ -176,11 +177,12 @@
   }
 
   .template-carousel-dot {
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.5rem !important;
+    height: 0.5rem !important;
 
     &.active {
-      width: 0.5rem;
+      width: 0.5rem !important;
+      height: 0.5rem !important;
     }
   }
 }
@@ -188,11 +190,12 @@
 // Écrans tactiles - Amélioration zones tactiles
 @media (pointer: coarse) {
   .template-carousel-dot {
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.5rem !important;
+    height: 0.5rem !important;
 
     &.active {
-      width: 0.5rem;
+      width: 0.5rem !important; // ← déjà présent, vérifier qu'il est là
+      height: 0.5rem !important; // ← ajouter
     }
   }
 }
