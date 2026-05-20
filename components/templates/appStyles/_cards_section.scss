@@ -5,7 +5,7 @@
 // 📄 _cards_section.scss
 // ================================
 
-.cards-section {
+.app-cards-section {
   background: linear-gradient(135deg, #0c0c1d 0%, #1a0f2e 50%, #151528 100%);
   background-image: url('/stars.png');
   background-repeat: repeat;
@@ -36,7 +36,7 @@
   }
 }
 
-.cards-section-container {
+.app-cards-section-container {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
@@ -53,7 +53,7 @@
 // ================================
 // HEADER
 // ================================
-.cards-section-header {
+.app-cards-section-header {
   display: flex;
   justify-content: flex-end;
   margin-bottom: clamp(1.5rem, 0.54vw + 1.3rem, 2.5rem);
@@ -63,7 +63,7 @@
   }
 }
 
-.title-block {
+.app-title-block {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -104,7 +104,7 @@
   }
 }
 
-.badge {
+.app-badge {
   display: flex;
   align-items: center;
   text-align: center;
@@ -115,18 +115,18 @@
   padding: clamp(0.35rem, 0.05vw + 0.33rem, 0.4rem)
     clamp(0.6rem, 0.11vw + 0.56rem, 0.7rem);
 
-  .badge-value {
+  .app-badge-value {
     font-weight: 600;
     font-size: clamp(0.75rem, 0.05vw + 0.73rem, 0.8rem);
   }
 
-  &.level-badge {
+  &.app-level-badge {
     background: rgba($color-orange, 0.1);
     border-color: rgba($color-orange, 0.3);
     color: $color-orange;
   }
 
-  &.category-badge {
+  &.app-category-badge {
     background: rgba($color-purple, 0.1);
     border-color: rgba($color-purple, 0.3);
     color: $color-purple;
@@ -136,7 +136,7 @@
 // ================================
 // GRILLE 4 CARTES
 // ================================
-.cards-grid {
+.app-cards-grid {
   display: grid;
   gap: clamp(1rem, 0.54vw + 0.8rem, 2rem);
   width: 100%;
@@ -147,7 +147,7 @@
   margin-right: auto;
 }
 
-.info-card {
+.app-info-card {
   background: rgba($color-light, 0.03);
   border: 0.2px solid rgba($color-light, 0.2);
   border-radius: 16px;
@@ -226,18 +226,18 @@
   }
 }
 
-.card-icon {
+.app-card-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease;
 
-  .info-card:hover & {
+  .app-info-card:hover & {
     transform: scale(1.15);
   }
 }
 
-.card-title {
+.app-card-title {
   font-size: clamp(0.85rem, 0.11vw + 0.81rem, 0.95rem);
   font-weight: 600;
   color: $color-light;
@@ -249,13 +249,13 @@
 // ================================
 // BOUTON COMMANDER
 // ================================
-.order-button-container {
+.app-order-button-container {
   width: 100%;
   display: flex;
   justify-content: center;
   padding-top: clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
 
-  .purchase-btn {
+  .app-purchase-btn {
     width: 100%;
     max-width: clamp(300px, 10.87vw + 260.9px, 400px);
   }
@@ -264,7 +264,7 @@
 // ================================
 // MODAL CONTENU
 // ================================
-.content-modal-overlay {
+.app-content-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -289,7 +289,7 @@
   }
 }
 
-.content-modal-container {
+.app-content-modal-container {
   background: linear-gradient(
     135deg,
     rgba($background-color, 0.95),
@@ -319,7 +319,7 @@
   }
 }
 
-.content-modal-close {
+.app-content-modal-close {
   position: absolute;
   z-index: 10;
   background: $primary-color;
@@ -338,7 +338,7 @@
   width: clamp(36px, 0.87vw + 32.9px, 44px);
   height: clamp(36px, 0.87vw + 32.9px, 44px);
 
-  .close-icon,
+  .app-close-icon,
   svg {
     display: block !important;
     color: $background-color !important;
@@ -355,7 +355,7 @@
   }
 }
 
-.content-modal-header {
+.app-content-modal-header {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -365,7 +365,7 @@
   flex-shrink: 0;
 }
 
-.content-modal-title {
+.app-content-modal-title {
   font-size: clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem);
   font-weight: 700;
   color: $color-light;
@@ -377,7 +377,7 @@
   background-clip: text;
 }
 
-.content-modal-body {
+.app-content-modal-body {
   padding: clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
   overflow-y: auto;
   flex: 1;
@@ -402,15 +402,15 @@
   }
 }
 
-.modal-content-section {
+.app-modal-content-section {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
 
-  .description-content {
+  .app-description-content {
     text-align: center;
 
-    .description-text {
+    .app-description-text {
       line-height: 1.7;
       color: $text-color-muted;
       font-size: clamp(0.95rem, 0.05vw + 0.93rem, 1rem);
@@ -419,28 +419,28 @@
     }
   }
 
-  .info-table-container,
-  .needs-table-container,
-  .pricing-table-container {
+  .app-info-table-container,
+  .app-needs-table-container,
+  .app-pricing-table-container {
     margin: 0 auto;
   }
 }
 
 // Responsive modal
 @include mobile-landscape {
-  .content-modal-container {
+  .app-content-modal-container {
     max-height: 85vh;
   }
 }
 
 @include reduced-motion {
-  .content-modal-overlay,
-  .content-modal-container {
+  .app-content-modal-overlay,
+  .app-content-modal-container {
     animation: none;
   }
 
-  .info-card,
-  .content-modal-close {
+  .app-info-card,
+  .app-content-modal-close {
     transition: none;
     &:hover {
       transform: none;
@@ -449,7 +449,7 @@
 }
 
 @media (pointer: coarse) {
-  .info-card {
+  .app-info-card {
     &:hover {
       transform: none;
     }

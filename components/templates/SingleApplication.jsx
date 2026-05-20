@@ -315,9 +315,9 @@ const ContentModal = memo(({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="content-modal-overlay" onClick={onClose}>
+    <div className="app-content-modal-overlay" onClick={onClose}>
       <div
-        className="content-modal-container"
+        className="app-content-modal-container"
         ref={modalRef}
         role="dialog"
         aria-modal="true"
@@ -326,18 +326,18 @@ const ContentModal = memo(({ isOpen, onClose, title, children }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          className="content-modal-close"
+          className="app-content-modal-close"
           onClick={onClose}
           aria-label="Fermer"
         >
           <FaX />
         </button>
-        <div className="content-modal-header">
-          <h2 id="content-modal-title" className="content-modal-title">
+        <div className="app-content-modal-header">
+          <h2 id="content-modal-title" className="app-content-modal-title">
             {title}
           </h2>
         </div>
-        <div className="content-modal-body">{children}</div>
+        <div className="app-content-modal-body">{children}</div>
       </div>
     </div>
   );
@@ -349,39 +349,41 @@ ContentModal.displayName = 'ContentModal';
 // ✅ COMPOSANTS CONTENU
 // =============================
 const TechnicalInfo = memo(({ application, template, onExternalLinkClick }) => (
-  <div className="modal-content-section">
-    <div className="info-table-container">
-      <table className="info-table">
+  <div className="app-modal-content-section">
+    <div className="app-info-table-container">
+      <table className="app-info-table">
         <tbody>
-          <tr className="info-row">
-            <td className="info-label">Template</td>
-            <td className="info-value">
+          <tr className="app-info-row">
+            <td className="app-info-label">Template</td>
+            <td className="app-info-value">
               {template?.template_name || 'Non spécifié'}
             </td>
           </tr>
-          <tr className="info-row">
-            <td className="info-label">Type</td>
-            <td className="info-value">
+          <tr className="app-info-row">
+            <td className="app-info-label">Type</td>
+            <td className="app-info-value">
               {getApplicationLevelLabel(application.application_level).long}
             </td>
           </tr>
-          <tr className="info-row">
-            <td className="info-label">Niveau</td>
-            <td className="info-value">{application.application_level}</td>
+          <tr className="app-info-row">
+            <td className="app-info-label">Niveau</td>
+            <td className="app-info-value">{application.application_level}</td>
           </tr>
-          <tr className="info-row">
-            <td className="info-label">Catégorie</td>
-            <td className="info-value">{application.application_category}</td>
+          <tr className="app-info-row">
+            <td className="app-info-label">Catégorie</td>
+            <td className="app-info-value">
+              {application.application_category}
+            </td>
           </tr>
           {application.application_link && (
-            <tr className="info-row">
-              <td className="info-label">Lien boutique</td>
-              <td className="info-value">
+            <tr className="app-info-row">
+              <td className="app-info-label">Lien boutique</td>
+              <td className="app-info-value">
                 <Link
                   href={application.application_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="info-link"
+                  className="app-info-link"
                   onClick={() =>
                     onExternalLinkClick('store', application.application_link)
                   }
@@ -392,14 +394,14 @@ const TechnicalInfo = memo(({ application, template, onExternalLinkClick }) => (
             </tr>
           )}
           {application.application_admin_link && (
-            <tr className="info-row">
-              <td className="info-label">Gestion</td>
-              <td className="info-value">
+            <tr className="app-info-row">
+              <td className="app-info-label">Gestion</td>
+              <td className="app-info-value">
                 <Link
                   href={application.application_admin_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="info-link"
+                  className="app-info-link"
                   onClick={() =>
                     onExternalLinkClick(
                       'admin',
@@ -421,32 +423,32 @@ const TechnicalInfo = memo(({ application, template, onExternalLinkClick }) => (
 TechnicalInfo.displayName = 'TechnicalInfo';
 
 const SpecificNeeds = memo(() => (
-  <div className="modal-content-section">
-    <div className="needs-table-container">
-      <table className="needs-table">
+  <div className="app-modal-content-section">
+    <div className="app-needs-table-container">
+      <table className="app-needs-table">
         <tbody>
-          <tr className="needs-row">
-            <td className="needs-item">
-              <span className="needs-icon">🌐</span>
-              <span className="needs-text">Hébergement web</span>
+          <tr className="app-needs-row">
+            <td className="app-needs-item">
+              <span className="app-needs-icon">🌐</span>
+              <span className="app-needs-text">Hébergement web</span>
             </td>
           </tr>
-          <tr className="needs-row">
-            <td className="needs-item">
-              <span className="needs-icon">💾</span>
-              <span className="needs-text">Base de données</span>
+          <tr className="app-needs-row">
+            <td className="app-needs-item">
+              <span className="app-needs-icon">💾</span>
+              <span className="app-needs-text">Base de données</span>
             </td>
           </tr>
-          <tr className="needs-row">
-            <td className="needs-item">
-              <span className="needs-icon">🔗</span>
-              <span className="needs-text">Nom de domaine</span>
+          <tr className="app-needs-row">
+            <td className="app-needs-item">
+              <span className="app-needs-icon">🔗</span>
+              <span className="app-needs-text">Nom de domaine</span>
             </td>
           </tr>
-          <tr className="needs-row free-tools">
-            <td className="needs-item">
-              <span className="needs-icon">🎁</span>
-              <span className="needs-text">Autres outils gratuits</span>
+          <tr className="app-needs-row app-free-tools">
+            <td className="app-needs-item">
+              <span className="app-needs-icon">🎁</span>
+              <span className="app-needs-text">Autres outils gratuits</span>
             </td>
           </tr>
         </tbody>
@@ -458,29 +460,29 @@ const SpecificNeeds = memo(() => (
 SpecificNeeds.displayName = 'SpecificNeeds';
 
 const PricingSection = memo(({ application }) => (
-  <div className="modal-content-section">
-    <div className="pricing-table-container">
-      <table className="pricing-table">
+  <div className="app-modal-content-section">
+    <div className="app-pricing-table-container">
+      <table className="app-pricing-table">
         <tbody>
-          <tr className="pricing-row">
-            <td className="pricing-label">Acquisition</td>
-            <td className="pricing-value">
+          <tr className="app-pricing-row">
+            <td className="app-pricing-label">Acquisition</td>
+            <td className="app-pricing-value">
               {formatPrice(application.application_fee)}
             </td>
           </tr>
-          <tr className="pricing-row">
-            <td className="pricing-label">Gestion</td>
-            <td className="pricing-value">
+          <tr className="app-pricing-row">
+            <td className="app-pricing-label">Gestion</td>
+            <td className="app-pricing-value">
               {formatPrice(application.application_rent)}/mois
             </td>
           </tr>
-          <tr className="pricing-row">
-            <td className="pricing-label">Autres charges</td>
-            <td className="pricing-value">A determiner</td>
+          <tr className="app-pricing-row">
+            <td className="app-pricing-label">Autres charges</td>
+            <td className="app-pricing-value">A determiner</td>
           </tr>
-          <tr className="pricing-row total-row">
-            <td className="pricing-label">Total</td>
-            <td className="pricing-value">
+          <tr className="app-pricing-row app-total-row">
+            <td className="app-pricing-label">Total</td>
+            <td className="app-pricing-value">
               {formatPrice(
                 application.application_fee + application.application_rent,
               )}
@@ -488,7 +490,7 @@ const PricingSection = memo(({ application }) => (
           </tr>
         </tbody>
       </table>
-      <div className="pricing-note">
+      <div className="app-pricing-note">
         <small>Francs Djiboutiens (FDJ)</small>
       </div>
     </div>
@@ -642,7 +644,7 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         />
       </section>
 
-      <section className="others gallery-section">
+      <section className="others app-gallery-section">
         <ApplicationGalleryCarousel
           images={allImages}
           applicationName={application.application_name}
@@ -650,22 +652,22 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         />
       </section>
 
-      <section className="others cards-section">
-        <div className="cards-section-container">
-          <div className="cards-section-header">
-            <div className="title-block">
+      <section className="others app-cards-section">
+        <div className="app-cards-section-container">
+          <div className="app-cards-section-header">
+            <div className="app-title-block">
               <h1 className="app-title">{application.application_name}</h1>
               <div className="app-badges">
-                <div className="badge level-badge">
-                  <span className="badge-value">
+                <div className="app-badge app-level-badge">
+                  <span className="app-badge-value">
                     {
                       getApplicationLevelLabel(application.application_level)
                         .short
                     }
                   </span>
                 </div>
-                <div className="badge category-badge">
-                  <span className="badge-value">
+                <div className="app-badge app-category-badge">
+                  <span className="app-badge-value">
                     {application.application_category}
                   </span>
                 </div>
@@ -673,32 +675,32 @@ const SingleApplication = ({ application, template, platforms, context }) => {
             </div>
           </div>
 
-          <div className="cards-grid">
+          <div className="app-cards-grid">
             {CARDS_CONFIG.map((card) => {
               const IconComponent = card.icon;
               return (
                 <button
                   key={card.id}
-                  className={`info-card card-${card.color}`}
+                  className={`app-info-card app-card-${card.color}`}
                   onClick={() => handleCardClick(card.id)}
                 >
-                  <div className="card-icon">
+                  <div className="app-card-icon">
                     <IconComponent size={36} />
                   </div>
-                  <h3 className="card-title">{card.title}</h3>
+                  <h3 className="app-card-title">{card.title}</h3>
                 </button>
               );
             })}
           </div>
 
-          <div className="order-button-container">
+          <div className="app-order-button-container">
             <button
               onClick={handleOrderModalOpen}
-              className={`btn btn-primary purchase-btn ${!hasPaymentMethods ? 'disabled' : ''}`}
+              className={`app-btn app-btn-primary app-purchase-btn ${!hasPaymentMethods ? 'disabled' : ''}`}
               disabled={!hasPaymentMethods}
             >
-              <span className="btn-icon">💳</span>
-              <span className="btn-text">
+              <span className="app-btn-icon">💳</span>
+              <span className="app-btn-text">
                 {!hasPaymentMethods ? 'Indisponible' : 'Commander'}
               </span>
             </button>
@@ -717,8 +719,8 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         onClose={handleModalClose}
         title="Description"
       >
-        <div className="description-content">
-          <p className="description-text">
+        <div className="app-description-content">
+          <p className="app-description-text">
             {application.application_description ||
               'Aucune description disponible.'}
           </p>

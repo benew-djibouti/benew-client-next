@@ -5,9 +5,9 @@
 // 📄 _tables.scss
 // ================================
 
-.info-table-container,
-.needs-table-container,
-.pricing-table-container {
+.app-info-table-container,
+.app-needs-table-container,
+.app-pricing-table-container {
   background: rgba($color-light, 0.03);
   border: 1px solid rgba($color-light, 0.1);
   border-radius: var(--badge-border-radius);
@@ -28,8 +28,8 @@
   }
 }
 
-.needs-table-container,
-.pricing-table-container {
+.app-needs-table-container,
+.app-pricing-table-container {
   &::-webkit-scrollbar-thumb {
     background: rgba($color-orange, 0.3);
     &:hover {
@@ -38,16 +38,16 @@
   }
 }
 
-.info-table,
-.needs-table,
-.pricing-table {
+.app-info-table,
+.app-needs-table,
+.app-pricing-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.info-row,
-.needs-row,
-.pricing-row {
+.app-info-row,
+.app-needs-row,
+.app-pricing-row {
   border-bottom: 1px solid rgba($color-light, 0.08);
   transition: background-color 0.2s ease;
 
@@ -59,7 +59,7 @@
   }
 }
 
-.info-label {
+.app-info-label {
   padding: clamp(0.875rem, 0.14vw + 0.82rem, 1rem)
     clamp(1rem, 0.27vw + 0.9rem, 1.25rem);
   color: $text-color-muted;
@@ -70,7 +70,7 @@
   font-size: clamp(0.8rem, 0.05vw + 0.78rem, 0.85rem);
 }
 
-.info-value {
+.app-info-value {
   padding: clamp(0.875rem, 0.14vw + 0.82rem, 1rem)
     clamp(1rem, 0.27vw + 0.9rem, 1.25rem);
   color: $color-light;
@@ -80,7 +80,7 @@
   font-size: clamp(0.8rem, 0.05vw + 0.78rem, 0.85rem);
 }
 
-.info-link {
+.app-info-link {
   color: $color-purple;
   text-decoration: none;
   font-weight: 600;
@@ -92,20 +92,20 @@
   }
 }
 
-.needs-row {
-  &.free-tools {
+.app-needs-row {
+  &.app-free-tools {
     background: rgba($color-orange, 0.05);
     &:hover {
       background: rgba($color-orange, 0.08);
     }
-    .needs-text {
+    .app-needs-text {
       color: $color-orange;
       font-weight: 600;
     }
   }
 }
 
-.needs-item {
+.app-needs-item {
   padding: clamp(0.875rem, 0.14vw + 0.82rem, 1rem)
     clamp(1rem, 0.27vw + 0.9rem, 1.25rem);
   vertical-align: middle;
@@ -113,12 +113,12 @@
   align-items: center;
   gap: clamp(0.625rem, 0.14vw + 0.57rem, 0.75rem);
 
-  .needs-icon {
+  .app-needs-icon {
     font-size: clamp(1.1rem, 0.11vw + 1.06rem, 1.2rem);
     flex-shrink: 0;
   }
 
-  .needs-text {
+  .app-needs-text {
     color: $color-light;
     font-weight: 500;
     line-height: 1.4;
@@ -126,13 +126,13 @@
   }
 }
 
-.pricing-row {
-  &.total-row {
+.app-pricing-row {
+  &.app-total-row {
     background: rgba($color-orange, 0.05);
     border-top: 2px solid rgba($color-orange, 0.3);
 
-    .pricing-label,
-    .pricing-value {
+    .app-pricing-label,
+    .app-pricing-value {
       font-weight: 700;
       color: $color-orange;
       font-size: clamp(1rem, 0.11vw + 0.96rem, 1.1rem);
@@ -144,7 +144,7 @@
   }
 }
 
-.pricing-label {
+.app-pricing-label {
   padding: clamp(0.875rem, 0.14vw + 0.82rem, 1rem)
     clamp(1rem, 0.27vw + 0.9rem, 1.25rem);
   color: $text-color-muted;
@@ -155,7 +155,7 @@
   font-size: clamp(0.8rem, 0.05vw + 0.78rem, 0.85rem);
 }
 
-.pricing-value {
+.app-pricing-value {
   padding: clamp(0.875rem, 0.14vw + 0.82rem, 1rem)
     clamp(1rem, 0.27vw + 0.9rem, 1.25rem);
   color: $color-light;
@@ -165,7 +165,7 @@
   font-size: clamp(0.85rem, 0.05vw + 0.83rem, 0.9rem);
 }
 
-.pricing-note {
+.app-pricing-note {
   padding: 0.75rem 1rem;
   text-align: center;
   background: rgba($color-light, 0.02);
