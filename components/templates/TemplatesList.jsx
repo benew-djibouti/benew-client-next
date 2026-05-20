@@ -393,7 +393,7 @@ const TemplatesList = ({ templates = [] }) => {
         {templates.map((template) => (
           <section
             key={template.template_id}
-            className="others projectSection"
+            className="others template-projectSection"
             role="listitem"
           >
             <TemplateCard template={template} onClick={handleTemplateClick} />

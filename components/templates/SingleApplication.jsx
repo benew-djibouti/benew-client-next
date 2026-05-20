@@ -644,7 +644,7 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         />
       </section>
 
-      <section className="others app-gallery-section">
+      <section className="app-others app-gallery-section">
         <ApplicationGalleryCarousel
           images={allImages}
           applicationName={application.application_name}
