@@ -6,7 +6,7 @@
 // ================================
 
 @include mobile-landscape {
-  .projectSection {
+  .shops-projectSection {
     padding: 1rem 0.75rem;
   }
 
@@ -23,7 +23,7 @@
       padding: 1.5rem 1.25rem;
     }
 
-    .app-title {
+    .shops-app-title {
       font-size: 1.2rem;
     }
 
@@ -31,7 +31,7 @@
       font-size: 1.8rem;
     }
 
-    .action-buttons .btn {
+    .shops-action-buttons .shops-btn {
       padding: 0.75rem 1rem;
       font-size: 0.85rem;
     }
@@ -51,7 +51,7 @@
 }
 
 @media (pointer: coarse) {
-  .btn {
+  .shops-btn {
     min-width: 44px;
     min-height: 44px;
 
@@ -75,9 +75,9 @@
 @include reduced-motion {
   .application-card,
   .app-image,
-  .app-title,
+  .shops-app-title,
   .price,
-  .btn {
+  .shops-btn {
     transition: none;
 
     &:hover,
@@ -87,7 +87,7 @@
   }
 
   .application-card::before,
-  .btn::before {
+  .shops-btn::before {
     display: none;
   }
 
@@ -110,7 +110,7 @@
 }
 
 @media (max-width: 359px) {
-  .projectSection {
+  .shops-projectSection {
     padding: 0.75rem 0.5rem;
   }
 
@@ -125,7 +125,7 @@
     .card-content {
       padding: 1.5rem 1rem;
     }
-    .app-title {
+    .shops-app-title {
       font-size: 1.15rem;
     }
     .app-meta {
@@ -138,7 +138,7 @@
       font-size: 0.8rem;
     }
 
-    .action-buttons .btn {
+    .shops-action-buttons .shops-btn {
       padding: 0.5rem 0.6rem;
       font-size: 0.75rem;
       min-height: 36px;
@@ -147,7 +147,7 @@
 }
 
 @include from('large-1920') {
-  .projectSection {
+  .shops-projectSection {
     padding: 3rem 2rem;
   }
 
@@ -158,7 +158,7 @@
     .card-image {
       height: 220px;
     }
-    .app-title {
+    .shops-app-title {
       font-size: 1.3rem;
     }
     .price {
