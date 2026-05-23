@@ -1,9 +1,5 @@
 // app/styles/main.scss
 
-// Déclarer l'ordre global des layers EN PREMIER
-// Cette ligne seule suffit — elle fixe la priorité absolue
-@layer globals, templates, shops, app;
-
 @use 'abstracts';
 @use 'base';
 @use 'components';
