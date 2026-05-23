@@ -5,7 +5,7 @@
 // 📄 _typography.scss
 // ================================
 
-.minimalTitleLink {
+.template-minimalTitleLink {
   text-decoration: none;
   color: inherit;
   display: block;
@@ -24,7 +24,7 @@
 }
 
 // clamp : 1.3rem (360px) → 1.8rem (1280px)
-.minimalTitle {
+.template-minimalTitle {
   text-transform: uppercase;
   font-size: clamp(1.3rem, 0.54vw + 1.1rem, 1.8rem);
   font-weight: 700;
@@ -34,7 +34,7 @@
   transition: all 0.3s ease;
   letter-spacing: 0.05em;
 
-  .minimalTitleLink:hover & {
+  .template-minimalTitleLink:hover & {
     color: $primary-color;
     transform: translateX(4px);
   }
@@ -43,7 +43,7 @@
 // ================================
 // INDICATEUR "VOIR +"
 // ================================
-.view-details-indicator {
+.template-view-details-indicator {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -58,7 +58,7 @@
   border-radius: 20px;
   transition: all 0.3s ease;
 
-  .minimalTitleLink:hover & {
+  .template-minimalTitleLink:hover & {
     background: linear-gradient(
       135deg,
       rgba($primary-color, 0.2),
@@ -69,7 +69,7 @@
   }
 }
 
-.indicator-text {
+.template-indicator-text {
   font-size: clamp(0.7rem, 0.08vw + 0.67rem, 0.8rem);
   font-weight: 600;
   color: $primary-color;
@@ -77,18 +77,18 @@
   letter-spacing: 0.02em;
   transition: color 0.3s ease;
 
-  .minimalTitleLink:hover & {
+  .template-minimalTitleLink:hover & {
     color: color.adjust($primary-color, $lightness: 10%);
   }
 }
 
-.indicator-arrow {
+.template-indicator-arrow {
   width: clamp(12px, 0.43vw + 10.4px, 16px);
   height: clamp(12px, 0.43vw + 10.4px, 16px);
   color: $primary-color;
   transition: transform 0.3s ease;
 
-  .minimalTitleLink:hover & {
+  .template-minimalTitleLink:hover & {
     transform: translateX(4px);
     color: color.adjust($primary-color, $lightness: 10%);
   }
@@ -98,27 +98,27 @@
 // ACCESSIBILITÉ
 // ================================
 @include reduced-motion {
-  .view-details-indicator,
-  .indicator-arrow,
-  .minimalTitle {
+  .template-view-details-indicator,
+  .template-indicator-arrow,
+  .template-minimalTitle {
     transition: none !important;
 
-    .minimalTitleLink:hover & {
+    .template-minimalTitleLink:hover & {
       transform: none !important;
     }
   }
 }
 
 @media (pointer: coarse) {
-  .view-details-indicator {
+  .template-view-details-indicator {
     padding: 0.5rem 0.9rem;
 
-    .minimalTitleLink:hover & {
+    .template-minimalTitleLink:hover & {
       transform: none;
     }
   }
 
-  .minimalTitleLink:active .view-details-indicator {
+  .template-minimalTitleLink:active .template-view-details-indicator {
     transform: scale(0.95);
   }
 }

@@ -6,16 +6,16 @@
 // ================================
 
 @include mobile-landscape {
-  .title-block .app-title {
+  .app-title-block .app-title {
     font-size: 2rem;
   }
-  .badge {
+  .app-badge {
     padding: 0.75rem 0.625rem;
   }
 }
 
 @include tall-screen {
-  .description-content .description-text {
+  .app-description-content .app-description-text {
     @include below-desktop {
       max-height: 220px;
     }
@@ -23,28 +23,28 @@
 }
 
 @media (pointer: coarse) {
-  .btn {
+  .app-btn {
     min-height: 48px;
   }
-  .badge {
+  .app-badge {
     min-width: 48px;
     min-height: 48px;
   }
-  .btn:hover,
-  .badge:hover {
+  .app-btn:hover,
+  .app-badge:hover {
     transform: none;
   }
-  .btn:active {
+  .app-btn:active {
     transform: scale(0.98);
   }
 }
 
 @include reduced-motion {
-  .badge,
-  .btn,
-  .description-section,
-  .needs-section,
-  .pricing-section {
+  .app-badge,
+  .app-btn,
+  .app-description-section,
+  .app-needs-section,
+  .app-pricing-section {
     transition: none;
     animation: none;
     &:hover,
@@ -52,26 +52,26 @@
       transform: none;
     }
   }
-  .btn::before {
+  .app-btn::before {
     display: none;
   }
 }
 
 @include from('large-1920') {
-  .title-block .app-title {
+  .app-title-block .app-title {
     font-size: 3rem;
   }
 }
 
 @media (max-width: 359px) {
-  .title-block .app-title {
+  .app-title-block .app-title {
     font-size: 2rem;
   }
-  .badge {
+  .app-badge {
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
   }
-  .btn {
+  .app-btn {
     padding: 1.25rem 1.5rem;
     font-size: 0.9rem;
   }

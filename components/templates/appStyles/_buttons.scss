@@ -5,7 +5,7 @@
 // 📄 _buttons.scss
 // ================================
 
-.btn {
+.app-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -60,11 +60,11 @@
     transform: translateY(-1px);
   }
 
-  .btn-icon {
+  .app-btn-icon {
     font-size: clamp(1.2rem, 0.11vw + 1.16rem, 1.3rem);
   }
 
-  .btn-text {
+  .app-btn-text {
     text-align: center;
     line-height: 1.2;
 
@@ -74,7 +74,7 @@
     }
   }
 
-  &.btn-primary {
+  &.app-btn-primary {
     background: linear-gradient(
       135deg,
       $color-orange,

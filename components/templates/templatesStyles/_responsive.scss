@@ -10,23 +10,23 @@
     padding: 0.75rem;
   }
 
-  .minimalCard {
+  .template-minimalCard {
     width: 85%;
     max-width: 400px;
   }
 
-  .minimalImageContainer {
+  .template-minimalImageContainer {
     height: 260px;
     padding: 1.25rem;
   }
 
-  .minimalContent {
+  .template-minimalContent {
     padding: 1rem;
   }
-  .minimalTitle {
+  .template-minimalTitle {
     font-size: 1.2rem;
   }
-  .minimalCategory {
+  .template-minimalCategory {
     font-size: 0.75rem;
     gap: 0.3rem;
     margin-bottom: 0.7rem;
@@ -34,7 +34,7 @@
 }
 
 @include tall-screen {
-  .minimalImageContainer {
+  .template-minimalImageContainer {
     @include below-desktop {
       height: 350px;
     }
@@ -42,7 +42,7 @@
 }
 
 @media (pointer: coarse) {
-  .minimalCard {
+  .template-minimalCard {
     min-height: 300px;
     &:hover {
       transform: none;
@@ -54,10 +54,10 @@
 }
 
 @include reduced-motion {
-  .minimalCardInner,
-  .minimalImage,
-  .minimalTitle,
-  .minimalCategory {
+  .template-minimalCardInner,
+  .template-minimalImage,
+  .template-minimalTitle,
+  .template-minimalCategory {
     transition: none !important;
 
     &:hover,
@@ -68,12 +68,12 @@
 }
 
 @include high-density {
-  .minimalImage {
+  .template-minimalImage {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
 
-  .minimalCardInner {
+  .template-minimalCardInner {
     box-shadow:
       0 4px 20px rgba(0, 0, 0, 0.12),
       0 1px 4px rgba($primary-color, 0.1);
@@ -85,21 +85,21 @@
     padding: 0.75rem 0.5rem;
   }
 
-  .minimalCard {
+  .template-minimalCard {
     width: 95%;
     max-width: 350px;
   }
-  .minimalImageContainer {
+  .template-minimalImageContainer {
     height: 240px;
     padding: 1rem;
   }
-  .minimalContent {
+  .template-minimalContent {
     padding: 1rem;
   }
-  .minimalTitle {
+  .template-minimalTitle {
     font-size: 1.2rem;
   }
-  .minimalCategory {
+  .template-minimalCategory {
     font-size: 0.75rem;
     gap: 0.3rem;
     margin-bottom: 0.7rem;
@@ -111,30 +111,30 @@
     padding: 3rem 2rem;
   }
 
-  .minimalCard {
+  .template-minimalCard {
     max-width: 600px;
     width: 65%;
   }
-  .minimalImageContainer {
+  .template-minimalImageContainer {
     height: 500px;
     padding: 4rem;
   }
-  .minimalTitle {
+  .template-minimalTitle {
     font-size: 2rem;
   }
-  .minimalCategory {
+  .template-minimalCategory {
     font-size: 0.9rem;
     gap: 0.6rem;
   }
 }
 
 @include dark-mode {
-  .minimalCardInner {
+  .template-minimalCardInner {
     background: rgba($text-color, 0.01);
     border-color: rgba($primary-color, 0.15);
   }
 
-  .minimalImageContainer {
+  .template-minimalImageContainer {
     background: linear-gradient(
       135deg,
       rgba($primary-color, 0.02),

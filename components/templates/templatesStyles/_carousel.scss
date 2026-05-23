@@ -5,12 +5,12 @@
 // 📄 _carousel.scss - Carousel avec animation de défilement
 // ================================
 
-.carousel-container {
+.template-carousel-container {
   position: relative;
   overflow: hidden;
 }
 
-.carousel-track {
+.template-carousel-track {
   position: relative;
   width: 100%;
   height: 100%;
@@ -20,7 +20,7 @@
 // ANIMATION DE DÉFILEMENT DROITE → GAUCHE
 // =============================
 
-.carousel-slide {
+.template-carousel-slide {
   position: absolute;
   top: 0;
   left: 0;
@@ -70,7 +70,7 @@
 // INDICATEURS (DOTS) - TOUJOURS VISIBLES
 // =============================
 
-.carousel-indicators {
+.template-carousel-indicators {
   position: absolute;
   bottom: 1rem;
   left: 50%;
@@ -87,7 +87,7 @@
   }
 }
 
-.carousel-dot {
+.template-carousel-indicators .template-carousel-dot {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
@@ -109,6 +109,7 @@
     background: $primary-color;
     border-color: $primary-color;
     width: 0.8rem;
+    height: 0.5rem; // ← ajouter height explicite
     border-radius: 50%;
     box-shadow: 0 2px 8px rgba($primary-color, 0.4);
   }
@@ -128,7 +129,7 @@
 // COMPTEUR D'APPLICATIONS
 // =============================
 
-.applications-count {
+.template-applications-count {
   margin-top: 0.75rem;
 
   @include small-screens {
@@ -136,7 +137,7 @@
   }
 }
 
-.count-badge {
+.template-count-badge {
   display: inline-flex;
   align-items: center;
 
@@ -158,7 +159,7 @@
     padding: 0.2rem 0.6rem;
   }
 
-  .minimalCard:hover & {
+  .template-minimalCard:hover & {
     background: rgba($secondary-color, 0.2);
     border-color: $secondary-color;
     transform: translateY(-2px);
@@ -171,35 +172,37 @@
 
 // Mode paysage mobile
 @include mobile-landscape {
-  .carousel-indicators {
+  .template-carousel-indicators {
     bottom: 0.5rem;
   }
 
-  .carousel-dot {
-    width: 0.5rem;
-    height: 0.5rem;
+  .template-carousel-indicators .template-carousel-dot {
+    width: 0.5rem !important;
+    height: 0.5rem !important;
 
     &.active {
-      width: 0.5rem;
+      width: 0.5rem !important;
+      height: 0.5rem !important;
     }
   }
 }
 
 // Écrans tactiles - Amélioration zones tactiles
 @media (pointer: coarse) {
-  .carousel-dot {
-    width: 0.5rem;
-    height: 0.5rem;
+  .template-carousel-indicators .template-carousel-dot {
+    width: 0.5rem !important;
+    height: 0.5rem !important;
 
     &.active {
-      width: 0.5rem;
+      width: 0.5rem !important; // ← déjà présent, vérifier qu'il est là
+      height: 0.5rem !important; // ← ajouter
     }
   }
 }
 
 // Réduction des animations
 @include reduced-motion {
-  .carousel-slide {
+  .template-carousel-slide {
     &.entering,
     &.exiting {
       transition: opacity 0.3s ease !important;
@@ -207,8 +210,8 @@
     }
   }
 
-  .carousel-dot,
-  .count-badge {
+  .template-carousel-indicators .template-carousel-dot,
+  .template-count-badge {
     transition: none !important;
 
     &:hover {
@@ -219,7 +222,7 @@
 
 // Contraste élevé
 @include high-contrast {
-  .carousel-dot {
+  .template-carousel-indicators .template-carousel-dot {
     border-width: 2px;
     background: rgba($text-color, 0.6);
 
@@ -229,7 +232,7 @@
     }
   }
 
-  .count-badge {
+  .template-count-badge {
     border-width: 2px;
   }
 }

@@ -5,13 +5,13 @@
 // 📄 _buttons.scss
 // ================================
 
-.action-buttons {
+.shops-action-buttons {
   display: flex;
   gap: clamp(0.5rem, 0.27vw + 0.4rem, 0.75rem);
   width: 100%;
   margin-top: auto;
 
-  .btn {
+  .shops-btn {
     flex: 1;
     padding: clamp(0.625rem, 0.38vw + 0.49rem, 1rem)
       clamp(0.75rem, 0.54vw + 0.55rem, 1.25rem);
@@ -20,7 +20,7 @@
   }
 }
 
-.btn {
+.shops-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,7 +81,7 @@
   }
 }
 
-.btn-cart {
+.shops-btn-cart {
   background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
   color: $background-color;
   border: 2px solid transparent;
@@ -97,12 +97,12 @@
     box-shadow: 0 8px 25px rgba($secondary-color, 0.4);
   }
 
-  .btn-text {
+  .shops-btn-text {
     display: inline;
   }
 }
 
-.btn-preview {
+.shops-btn-preview {
   background: transparent;
   color: $text-color;
   border: 2px solid $primary-color;
@@ -115,7 +115,7 @@
     box-shadow: 0 6px 20px rgba($primary-color, 0.3);
   }
 
-  .btn-text {
+  .shops-btn-text {
     display: inline;
   }
 }

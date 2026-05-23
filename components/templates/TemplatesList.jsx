@@ -164,13 +164,13 @@ const TemplateImageCarousel = memo(({ images, templateName }) => {
   // Si une seule image, pas besoin de carousel
   if (imageList.length === 1) {
     return (
-      <div className="minimalImageContainer">
+      <div className="template-minimalImageContainer">
         <CarouselImage
           src={imageList[0]}
           alt={`Template ${templateName}`}
           width={520}
           height={460}
-          className="minimalImage"
+          className="template-minimalImage"
           loading="lazy"
         />
       </div>
@@ -179,13 +179,13 @@ const TemplateImageCarousel = memo(({ images, templateName }) => {
 
   return (
     <div
-      className="minimalImageContainer carousel-container"
+      className="template-minimalImageContainer template-carousel-container"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
       {/* Images avec animation de défilement */}
-      <div className="carousel-track">
+      <div className="template-carousel-track">
         {imageList.map((imgUrl, index) => {
           // Déterminer la position de chaque slide
           let slidePosition = 'hidden-right';
@@ -200,13 +200,16 @@ const TemplateImageCarousel = memo(({ images, templateName }) => {
           }
 
           return (
-            <div key={index} className={`carousel-slide ${slidePosition}`}>
+            <div
+              key={index}
+              className={`template-carousel-slide ${slidePosition}`}
+            >
               <CarouselImage
                 src={imgUrl}
                 alt={`${templateName} - Image ${index + 1}`}
                 width={520}
                 height={460}
-                className="minimalImage"
+                className="template-minimalImage"
                 loading={index === 0 ? 'eager' : 'lazy'}
               />
             </div>
@@ -216,12 +219,12 @@ const TemplateImageCarousel = memo(({ images, templateName }) => {
 
       {/* Indicateurs (dots) - Toujours visibles */}
       {imageList.length > 1 && (
-        <div className="carousel-indicators">
+        <div className="template-carousel-indicators">
           {imageList.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`carousel-dot ${index === currentSlide ? 'active' : ''}`}
+              className={`template-carousel-dot ${index === currentSlide ? 'active' : ''}`}
               aria-label={`Aller à l'image ${index + 1}`}
               disabled={isTransitioning}
             />
@@ -252,30 +255,30 @@ const TemplateCard = memo(({ template, onClick }) => {
 
   return (
     <div
-      className="minimalCard"
+      className="template-minimalCard"
       aria-label={`Template ${template.template_name}`}
     >
-      <div className="minimalCardInner">
+      <div className="template-minimalCardInner">
         {/* Carousel SANS Link */}
         <TemplateImageCarousel
           images={template.template_images}
           templateName={template.template_name}
         />
 
-        <div className="minimalContent">
+        <div className="template-minimalContent">
           {/* Link UNIQUEMENT sur le titre avec indicateur visuel */}
           <Link
             href={`/templates/${template.template_id}`}
-            className="minimalTitleLink"
+            className="template-minimalTitleLink"
             onClick={() => onClick(template)}
           >
-            <h3 className="minimalTitle">{template.template_name}</h3>
+            <h3 className="template-minimalTitle">{template.template_name}</h3>
 
             {/* ✅ INDICATEUR VISUEL ATTRACTIF */}
-            <div className="view-details-indicator">
-              <span className="indicator-text">Voir +</span>
+            <div className="template-view-details-indicator">
+              <span className="template-indicator-text">Voir +</span>
               <svg
-                className="indicator-arrow"
+                className="template-indicator-arrow"
                 width="16"
                 height="16"
                 viewBox="0 0 16 16"
@@ -293,15 +296,15 @@ const TemplateCard = memo(({ template, onClick }) => {
           </Link>
 
           {/* ✅ CATÉGORIE SOUS LE TITRE */}
-          <div className="minimalCategory">
+          <div className="template-minimalCategory">
             {categoryIcons}
             <span>{categoryLabel.join(' & ')}</span>
           </div>
 
           {/* Affichage du nombre d'applications si > 0 */}
           {template.applications_count > 0 && (
-            <div className="applications-count">
-              <span className="count-badge">
+            <div className="template-applications-count">
+              <span className="template-count-badge">
                 {template.applications_count} magasin
                 {template.applications_count > 1 ? 's' : ''} disponible
                 {template.applications_count > 1 ? 's' : ''}
@@ -390,7 +393,7 @@ const TemplatesList = ({ templates = [] }) => {
         {templates.map((template) => (
           <section
             key={template.template_id}
-            className="others projectSection"
+            className="others template-projectSection"
             role="listitem"
           >
             <TemplateCard template={template} onClick={handleTemplateClick} />
