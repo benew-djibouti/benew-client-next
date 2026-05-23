@@ -51,7 +51,7 @@ function Hero() {
     <div className="hero">
       <div className="wrapper">
         <motion.div
-          className="textContainer"
+          className="hero-textContainer"
           variants={textVariants}
           initial="initial"
           animate="animate"

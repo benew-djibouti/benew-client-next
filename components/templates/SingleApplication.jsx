@@ -644,7 +644,7 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         />
       </section>
 
-      <section className="others app-gallery-section">
+      <section className="others app-others app-gallery-section">
         <ApplicationGalleryCarousel
           images={allImages}
           applicationName={application.application_name}
@@ -652,7 +652,7 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         />
       </section>
 
-      <section className="others app-cards-section">
+      <section className="others app-others app-cards-section">
         <div className="app-cards-section-container">
           <div className="app-cards-section-header">
             <div className="app-title-block">
