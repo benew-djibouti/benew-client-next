@@ -177,10 +177,6 @@ const nextConfig = {
     },
   },
 
-  experimental: {
-    optimizePackageImports: ['react-icons', 'framer-motion'],
-  },
-
   // Timeout pour la génération de pages statiques
   staticPageGenerationTimeout: 60,
 
