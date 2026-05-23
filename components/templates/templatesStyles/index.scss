@@ -1,13 +1,11 @@
 // ================================
 // 📄 index.scss (fichier principal mis à jour)
 // ================================
-@layer templates {
-  @forward 'base';
-  @forward 'card';
-  @forward 'image';
-  @forward 'content';
-  @forward 'typography';
-  @forward 'carousel';
-  @forward 'responsive';
-  @forward 'states';
-}
+@forward 'base';
+@forward 'card';
+@forward 'image';
+@forward 'content';
+@forward 'typography';
+@forward 'carousel';
+@forward 'responsive';
+@forward 'states';

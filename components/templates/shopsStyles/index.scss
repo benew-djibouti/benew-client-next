@@ -1,16 +1,14 @@
 // ================================
 // 📄 index.scss (fichier principal MIS À JOUR)
 // ================================
-@layer shops {
-  @forward 'base';
-  @forward 'card';
-  @forward 'image';
-  @forward 'content';
-  @forward 'typography';
-  @forward 'pricing';
-  @forward 'buttons';
-  @forward 'carousel_applications';
-  @forward 'gallery';
-  @forward 'animations';
-  @forward 'responsive';
-}
+@forward 'base';
+@forward 'card';
+@forward 'image';
+@forward 'content';
+@forward 'typography';
+@forward 'pricing';
+@forward 'buttons';
+@forward 'carousel_applications'; // ✅ AJOUTÉ
+@forward 'gallery';
+@forward 'animations';
+@forward 'responsive';

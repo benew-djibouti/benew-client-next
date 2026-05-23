@@ -1,13 +1,9 @@
 // app/styles/main.scss
 
-// Déclarer l'ordre des layers UNE SEULE FOIS
-// Priorité croissante : globals < templates < shops < app
-// Peu importe l'ordre d'injection CSS de Next.js, cet ordre est absolu
+// Déclarer l'ordre global des layers EN PREMIER
+// Cette ligne seule suffit — elle fixe la priorité absolue
 @layer globals, templates, shops, app;
 
-// Les styles globaux dans le layer le moins prioritaire
-@layer globals {
-  @use 'abstracts';
-  @use 'base';
-  @use 'components';
-}
+@use 'abstracts';
+@use 'base';
+@use 'components';
