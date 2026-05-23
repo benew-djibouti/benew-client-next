@@ -178,7 +178,6 @@ const nextConfig = {
   },
 
   experimental: {
-    cssChunking: 'strict',  // ← ajouter cette option
     optimizePackageImports: ['react-icons', 'framer-motion'],
   },
 
