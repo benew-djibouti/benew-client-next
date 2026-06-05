@@ -324,8 +324,6 @@ TemplateCard.displayName = 'TemplateCard';
 const TemplatesList = ({ templates = [] }) => {
   const viewedTemplatesRef = useRef(new Set());
 
-  console.log('Rendering TemplatesList with templates:', templates); // Debug log pour vérifier les données reçues
-
   // Tracking de la page view
   useEffect(() => {
     if (templates.length > 0) {
