@@ -66,6 +66,9 @@ const TemplateImageCarousel = memo(({ images, templateName }) => {
     if (!images || images.length === 0) {
       return ['/placeholder-template.png'];
     }
+
+    console.log('Images du template:', images); // Debug : vérifier les images reçues
+
     return images;
   }, [images]);
 
