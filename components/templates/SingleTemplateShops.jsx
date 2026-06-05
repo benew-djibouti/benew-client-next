@@ -651,7 +651,7 @@ const SingleTemplateShops = ({
         <section className="first">
           <Parallax bgColor="#0c0c1d" title="Template" planets="/sun.png" />
         </section>
-        <section className="empty-state">
+        <section className="others empty-state">
           <h2>Aucune application disponible</h2>
           <p>Ce template n&apos;a pas encore d&apos;applications associées.</p>
           <Link href="/templates" className="cta-button">
