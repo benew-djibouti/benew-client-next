@@ -499,7 +499,7 @@ ApplicationsCarousel.displayName = 'ApplicationsCarousel';
 // =============================
 const SingleTemplateShops = ({
   templateID,
-  applications = [],
+  // applications = [],
   template,
   platforms = [],
 }) => {
@@ -514,6 +514,8 @@ const SingleTemplateShops = ({
   const selectedAppRef = useRef(null);
   const paymentErrorTimerRef = useRef(null); // ← ajouter cette ligne
   const galleryCloseTimerRef = useRef(null);
+
+  const applications = [];
 
   useEffect(() => {
     if (templateID && applications.length > 0) {
