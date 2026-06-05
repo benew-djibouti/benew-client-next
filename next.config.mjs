@@ -177,11 +177,6 @@ const nextConfig = {
     },
   },
 
-  experimental: {
-    cssChunking: 'loose',  // ← ajouter cette option
-    optimizePackageImports: ['react-icons', 'framer-motion', 'lucide-react'],
-  },
-
   // Timeout pour la génération de pages statiques
   staticPageGenerationTimeout: 60,
 

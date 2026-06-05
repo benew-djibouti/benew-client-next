@@ -5,8 +5,8 @@
 // 📄 _inputs.scss - FIX SIMPLE
 // ================================
 
-input,
-textarea {
+.formContainer input,
+.formContainer textarea {
   border-radius: 12px;
   transition: all 0.4s ease;
   font-weight: 400;
@@ -134,7 +134,7 @@ textarea {
   }
 }
 
-textarea {
+.formContainer textarea {
   resize: vertical;
   font-family: inherit;
   line-height: 1.5;

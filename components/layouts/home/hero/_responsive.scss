@@ -14,7 +14,7 @@
     flex-direction: row;
     padding: 0.5rem;
 
-    .textContainer {
+    .hero-textContainer {
       width: 65%;
       height: 100%;
       min-height: auto;
@@ -79,7 +79,7 @@
 // ÉCRANS COURTS (ex: paysage budget)
 // =============================
 @include short-screen {
-  .hero .wrapper .textContainer {
+  .hero .wrapper .hero-textContainer {
     gap: 1rem;
 
     h1 {
@@ -107,7 +107,7 @@
 // ACCESSIBILITÉ
 // =============================
 @include reduced-motion {
-  .hero .wrapper .textContainer {
+  .hero .wrapper .hero-textContainer {
     img {
       animation: none;
     }
@@ -146,7 +146,7 @@
 // CONTRASTE ÉLEVÉ
 // =============================
 @include high-contrast {
-  .hero .wrapper .textContainer {
+  .hero .wrapper .hero-textContainer {
     h2 {
       text-shadow:
         0 2px 4px rgba($background-color, 0.9),
@@ -177,7 +177,7 @@
     max-width: 1400px;
   }
 
-  .hero .wrapper .textContainer {
+  .hero .wrapper .hero-textContainer {
     h2 {
       font-size: 1.4rem;
     }

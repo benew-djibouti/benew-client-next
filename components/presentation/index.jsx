@@ -98,7 +98,7 @@ const PresentationComponent = () => {
       </section>
 
       {/* SECTION 2: Carte SKY IS THE LIMIT */}
-      <section className="others">
+      <section className="others presentation-others">
         {/* ✅ BACKGROUNDS OPTIMISÉS avec Next.js Image */}
         <div className="planets-background-container" aria-hidden="true">
           <Image
@@ -142,7 +142,7 @@ const PresentationComponent = () => {
       </section>
 
       {/* SECTION 3: Grille des catégories - CLASSE SUPPLÉMENTAIRE */}
-      <section className="others categories-section">
+      <section className="others presentation-others categories-section">
         {/* Backgrounds réutilisés */}
         <div className="planets-background-container" aria-hidden="true">
           <Image
