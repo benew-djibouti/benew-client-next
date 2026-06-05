@@ -67,8 +67,6 @@ const TemplateImageCarousel = memo(({ images, templateName }) => {
       return ['/placeholder-template.png'];
     }
 
-    console.log('Images du template:', images); // Debug : vérifier les images reçues
-
     return images;
   }, [images]);
 
@@ -325,6 +323,8 @@ TemplateCard.displayName = 'TemplateCard';
 // Composant principal simplifié
 const TemplatesList = ({ templates = [] }) => {
   const viewedTemplatesRef = useRef(new Set());
+
+  console.log('Rendering TemplatesList with templates:', templates); // Debug log pour vérifier les données reçues
 
   // Tracking de la page view
   useEffect(() => {
