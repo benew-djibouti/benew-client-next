@@ -18,7 +18,7 @@ const Parallax = dynamic(() => import('components/layouts/parallax'), {
   loading: () => <ParallaxSkeleton />,
 });
 
-import OrderModal from '../modal/OrderModal';
+// import OrderModal from '../modal/OrderModal';
 import { formatPrice, getApplicationLevelLabel } from '@/utils/helpers';
 import { trackEvent } from '@/utils/analytics';
 import PageTracker from '../analytics/PageTracker';
@@ -755,7 +755,7 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         <PricingSection application={application} />
       </ContentModal>
 
-      <OrderModal
+      {/* <OrderModal
         isOpen={isModalOpen}
         onClose={handleOrderModalClose}
         platforms={platforms}
@@ -763,7 +763,7 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         applicationFee={application.application_fee}
         applicationName={application.application_name}
         applicationCategory={application.application_category}
-      />
+      /> */}
     </div>
   );
 };

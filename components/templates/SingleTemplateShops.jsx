@@ -24,13 +24,13 @@ import { trackEvent } from '@/utils/analytics';
 import PageTracker from '../analytics/PageTracker';
 import AppImage from './AppImage';
 
-const OrderModal = dynamic(() => import('../modal/OrderModal'), {
-  loading: () => (
-    <div className="modal-loading-overlay">
-      <div className="modal-loading-spinner" aria-label="Chargement..." />
-    </div>
-  ),
-});
+// const OrderModal = dynamic(() => import('../modal/OrderModal'), {
+//   loading: () => (
+//     <div className="modal-loading-overlay">
+//       <div className="modal-loading-spinner" aria-label="Chargement..." />
+//     </div>
+//   ),
+// });
 
 // =============================
 // COMPOSANT GALLERYMODAL AVEC IMAGES COMBINÉES
@@ -714,7 +714,7 @@ const SingleTemplateShops = ({
         </section>
       )}
 
-      {selectedApp && (
+      {/* {selectedApp && (
         <OrderModal
           isOpen={isModalOpen}
           onClose={handleModalClose}
@@ -724,7 +724,7 @@ const SingleTemplateShops = ({
           applicationName={selectedApp.application_name}
           applicationCategory={selectedApp.application_category}
         />
-      )}
+      )} */}
 
       {galleryApp && (
         <GalleryModal
