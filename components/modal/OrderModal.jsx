@@ -459,7 +459,7 @@ const OrderModal = ({
                     <span className="order-summary-label">
                       {platform.is_cash_payment ? '💵' : '📱'}
                     </span>
-                    <span className="order-summary-value platform-name-highlight">
+                    <span className="order-summary-value order-platform-name-highlight">
                       {platform.is_cash_payment
                         ? `${platform.platform_name} (Espèces)`
                         : platform.platform_name}
@@ -542,9 +542,9 @@ const OrderModal = ({
                               {platform.account_name}
                             </span>
                           </div>
-                          <div className="order-latform-detail-item">
+                          <div className="order-platform-detail-item">
                             <span className="order-detail-label">Numéro :</span>
-                            <span className="order-detail-value account-number">
+                            <span className="order-detail-value order-account-number">
                               {platform.account_number}
                             </span>
                           </div>
