@@ -71,9 +71,9 @@ const PresentationModal = ({ isOpen, onClose, content }) => {
   if (!isOpen || !content) return null;
 
   return (
-    <div className="modalOverlay" onClick={onClose}>
+    <div className="pres-overlay" onClick={onClose}>
       <div
-        className="modal"
+        className="pres-modal"
         ref={modalRef}
         role="dialog"
         aria-modal="true"
@@ -81,9 +81,9 @@ const PresentationModal = ({ isOpen, onClose, content }) => {
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="modalContent">
+        <div className="pres-modal-content">
           <h2 id="modal-title">{content.title}</h2>
-          <div className="modalText">
+          <div className="pres-modal-text">
             {content.paragraphs
               .filter((paragraph) => paragraph !== '')
               .map((paragraph, index) => (
@@ -92,7 +92,7 @@ const PresentationModal = ({ isOpen, onClose, content }) => {
           </div>
           <button
             onClick={onClose}
-            className="closeButton"
+            className="pres-close-btn"
             aria-label="Fermer la modal"
           >
             Fermer

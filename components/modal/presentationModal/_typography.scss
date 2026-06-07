@@ -5,7 +5,7 @@
 // 📄 _typography.scss
 // ================================
 
-.modalContent h2 {
+.pres-modal-content h2 {
   color: $primary-color;
   font-size: 1.8rem;
   text-align: center;
@@ -56,7 +56,7 @@
   }
 }
 
-.modalText {
+.pres-modal-text {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
