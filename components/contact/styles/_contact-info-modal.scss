@@ -35,8 +35,8 @@
 .contact-info-modal-content {
   background: linear-gradient(
     135deg,
-    rgba($text-color, 0.8),
-    rgba($text-color, 0.5)
+    color.adjust($background-color, $lightness: -5%),
+    color.adjust($background-color, $lightness: 8%)
   );
   backdrop-filter: blur(20px);
   border: 2px solid rgba($primary-color, 0.3);
