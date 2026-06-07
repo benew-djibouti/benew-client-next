@@ -305,11 +305,11 @@ const OrderModal = ({
 
   return (
     <div
-      className="modalOverlay"
+      className="order-overlay"
       onClick={closeModal} // ← clic overlay ferme la modale
     >
       <div
-        className="modal"
+        className="order-modal"
         onClick={(e) => e.stopPropagation()} // ← empêche la propagation vers l'overlay
         ref={modalRef}
         role="dialog"
@@ -317,12 +317,12 @@ const OrderModal = ({
         aria-labelledby="modal-step-title"
         tabIndex={-1} // ← permet de recevoir le focus programmatiquement sans être dans l'ordre Tab naturel
       >
-        <div className="modal-content">
-          {error && <div className="errorMessage">{error}</div>}
+        <div className="order-modal-content">
+          {error && <div className="order-error-message">{error}</div>}
 
           {/* ÉTAPE 1 : Informations personnelles */}
           {step === 1 && (
-            <div className="step">
+            <div className="order-step">
               <h2 id="modal-step-title">Étape 1: Informations personnelles</h2>
 
               <input
@@ -353,14 +353,14 @@ const OrderModal = ({
                 required
                 autoComplete="tel"
               />
-              <div className="buttonContainer">
+              <div className="order-button-container">
                 <button
                   onClick={() => closeModal('user_cancel_step1')}
-                  className="cancelButton"
+                  className="order-cancel-btn"
                 >
                   Annuler
                 </button>
-                <button onClick={handleNext} className="nextButton">
+                <button onClick={handleNext} className="order-next-btn">
                   Suivant
                 </button>
               </div>
@@ -369,14 +369,17 @@ const OrderModal = ({
 
           {/* ÉTAPE 2 : Méthode de paiement */}
           {step === 2 && (
-            <div className="step">
+            <div className="order-step">
               <h2 id="modal-step-title">Étape 2: Méthode de paiement</h2>
               <p style={{ fontSize: '0.875rem', opacity: 0.7 }}>
                 Vous pouvez sélectionner une ou plusieurs méthodes.
               </p>
-              <div className="checkboxGroup">
+              <div className="order-checkbox-group">
                 {platforms?.map((platform) => (
-                  <label key={platform?.platform_id} className="radioLabel">
+                  <label
+                    key={platform?.platform_id}
+                    className="order-radio-label"
+                  >
                     <input
                       type="checkbox"
                       name="paymentMethods"
@@ -386,7 +389,7 @@ const OrderModal = ({
                         platform?.platform_id,
                       )}
                     />
-                    <span className="platform-name">
+                    <span className="order-platform-name">
                       {platform?.is_cash_payment ? (
                         <strong>💵 {platform?.platform_name} (Espèces)</strong>
                       ) : (
@@ -394,7 +397,7 @@ const OrderModal = ({
                       )}
                     </span>
                     {platform?.description && (
-                      <span className="platform-description">
+                      <span className="order-platform-description">
                         {platform?.description}
                       </span>
                     )}
@@ -403,18 +406,18 @@ const OrderModal = ({
               </div>
 
               {hasCashPayment && (
-                <div className="cash-info">
-                  <p className="cash-message">
+                <div className="order-cash-info">
+                  <p className="order-cash-message">
                     💵 Paiement en espèces inclus dans votre sélection.
                   </p>
                 </div>
               )}
 
-              <div className="buttonContainer">
-                <button onClick={handleBack} className="backButton">
+              <div className="order-button-container">
+                <button onClick={handleBack} className="order-back-btn">
                   Retour
                 </button>
-                <button onClick={handleNext} className="nextButton">
+                <button onClick={handleNext} className="order-next-btn">
                   Suivant
                 </button>
               </div>
@@ -423,35 +426,40 @@ const OrderModal = ({
 
           {/* ÉTAPE 3 : Récapitulatif */}
           {step === 3 && (
-            <div className="step">
+            <div className="order-step">
               <h2 id="modal-step-title">Étape 3: Récapitulatif</h2>
 
-              <div className="summary-section">
-                <h3 className="summary-title">Informations personnelles</h3>
+              <div className="order-summary-section">
+                <h3 className="order-summary-title">
+                  Informations personnelles
+                </h3>
 
-                <div className="summary-item">
-                  <span className="summary-label">Nom complet :</span>
-                  <span className="summary-value">{formData.name}</span>
+                <div className="order-summary-item">
+                  <span className="order-summary-label">Nom complet :</span>
+                  <span className="order-summary-value">{formData.name}</span>
                 </div>
 
-                <div className="summary-item">
-                  <span className="summary-label">Email :</span>
-                  <span className="summary-value">{formData.email}</span>
+                <div className="order-summary-item">
+                  <span className="order-summary-label">Email :</span>
+                  <span className="order-summary-value">{formData.email}</span>
                 </div>
-                <div className="summary-item">
-                  <span className="summary-label">Téléphone :</span>
-                  <span className="summary-value">{formData.phone}</span>
+                <div className="order-summary-item">
+                  <span className="order-summary-label">Téléphone :</span>
+                  <span className="order-summary-value">{formData.phone}</span>
                 </div>
               </div>
 
-              <div className="summary-section">
-                <h3 className="summary-title">Méthodes de paiement</h3>
+              <div className="order-summary-section">
+                <h3 className="order-summary-title">Méthodes de paiement</h3>
                 {selectedPlatforms.map((platform) => (
-                  <div key={platform.platform_id} className="summary-item">
-                    <span className="summary-label">
+                  <div
+                    key={platform.platform_id}
+                    className="order-summary-item"
+                  >
+                    <span className="order-summary-label">
                       {platform.is_cash_payment ? '💵' : '📱'}
                     </span>
-                    <span className="summary-value platform-name-highlight">
+                    <span className="order-summary-value order-platform-name-highlight">
                       {platform.is_cash_payment
                         ? `${platform.platform_name} (Espèces)`
                         : platform.platform_name}
@@ -460,22 +468,22 @@ const OrderModal = ({
                 ))}
               </div>
 
-              <div className="summary-section summary-total">
-                <div className="summary-item">
-                  <span className="summary-label">Montant total :</span>
-                  <span className="summary-value total-amount">
+              <div className="order-summary-section order-summary-total">
+                <div className="order-summary-item">
+                  <span className="order-summary-label">Montant total :</span>
+                  <span className="order-summary-value order-total-amount">
                     {formatPrice(applicationFee)}
                   </span>
                 </div>
               </div>
 
-              <div className="buttonContainer">
-                <button onClick={handleBack} className="backButton">
+              <div className="order-button-container">
+                <button onClick={handleBack} className="order-back-btn">
                   Retour
                 </button>
                 <button
                   onClick={handleNext}
-                  className="nextButton"
+                  className="order-next-btn"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? 'Traitement...' : 'Confirmer la commande'}
@@ -486,12 +494,12 @@ const OrderModal = ({
 
           {/* ÉTAPE 4 : Confirmation avec plateformes de paiement */}
           {step === 4 && (
-            <div className="step confirmationStep">
+            <div className="order-step order-confirmation-step">
               <h2 id="modal-step-title">Étape 4: Confirmation</h2>
 
-              <div className="confirmation-icon">✅</div>
+              <div className="order-confirmation-icon">✅</div>
 
-              <div className="confirmation-main-message">
+              <div className="order-confirmation-main-message">
                 <p>
                   Merci pour votre commande. Nous avons bien reçu vos
                   informations et nous vous contacterons dans les plus brefs
@@ -505,35 +513,38 @@ const OrderModal = ({
 
               {/* ✅ SECTION PLATEFORMES DE PAIEMENT ÉLECTRONIQUE */}
               {electronicPlatforms.length > 0 && (
-                <div className="payment-platforms-section">
-                  <h3 className="platforms-title">
+                <div className="order-payment-platforms-section">
+                  <h3 className="order-platforms-title">
                     📱 Nos moyens de paiement électronique
                   </h3>
-                  <p className="platforms-subtitle">
+                  <p className="order-platforms-subtitle">
                     Vous pouvez effectuer votre paiement via l&apos;un de ces
                     comptes :
                   </p>
 
-                  <div className="platforms-list">
+                  <div className="order-platforms-list">
                     {electronicPlatforms.map((platform) => (
-                      <div key={platform.platform_id} className="platform-card">
-                        <div className="platform-card-header">
-                          <span className="platform-card-name">
+                      <div
+                        key={platform.platform_id}
+                        className="order-platform-card"
+                      >
+                        <div className="order-platform-card-header">
+                          <span className="order-platform-card-name">
                             {platform.platform_name}
                           </span>
                         </div>
-                        <div className="platform-card-details">
-                          <div className="platform-detail-item">
-                            <span className="detail-label">
+                        <div className="order-platform-card-details">
+                          <div className="order-platform-detail-item">
+                            <span className="order-detail-label">
                               Nom du compte :
                             </span>
-                            <span className="detail-value">
+                            <span className="order-detail-value">
                               {platform.account_name}
                             </span>
                           </div>
-                          <div className="platform-detail-item">
-                            <span className="detail-label">Numéro :</span>
-                            <span className="detail-value account-number">
+                          <div className="order-platform-detail-item">
+                            <span className="order-detail-label">Numéro :</span>
+                            <span className="order-detail-value order-account-number">
                               {platform.account_number}
                             </span>
                           </div>
@@ -542,7 +553,7 @@ const OrderModal = ({
                     ))}
                   </div>
 
-                  <div className="payment-notice">
+                  <div className="order-payment-notice">
                     <p>
                       💡 <strong>Important :</strong> Après avoir effectué le
                       paiement, veuillez nous contacter pour confirmer votre
@@ -554,7 +565,7 @@ const OrderModal = ({
 
               <button
                 onClick={() => closeModal('purchase_complete')}
-                className="closeButton"
+                className="order-close-btn"
               >
                 Fermer
               </button>

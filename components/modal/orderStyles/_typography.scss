@@ -6,8 +6,8 @@
 // ================================
 
 // clamp : 1.25rem (360px) → 1.5rem (1280px)
-.modal h2,
-.step h2 {
+.order-modal h2,
+.order-step h2 {
   color: $primary-color;
   border-bottom: 1px solid rgba($primary-color, 0.4);
   text-shadow: 0 2px 4px rgba($background-color, 0.5);
@@ -18,19 +18,7 @@
   font-size: clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem);
 }
 
-.confirmationStep {
-  text-align: center;
-
-  p {
-    color: $text-color;
-    line-height: 1.6;
-    margin-bottom: clamp(1.25rem, 0.27vw + 1.15rem, 1.5rem);
-    opacity: 0.9;
-    font-size: clamp(0.95rem, 0.05vw + 0.93rem, 1rem);
-  }
-}
-
-.errorMessage {
+.order-error-message {
   background-color: rgba(220, 38, 38, 0.15);
   color: color.adjust(#ef4444, $lightness: 10%);
   border: 1px solid rgba(220, 38, 38, 0.4);

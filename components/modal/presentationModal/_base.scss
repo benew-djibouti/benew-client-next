@@ -5,7 +5,7 @@
 // 📄 _base.scss
 // ================================
 
-.modalOverlay {
+.pres-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -19,7 +19,7 @@
   backdrop-filter: blur(5px);
 }
 
-.modal {
+.pres-modal {
   background: linear-gradient(
     135deg,
     color.adjust($background-color, $lightness: -5%),
@@ -111,7 +111,7 @@
   }
 }
 
-.modalContent {
+.pres-modal-content {
   padding: 30px;
   display: flex;
   flex-direction: column;

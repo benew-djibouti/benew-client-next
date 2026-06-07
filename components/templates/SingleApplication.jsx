@@ -616,7 +616,7 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         <section className="first">
           <Parallax bgColor="#0c0c1d" title="Application" planets="/sun.png" />
         </section>
-        <section className="empty-state">
+        <section className="others empty-state">
           <h2>Application non trouvée</h2>
           <p>Cette application n&apos;est pas disponible.</p>
           <Link href="/templates" className="cta-button">

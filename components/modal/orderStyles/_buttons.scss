@@ -5,7 +5,7 @@
 // 📄 _buttons.scss
 // ================================
 
-.buttonContainer {
+.order-button-container {
   display: flex;
   margin-top: 1rem;
   flex-direction: column-reverse;
@@ -18,7 +18,7 @@
   }
 }
 
-button {
+.order-modal button {
   border-radius: 8px;
   font-weight: 600;
   transition: all 0.3s ease;
@@ -51,7 +51,7 @@ button {
   }
 }
 
-.nextButton {
+.order-next-btn {
   background: linear-gradient(
     135deg,
     $primary-color,
@@ -75,8 +75,8 @@ button {
   }
 }
 
-.backButton,
-.cancelButton {
+.order-back-btn,
+.order-cancel-btn {
   background-color: transparent;
   color: $primary-color;
   border: 1px solid $primary-color;
@@ -84,31 +84,5 @@ button {
   &:hover {
     background-color: rgba($primary-color, 0.1);
     border-color: color.adjust($primary-color, $lightness: 10%);
-  }
-}
-
-.closeButton {
-  background: linear-gradient(
-    135deg,
-    $primary-color,
-    color.adjust($primary-color, $lightness: 10%)
-  );
-  color: $background-color;
-  box-shadow: 0 4px 8px rgba($primary-color, 0.3);
-  margin-top: 1rem;
-  width: 100%;
-
-  &:hover {
-    background: linear-gradient(
-      135deg,
-      color.adjust($primary-color, $lightness: 5%),
-      $secondary-color
-    );
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba($primary-color, 0.4);
-  }
-
-  &:active {
-    transform: translateY(0);
   }
 }

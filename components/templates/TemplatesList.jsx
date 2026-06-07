@@ -370,7 +370,7 @@ const TemplatesList = ({ templates = [] }) => {
           <section className="first">
             <Parallax bgColor="#0c0c1d" title="Modeles" planets="/sun.png" />
           </section>
-          <section className="empty-state">
+          <section className="others empty-state">
             <h2>Aucun template disponible</h2>
             <p>Revenez bientôt pour découvrir nos nouveaux templates</p>
             <Link href="/" className="cta-button">
