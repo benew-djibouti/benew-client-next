@@ -5,7 +5,7 @@
 // 📄 _confirmation.scss - Étape 4 avec plateformes de paiement
 // ================================
 
-.confirmationStep {
+.order-confirmation-step {
   text-align: center;
 
   p {
@@ -33,7 +33,7 @@
 // MESSAGE PRINCIPAL DE CONFIRMATION
 // =============================
 
-.confirmation-main-message {
+.order-confirmation-main-message {
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid rgba($primary-color, 0.2);
@@ -56,7 +56,7 @@
 // SECTION PLATEFORMES DE PAIEMENT
 // =============================
 
-.payment-platforms-section {
+.order-payment-platforms-section {
   background: rgba($primary-color, 0.05);
   border: 1px solid rgba($primary-color, 0.2);
   border-radius: 12px;
@@ -80,7 +80,7 @@
   }
 }
 
-.platforms-title {
+.order-platforms-title {
   color: $primary-color;
   font-weight: 700;
   text-align: center;
@@ -102,7 +102,7 @@
   }
 }
 
-.platforms-subtitle {
+.order-platforms-subtitle {
   color: rgba($text-color, 0.8);
   text-align: center;
   margin-bottom: 1.5rem;
@@ -125,7 +125,7 @@
 // LISTE DES PLATEFORMES
 // =============================
 
-.platforms-list {
+.order-platforms-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -145,7 +145,7 @@
 // CARTE PLATEFORME INDIVIDUELLE
 // =============================
 
-.platform-card {
+.order-platform-card {
   background: rgba($background-color, 0.6);
   border: 1px solid rgba($primary-color, 0.3);
   border-radius: 10px;
@@ -160,7 +160,7 @@
   }
 }
 
-.platform-card-header {
+.order-platform-card-header {
   background: linear-gradient(
     135deg,
     rgba($primary-color, 0.15),
@@ -180,7 +180,7 @@
   }
 }
 
-.platform-card-name {
+.order-platform-card-name {
   color: $primary-color;
   font-weight: 700;
   display: block;
@@ -201,7 +201,7 @@
   }
 }
 
-.platform-card-details {
+.order-platform-card-details {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -220,7 +220,7 @@
   }
 }
 
-.platform-detail-item {
+.order-platform-detail-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -238,7 +238,7 @@
   }
 }
 
-.detail-label {
+.order-detail-label {
   color: rgba($text-color, 0.7);
   font-weight: 500;
 
@@ -254,7 +254,7 @@
   }
 }
 
-.detail-value {
+.order-detail-value {
   color: $text-color;
   font-weight: 600;
 
@@ -292,7 +292,7 @@
 // NOTICE DE PAIEMENT
 // =============================
 
-.payment-notice {
+.order-payment-notice {
   background: rgba($secondary-color, 0.1);
   border: 1px solid rgba($secondary-color, 0.3);
   border-radius: 8px;
@@ -337,7 +337,7 @@
 // BOUTON FERMER (CLOSEBUTTON)
 // =============================
 
-.closeButton {
+.order-close-btn {
   background: linear-gradient(
     135deg,
     $primary-color,
@@ -404,25 +404,25 @@
 // =============================
 
 @include mobile-landscape {
-  .payment-platforms-section {
+  .order-payment-platforms-section {
     padding: 1.25rem 1rem;
   }
 
-  .platforms-list {
+  .order-platforms-list {
     gap: 0.875rem;
   }
 
-  .platform-card-header {
+  .order-platform-card-header {
     padding: 0.75rem 1rem;
   }
 
-  .platform-card-details {
+  .order-platform-card-details {
     padding: 0.875rem 1rem;
   }
 }
 
 @media (pointer: coarse) {
-  .platform-card {
+  .order-platform-card {
     &:hover {
       transform: none;
     }
@@ -432,7 +432,7 @@
     }
   }
 
-  .closeButton {
+  .order-close-btn {
     min-height: 48px;
 
     &:hover {
@@ -446,8 +446,8 @@
 }
 
 @include reduced-motion {
-  .platform-card,
-  .closeButton {
+  .order-platform-card,
+  .order-close-btn {
     transition: none;
 
     &:hover {
@@ -457,27 +457,27 @@
 }
 
 @include dark-mode {
-  .payment-platforms-section {
+  .order-payment-platforms-section {
     background: rgba($primary-color, 0.08);
   }
 
-  .platform-card {
+  .order-platform-card {
     background: rgba($background-color, 0.8);
   }
 
-  .payment-notice {
+  .order-payment-notice {
     background: rgba($secondary-color, 0.12);
   }
 }
 
 @include high-density {
-  .platform-card {
+  .order-platform-card {
     &:hover {
       box-shadow: 0 4px 12px rgba($primary-color, 0.3);
     }
   }
 
-  .closeButton {
+  .order-close-btn {
     box-shadow: 0 4px 8px rgba($primary-color, 0.4);
 
     &:hover {

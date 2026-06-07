@@ -5,7 +5,7 @@
 // 📄 _summary.scss - Étape récapitulatif
 // ================================
 
-.summary-section {
+.order-summary-section {
   background: rgba($text-color, 0.03);
   border: 1px solid rgba($primary-color, 0.2);
   border-radius: 8px;
@@ -23,13 +23,13 @@
     padding: 1.5rem;
   }
 
-  &.summary-total {
+  &.order-summary-total {
     background: rgba($primary-color, 0.08);
     border-color: rgba($primary-color, 0.4);
   }
 }
 
-.summary-title {
+.order-summary-title {
   color: $primary-color;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -50,7 +50,7 @@
   }
 }
 
-.summary-item {
+.order-summary-item {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -72,7 +72,7 @@
   }
 }
 
-.summary-label {
+.order-summary-label {
   color: rgba($text-color, 0.7);
   font-weight: 500;
 
@@ -88,7 +88,7 @@
   }
 }
 
-.summary-value {
+.order-summary-value {
   color: $text-color;
   font-weight: 600;
   text-align: right;
@@ -105,7 +105,7 @@
     font-size: 1rem;
   }
 
-  &.total-amount {
+  &.order-total-amount {
     color: $primary-color;
     font-size: 1.3rem;
     font-weight: 700;
@@ -115,17 +115,17 @@
     }
   }
 
-  &.platform-name-highlight {
+  &.order-platform-name-highlight {
     color: $secondary-color;
   }
 }
 
-.platform-summary {
+.order-platform-summary {
   margin-top: 0.5rem;
 }
 
 // Message CASH
-.cash-info {
+.order-cash-info {
   background: rgba($secondary-color, 0.1);
   border: 1px solid rgba($secondary-color, 0.3);
   border-radius: 6px;
@@ -139,7 +139,7 @@
   }
 }
 
-.cash-message {
+.order-cash-message {
   color: $secondary-color;
   font-weight: 500;
   margin: 0;
@@ -154,7 +154,7 @@
 }
 
 // Icône confirmation
-.confirmation-icon {
+.order-confirmation-icon {
   font-size: 4rem;
   margin-bottom: 1.5rem;
   animation: scaleIn 0.5s ease-out;
@@ -177,12 +177,12 @@
 }
 
 // Labels pour les plateformes
-.platform-name {
+.order-platform-name {
   flex: 1;
   font-weight: 500;
 }
 
-.platform-description {
+.order-platform-description {
   display: block;
   font-size: 0.85rem;
   color: rgba($text-color, 0.6);
@@ -196,18 +196,18 @@
 
 // Mode sombre
 @include dark-mode {
-  .summary-section {
+  .order-order-summary-section {
     background: rgba($text-color, 0.02);
   }
 
-  .cash-info {
+  .order-cash-info {
     background: rgba($secondary-color, 0.12);
   }
 }
 
 // Réduction des animations
 @include reduced-motion {
-  .confirmation-icon {
+  .order-confirmation-icon {
     animation: none;
   }
 }

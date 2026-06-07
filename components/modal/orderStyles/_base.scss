@@ -5,7 +5,7 @@
 // 📄 _base.scss
 // ================================
 
-.modalOverlay {
+.order-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -24,7 +24,7 @@
   }
 }
 
-.modal {
+.order-modal {
   background: linear-gradient(
     135deg,
     color.adjust($background-color, $lightness: -5%),
@@ -70,7 +70,7 @@
   }
 }
 
-.modal-content {
+.order-modal-content {
   overflow-y: auto;
   overflow-x: hidden;
   flex: 1;
@@ -100,7 +100,7 @@
   scrollbar-color: rgba($primary-color, 0.3) rgba($text-color, 0.05);
 }
 
-.step {
+.order-step {
   display: flex;
   flex-direction: column;
   // clamp : 1rem (360px) → 1.2rem (1280px)

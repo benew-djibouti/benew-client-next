@@ -7,36 +7,36 @@
 
 // Mode paysage sur mobile - Optimisations spécifiques
 @include mobile-landscape {
-  .modal {
+  .order-modal {
     width: 85%;
     max-width: 500px;
     padding: 1.25rem;
   }
 
-  h2 {
+  .order-modal h2 {
     font-size: 1.2rem;
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
   }
 
-  .step {
+  .order-step {
     gap: 0.8rem;
   }
 
-  input[type='text'],
-  input[type='email'],
-  input[type='tel'] {
+  .order-modal input[type='text'],
+  .order-modal input[type='email'],
+  .order-modal input[type='tel'] {
     padding: 0.75rem 1rem;
     font-size: 0.9rem;
   }
 
-  .buttonContainer {
+  .order-button-container {
     flex-direction: row;
     gap: 0.75rem;
     margin-top: 0.75rem;
   }
 
-  button {
+  .order-modal button {
     padding: 0.75rem 1.25rem;
     font-size: 0.9rem;
   }
@@ -44,14 +44,14 @@
 
 // Écrans très hauts - Plus d'espace pour le contenu
 @include tall-screen {
-  .modal {
+  .order-modal {
     @include until('large-xs') {
       max-height: 85vh;
       overflow-y: auto;
     }
   }
 
-  .step {
+  .order-step {
     @include until('large-xs') {
       gap: 1.5rem;
     }
@@ -60,42 +60,42 @@
 
 // Support pour écrans tactiles - Zones tactiles optimisées
 @media (pointer: coarse) {
-  input[type='text'],
-  input[type='email'],
-  input[type='tel'] {
+  .order-modal input[type='text'],
+  .order-modal input[type='email'],
+  .order-modal input[type='tel'] {
     min-height: 48px;
   }
 
-  button {
+  .order-modal button {
     min-height: 48px;
     min-width: 44px;
   }
 
-  .radioLabel {
+  .order-radio-label {
     min-height: 48px;
 
-    input[type='radio'] {
+    .order-modal input[type='radio'] {
       transform: scale(1.3);
       margin-right: 15px;
     }
   }
 
   // Pas d'effet hover sur tactile, juste active
-  button:hover,
-  .radioLabel:hover {
+  .order-modal button:hover,
+  .order-radio-label:hover {
     transform: none;
   }
 
-  button:active {
+  .order-modal button:active {
     transform: scale(0.98);
   }
 }
 
 // Amélioration pour l'accessibilité - Réduction des animations
 @include reduced-motion {
-  button,
-  input,
-  .radioLabel {
+  .order-modal button,
+  .order-modal input,
+  .order-radio-label {
     transition: none;
 
     &:hover,
@@ -107,14 +107,14 @@
 
 // Support pour écrans haute densité
 @include high-density {
-  .modal {
+  .order-modal {
     box-shadow:
       0 10px 30px rgba($background-color, 0.7),
       0 0 20px rgba($primary-color, 0.15),
       0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  button {
+  .order-modal button {
     box-shadow: 0 4px 8px rgba($primary-color, 0.4);
 
     &:hover:not(:disabled) {
@@ -125,33 +125,33 @@
 
 // ÉCRANS TRÈS PETITS - Mobile
 @media (max-width: 360px) {
-  .modal {
+  .order-modal {
     width: 98%;
     padding: 1.25rem;
   }
 
-  h2 {
+  .order-modal h2 {
     font-size: 1.1rem;
     margin-bottom: 1rem;
   }
 
-  .step {
+  .order-step {
     gap: 0.8rem;
   }
 
-  input[type='text'],
-  input[type='email'],
-  input[type='tel'] {
+  .order-modal input[type='text'],
+  .order-modal input[type='email'],
+  .order-modal input[type='tel'] {
     padding: 0.75rem 0.875rem;
     font-size: 0.9rem;
   }
 
-  .radioLabel {
+  .order-radio-label {
     padding: 0.75rem 0.5rem;
     font-size: 0.9rem;
   }
 
-  button {
+  .order-modal button {
     padding: 0.75rem 1rem;
     font-size: 0.9rem;
   }
@@ -164,23 +164,23 @@
 
 // Très grands écrans - Limitation de la taille
 @include from('large-xxxl') {
-  .modal {
+  .order-modal {
     max-width: 600px;
     padding: 3.5rem;
   }
 
-  h2 {
+  .order-modal h2 {
     font-size: 1.6rem;
   }
 
-  input[type='text'],
-  input[type='email'],
-  input[type='tel'] {
+  .order-modal input[type='text'],
+  .order-modal input[type='email'],
+  .order-modal input[type='tel'] {
     font-size: 1.1rem;
     padding: 1rem 1.25rem;
   }
 
-  button {
+  .order-modal button {
     font-size: 1.1rem;
     padding: 1rem 2rem;
   }
