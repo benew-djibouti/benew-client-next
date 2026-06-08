@@ -309,7 +309,7 @@
   width: 100%;
   background: #000;
   flex-shrink: 0;
-  transform: translateZ(0); // ← AJOUTER : crée un stacking context isolé
+  isolation: isolate; // ← remplacer transform: translateZ(0) par ceci
 
   // @include desktop-up {
   //   padding-bottom: 2.75rem;
