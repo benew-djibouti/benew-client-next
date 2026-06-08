@@ -310,9 +310,9 @@
   background: #000;
   flex-shrink: 0;
 
-  @include desktop-up {
-    padding-bottom: 2.75rem;
-  }
+  // @include desktop-up {
+  //   padding-bottom: 2.75rem;
+  // }
 
   .react-video-wrapper {
     width: 100%;
