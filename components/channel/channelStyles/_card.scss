@@ -309,29 +309,28 @@
   width: 100%;
   background: #000;
   flex-shrink: 0;
-  isolation: isolate; // ← remplacer transform: translateZ(0) par ceci
 
-  // @include desktop-up {
-  //   padding-bottom: 2.75rem;
-  // }
+  @include desktop-up {
+    padding-bottom: 2.75rem;
+  }
 
   .react-video-wrapper {
     width: 100%;
-    // aspect-ratio: 16 / 9;
+    aspect-ratio: 16 / 9;
     display: block;
     line-height: 0;
 
-    // > div {
-    //   width: 100% !important;
-    //   height: 100% !important;
-    // }
+    > div {
+      width: 100% !important;
+      height: 100% !important;
+    }
 
-    // video {
-    //   width: 100% !important;
-    //   height: 100% !important;
-    //   display: block;
-    //   object-fit: contain;
-    // }
+    video {
+      width: 100% !important;
+      height: 95% !important;
+      display: block;
+      object-fit: contain;
+    }
   }
 
   .video-modal__player-loading {
