@@ -254,7 +254,7 @@
   background: $background-color;
   border: 1px solid rgba($primary-color, 0.25);
   border-radius: 16px;
-  overflow: visible;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   box-shadow:
@@ -309,7 +309,7 @@
   width: 100%;
   background: #000;
   flex-shrink: 0;
-  overflow: hidden;
+  transform: translateZ(0); // ← AJOUTER : crée un stacking context isolé
 
   // @include desktop-up {
   //   padding-bottom: 2.75rem;
@@ -320,7 +320,6 @@
     aspect-ratio: 16 / 9;
     display: block;
     line-height: 0;
-    border-radius: 16px 16px 0 0; // ← arrondir seulement le haut
 
     > div {
       width: 100% !important;
@@ -351,7 +350,6 @@
   flex-shrink: 0;
   overflow-y: auto;
   max-height: 35vh;
-  border-radius: 0 0 16px 16px; // ← arrondir seulement le bas pour garder l'aspect visuel
 }
 
 // clamp : 1rem (360px) → 1.2rem (1280px)
