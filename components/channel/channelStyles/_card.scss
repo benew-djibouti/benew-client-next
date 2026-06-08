@@ -317,21 +317,21 @@
 
   .react-video-wrapper {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    // aspect-ratio: 16 / 9;
     display: block;
     line-height: 0;
 
-    > div {
-      width: 100% !important;
-      height: 100% !important;
-    }
+    // > div {
+    //   width: 100% !important;
+    //   height: 100% !important;
+    // }
 
-    video {
-      width: 100% !important;
-      height: 100% !important;
-      display: block;
-      object-fit: contain;
-    }
+    // video {
+    //   width: 100% !important;
+    //   height: 100% !important;
+    //   display: block;
+    //   object-fit: contain;
+    // }
   }
 
   .video-modal__player-loading {
