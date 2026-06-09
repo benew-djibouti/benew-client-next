@@ -90,28 +90,25 @@ export const metadata = {
   },
 
   // ✅ DÉCOMMENTÉ - Icônes et manifeste
+  // REMPLACER les deux blocs icons + manifest par ceci :
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+    icon: [
+      { url: '/icon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/icon-180x180.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: '/icon-48x48.png',
   },
-  manifest: '/site.webmanifest',
+  manifest: '/manifest', // ← corriger /site.webmanifest → /manifest
 
   // AJOUTER — support iOS "Add to Home Screen"
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'Benew',
-  },
-
-  // AJOUTER — icônes (si tu n'as pas les fichiers dans app/)
-  icons: {
-    icon: [
-      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
-    ],
-    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
-    shortcut: '/favicon.ico',
   },
 };
 
