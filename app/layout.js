@@ -88,14 +88,6 @@ export const metadata = {
       'fr-FR': 'https://benew-dj.com',
     },
   },
-
-  // ✅ DÉCOMMENTÉ - Icônes et manifeste
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
-  },
-  manifest: '/site.webmanifest',
 };
 
 // =============================
@@ -153,14 +145,6 @@ export default function RootLayout({ children }) {
       <head>
         {/* ⭐ CRITIQUE : Script pré-hydratation en PREMIER */}
         <HydrationFix />
-
-        {/* Icônes et métadonnées supplémentaires */}
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#f6a037" />
-        <meta name="application-name" content="Benew" />
-        <meta name="msapplication-TileColor" content="#f6a037" />
 
         {/* GTM Script Natif - SÉCURISÉ - DANS LE HEAD */}
         {gtmValid && (
