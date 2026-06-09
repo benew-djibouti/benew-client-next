@@ -88,6 +88,31 @@ export const metadata = {
       'fr-FR': 'https://benew-dj.com',
     },
   },
+
+  // ✅ DÉCOMMENTÉ - Icônes et manifeste
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: '/site.webmanifest',
+
+  // AJOUTER — support iOS "Add to Home Screen"
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Benew',
+  },
+
+  // AJOUTER — icônes (si tu n'as pas les fichiers dans app/)
+  icons: {
+    icon: [
+      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: '/favicon.ico',
+  },
 };
 
 // =============================
