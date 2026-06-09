@@ -82,7 +82,7 @@ const ReactVideoPlayer = ({
         controls={controls}
         width="100%"
         height="auto"
-        style={{ display: 'block', aspectRatio: '16/9' }}
+        style={{ display: 'block' }}
         config={{
           file: {
             attributes: {
