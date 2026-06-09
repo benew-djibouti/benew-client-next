@@ -274,6 +274,17 @@ const nextConfig = {
         ],
       },
 
+      // AJOUTER dans le tableau headers(), en premier
+      {
+        source: '/sw.js',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+
       // ===== 2. ASSETS STATIQUES (Cache optimisé + Sécurité) =====
       {
         source:
