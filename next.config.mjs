@@ -249,7 +249,7 @@ const nextConfig = {
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com blob:",
         `img-src 'self' https://res.cloudinary.com${includeAnalytics ? ' https://www.google-analytics.com https://www.googletagmanager.com' : ''} data:`,
         "font-src 'self' https://fonts.gstatic.com data:",
-        `connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.doubleclick.net https://unpkg.com https://*.cloudinary.com https://*.sentry.io https://o*.ingest.sentry.io`,
+        `connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.doubleclick.net https://unpkg.com https://*.cloudinary.com https://*.sentry.io https://o4498048.ingest.sentry.io`,
         "worker-src 'self' blob:",
         "form-action 'self'",
         "frame-ancestors 'none'",
