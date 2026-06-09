@@ -37,6 +37,7 @@ const validateEnv = () => {
     'NEXT_PUBLIC_INSTAGRAM_URL',
     'NEXT_PUBLIC_TIKTOK_URL',
     'NEXT_PUBLIC_YOUTUBE_URL',
+    'NEXT_PUBLIC_FACEBOOK_PIXEL_ID',
   ];
 
   const RUNTIME_VARS = [

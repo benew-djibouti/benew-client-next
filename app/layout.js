@@ -11,6 +11,7 @@ import './styles/main.scss';
 import Navbar from '../components/layouts/navbar';
 import AnalyticsInitializer from '../components/analytics/AnalyticsInitializer';
 import { HydrationFix } from '@/components/layouts/hydrationFix';
+import FacebookPixel from '@/components/analytics/FacebookPixel';
 
 // =============================
 // MÉTADONNÉES GLOBALES
@@ -192,6 +193,7 @@ export default function RootLayout({ children }) {
             isDevelopment={process.env.NODE_ENV === 'development'}
           />
         )}
+        <FacebookPixel />
       </body>
     </html>
   );
