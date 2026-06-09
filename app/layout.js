@@ -90,12 +90,26 @@ export const metadata = {
   },
 
   // ✅ DÉCOMMENTÉ - Icônes et manifeste
+  // REMPLACER les deux blocs icons + manifest par ceci :
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+    icon: [
+      { url: '/icon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/icon-180x180.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: '/icon-48x48.png',
   },
-  manifest: '/site.webmanifest',
+  manifest: '/manifest', // ← corriger /site.webmanifest → /manifest
+
+  // AJOUTER — support iOS "Add to Home Screen"
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Benew',
+  },
 };
 
 // =============================
@@ -153,14 +167,6 @@ export default function RootLayout({ children }) {
       <head>
         {/* ⭐ CRITIQUE : Script pré-hydratation en PREMIER */}
         <HydrationFix />
-
-        {/* Icônes et métadonnées supplémentaires */}
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#f6a037" />
-        <meta name="application-name" content="Benew" />
-        <meta name="msapplication-TileColor" content="#f6a037" />
 
         {/* GTM Script Natif - SÉCURISÉ - DANS LE HEAD */}
         {gtmValid && (
