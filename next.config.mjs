@@ -5,6 +5,9 @@ import { fileURLToPath } from 'url';
 import withBundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 
+// AJOUTER en haut
+import withSerwistInit from '@serwist/next';
+
 // ===== VALIDATION INTELLIGENTE DES VARIABLES D'ENVIRONNEMENT =====
 const validateEnv = () => {
   // 🔍 DÉTECTION DU CONTEXTE D'EXÉCUTION
@@ -466,6 +469,13 @@ const nextConfig = {
   },
 };
 
+// AJOUTER avant la config Sentry
+const withSerwist = withSerwistInit({
+  swSrc: 'app/sw.js',       // ← ton fichier source
+  swDest: 'public/sw.js',   // ← fichier généré au build
+  disable: process.env.NODE_ENV === 'development',
+});
+
 // Configuration Sentry optimisée
 const sentryWebpackPluginOptions = {
   org: process.env.SENTRY_ORG || 'benew-tech',
@@ -490,6 +500,6 @@ const sentryWebpackPluginOptions = {
 };
 
 export default withSentryConfig(
-  bundleAnalyzer(nextConfig),
+  bundleAnalyzer(withSerwist(nextConfig)),
   sentryWebpackPluginOptions,
 );
