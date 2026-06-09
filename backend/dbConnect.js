@@ -252,17 +252,14 @@ async function createPool() {
 // =============================================
 
 async function performHealthCheck() {
-  const { Client } = await import('pg');
-  const config = await getDatabaseConfig();
-  const client = new Client(config);
-
   const startTime = Date.now();
+  let client;
   try {
-    await client.connect();
+    client = await pool.connect();
     const result = await client.query(
       'SELECT NOW() as current_time, version() as pg_version',
     );
-    await client.end();
+    client.release();
 
     const responseTime = Date.now() - startTime;
     const pgVersion = result.rows[0].pg_version.split(' ')[0];
@@ -286,7 +283,7 @@ async function performHealthCheck() {
     };
   } catch (error) {
     try {
-      await client.end();
+      if (client) client.release();
     } catch (_) {}
 
     console.error(`[${getTimestamp()}] 🚨 Health Check échoué:`, error.message);
