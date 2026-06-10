@@ -249,6 +249,11 @@ const OrderModal = ({
         formDataToSubmit,
         applicationId,
         applicationFee,
+        {
+          applicationName: applicationName || null,
+          fbp: metaCookies.fbp,
+          fbc: metaCookies.fbc,
+        },
       );
 
       if (!result.success) {
@@ -266,7 +271,7 @@ const OrderModal = ({
             application_name: applicationName || `Application ${applicationId}`,
             application_category: applicationCategory || 'unknown',
           },
-          result.orderId || Date.now().toString(),
+          result.metaEventId || result.orderId || Date.now().toString(), // ← metaEventId pour déduplication
           formData.paymentMethods.join(','),
         );
       } catch (error) {

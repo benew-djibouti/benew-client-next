@@ -18,6 +18,8 @@ import { checkServerActionRateLimit } from '@/backend/rateLimiter';
 import { withTimeout } from '@/utils/asyncUtils';
 import * as Sentry from '@sentry/nextjs';
 import { headers } from 'next/headers';
+// AJOUTER après les autres imports
+import { sendPurchaseEventToCAPI } from '@/lib/metaCAPI';
 
 // =============================
 // CRÉATION DE COMMANDE
@@ -33,7 +35,12 @@ import { headers } from 'next/headers';
  * @param {boolean} isCashPayment - Mode CASH ou non
  * @returns {Promise<Object>} - Résultat de la création
  */
-export async function createOrder(formData, applicationId, applicationFee) {
+export async function createOrder(
+  formData,
+  applicationId,
+  applicationFee,
+  metaData = {},
+) {
   return Sentry.withServerActionInstrumentation(
     'createOrder',
     {
@@ -209,7 +216,7 @@ export async function createOrder(formData, applicationId, applicationFee) {
         }
 
         // =============================
-        // ÉTAPE 7: INSERTION EN BASE DE DONNÉES
+        // ÉTAPE 7a: INSERTION EN BASE DE DONNÉES
         // =============================
 
         client = await getClient();
@@ -308,6 +315,37 @@ export async function createOrder(formData, applicationId, applicationFee) {
           throw txError;
         }
 
+        // =============================
+        // ÉTAPE 7b: ENVOI META CAPI
+        // =============================
+        // Non bloquant — la commande est créée même si CAPI échoue
+        const capiOrderId = insertResult?.rows[0]?.order_id;
+        if (capiOrderId) {
+          const requestHeaders = await headers();
+          const clientIp =
+            requestHeaders.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+            requestHeaders.get('x-real-ip') ||
+            null;
+          const clientUserAgent = requestHeaders.get('user-agent') || null;
+
+          sendPurchaseEventToCAPI({
+            orderId: capiOrderId,
+            email: yupValidation.data.email,
+            phone: yupValidation.data.phone,
+            amount: yupValidation.data.applicationFee,
+            applicationName: metaData.applicationName || null,
+            clientIp,
+            clientUserAgent,
+            fbp: metaData.fbp || null,
+            fbc: metaData.fbc || null,
+          }).catch((err) => {
+            captureException(err, {
+              tags: { component: 'order_actions', operation: 'meta_capi_fire' },
+              extra: { orderId: capiOrderId },
+            });
+          });
+        }
+
         const newOrder = insertResult?.rows[0];
         const hasCashPayment = platformCheck.rows.some(
           (p) => p.is_cash_payment,
@@ -336,6 +374,7 @@ export async function createOrder(formData, applicationId, applicationFee) {
           success: true,
           message: 'Commande créée avec succès',
           orderId: newOrder.order_id,
+          metaEventId: newOrder.order_id, // ← même ID pour déduplication Pixel/CAPI
           orderDetails: {
             id: newOrder.order_id,
             status: newOrder.order_payment_status,
