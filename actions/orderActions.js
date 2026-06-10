@@ -375,6 +375,7 @@ export async function createOrder(
           message: 'Commande créée avec succès',
           orderId: newOrder.order_id,
           metaEventId: newOrder.order_id, // ← même ID pour déduplication Pixel/CAPI
+          orderNumber: newOrder.order_id.split('-')[0].toUpperCase(), // ← ex: "A1B2C3D4"
           orderDetails: {
             id: newOrder.order_id,
             status: newOrder.order_payment_status,
