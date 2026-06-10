@@ -63,6 +63,22 @@ const OrderModal = ({
     [platforms],
   );
 
+  // Lire les cookies Meta au montage — améliorent l'EMQ côté CAPI
+  const [metaCookies, setMetaCookies] = useState({ fbp: null, fbc: null });
+
+  useEffect(() => {
+    const getCookie = (name) => {
+      const match = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith(`${name}=`));
+      return match ? match.split('=')[1] : null;
+    };
+    setMetaCookies({
+      fbp: getCookie('_fbp'),
+      fbc: getCookie('_fbc'),
+    });
+  }, []);
+
   const closeModal = useCallback(
     (reason = 'user_close') => {
       if (isSubmitting) return;
