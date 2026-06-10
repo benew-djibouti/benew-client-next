@@ -9,11 +9,16 @@ const FacebookPixel = () => {
   const [loaded, setLoaded] = useState(false);
   const pathname = usePathname();
 
+  // APRÈS — ajouter un useEffect séparé pour la première visite
   useEffect(() => {
     if (!loaded) return;
+    pixel.pageview(); // ← déclenche PageView dès que le script est chargé
+  }, [loaded]);
 
-    pixel.pageview();
-  }, [pathname, loaded]);
+  useEffect(() => {
+    if (!loaded) return;
+    pixel.pageview(); // ← déclenche PageView à chaque changement de route
+  }, [pathname]);
 
   return (
     <div>
