@@ -25,3 +25,4 @@ initializeFacebookPixel(
 );
 
 window.fbq('init', PIXEL_ID);
+window.fbq('track', 'PageView'); // ← MANQUANT
