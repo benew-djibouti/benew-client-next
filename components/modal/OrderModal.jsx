@@ -33,6 +33,7 @@ const OrderModal = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+  const [orderNumber, setOrderNumber] = useState(null);
 
   // Ajouter une ref sur la modale
   const modalRef = useRef(null);
@@ -295,6 +296,7 @@ const OrderModal = ({
       }
 
       // Aller à la confirmation
+      setOrderNumber(result.orderNumber || null);
       setStep(4);
     } catch (err) {
       setError(err.message);
@@ -519,6 +521,22 @@ const OrderModal = ({
               <h2 id="modal-step-title">Étape 4: Confirmation</h2>
 
               <div className="order-confirmation-icon">✅</div>
+
+              {/* Numéro de commande */}
+              {orderNumber && (
+                <div className="order-confirmation-number">
+                  <p className="order-confirmation-number-label">
+                    Votre numéro de commande :
+                  </p>
+                  <p className="order-confirmation-number-value">
+                    #{orderNumber}
+                  </p>
+                  <p className="order-confirmation-number-instructions">
+                    📩 Veuillez enregistrer ce numéro et l&apos;envoyer avec
+                    votre reçu de paiement par message.
+                  </p>
+                </div>
+              )}
 
               <div className="order-confirmation-main-message">
                 <p>
