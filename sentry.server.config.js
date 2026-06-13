@@ -102,6 +102,10 @@ if (sentryDSN && isValidDSN(sentryDSN)) {
       // Erreurs paiement mobile (timeouts normaux)
       'Payment timeout',
       'Transaction pending',
+
+      // Bruits inutiles serveur (Next.js, Node.js, etc.)
+      'Failed to find Server Action.',
+      'Failed to parse body as FormData',
     ],
 
     // ===== FILTRAGE BREADCRUMBS SERVEUR =====
