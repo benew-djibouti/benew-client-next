@@ -485,7 +485,7 @@ const nextConfig = {
 const withSerwist = withSerwistInit({
   swSrc: 'app/sw.js',       // ← ton fichier source
   swDest: 'public/sw.js',   // ← fichier généré au build
-  disable: process.env.NODE_ENV === 'development',
+  disable: process.env.NODE_ENV !== 'production',
 });
 
 // Configuration Sentry optimisée
