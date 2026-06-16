@@ -31,6 +31,13 @@ async function loadCertificate() {
     return null;
   }
 
+  // ✅ Priorité à la variable d'environnement (Vercel)
+  if (process.env.DB_CA) {
+    console.log('✅ Certificate loaded from environment variable DB_CA');
+    cachedCertificate = process.env.DB_CA;
+    return cachedCertificate;
+  }
+
   const workingDir = process.cwd();
 
   // Chemins possibles pour le certificat
@@ -139,7 +146,7 @@ async function getDatabaseConfig() {
         : false,
   };
 
-  if (!certificate) {
+  if (!certificate && !process.env.CI && !process.env.GITHUB_ACTIONS) {
     // ← warning visible dans les logs Vercel/PM2
     console.warn(
       '[DB] ⚠️ Certificat CA non trouvé — connexion SSL sans vérification. ' +
