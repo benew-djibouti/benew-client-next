@@ -137,7 +137,6 @@ const ContactInfoModal = ({ isOpen, onClose }) => {
 
             <div className="modal-contact-items">
               <ContactItem icon={MdPhone} text="77.86.00.64" />
-              <ContactItem icon={MdPhone} text="77.19.68.18" />
               <ContactItem icon={MdWhatsapp} text="77.86.00.64" />
               <ContactItem icon={MdMail} text="benew-tech@benew-dj.com" />
               <ContactItem icon={MdMail} text="service-client@benew-dj.com" />
