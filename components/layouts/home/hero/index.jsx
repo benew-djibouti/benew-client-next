@@ -44,9 +44,15 @@ const sliderVariants = {
 };
 
 const MotionLink = motion.create(Link);
-const MotionImage = motion.create(Image);
+// const MotionImage = motion.create(Image);
 
 function Hero() {
+  const handleScrollClick = () => {
+    const heroSection = document.querySelector('.first');
+    const nextSection = heroSection?.nextElementSibling;
+    nextSection?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="hero">
       <div className="wrapper">
@@ -83,15 +89,16 @@ function Hero() {
               BENEW
             </MotionLink>
           </motion.div>
-          <MotionImage
-            src="/scroll.png"
-            alt="Défiler vers le bas"
-            title="Défiler vers le bas"
-            width={30}
-            height={30}
+          <motion.button
+            type="button"
+            className="scrollButton"
+            onClick={handleScrollClick}
+            aria-label="Défiler vers la section suivante"
             variants={textVariants}
             animate="scrollButton"
-          />
+          >
+            <Image src="/scroll.png" alt="" width={30} height={30} />
+          </motion.button>
         </motion.div>
       </div>
       <motion.div
