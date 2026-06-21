@@ -91,22 +91,22 @@
 
     // 📱 PETITS ÉCRANS - Tailles réduites
     @include until('small-sm') {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       line-height: 1.6;
     }
 
     @include from('small-sm') {
-      font-size: 0.87rem;
+      font-size: 0.97rem;
       line-height: 1.62;
     }
 
     @include from('small-lg') {
-      font-size: 0.9rem;
+      font-size: 1rem;
       line-height: 1.65;
     }
 
     @include from('small-xl') {
-      font-size: 0.93rem;
+      font-size: 1.03rem;
       line-height: 1.67;
     }
 
