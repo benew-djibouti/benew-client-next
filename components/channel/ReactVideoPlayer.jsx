@@ -79,7 +79,6 @@ const ReactVideoPlayer = ({
       <ReactPlayer
         src={videoUrl}
         playing={autoPlay}
-        muted={autoPlay} // autoplay sans son pour éviter les blocages navigateur
         controls={controls}
         width="100%"
         height="auto"
@@ -90,7 +89,6 @@ const ReactVideoPlayer = ({
               poster: posterUrl || undefined,
               preload: 'metadata',
               playsInline: true,
-              muted: autoPlay, // autoplay sans son pour éviter les blocages navigateur
             },
           },
         }}
