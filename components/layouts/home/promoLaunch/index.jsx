@@ -145,7 +145,7 @@ const PromoLaunch = () => {
       {/* BOUTON */}
       <div className="promo-cta">
         <Link href="/templates" className="promo-cta__button">
-          Visiter la boutique
+          La Boutique
         </Link>
       </div>
     </div>
