@@ -85,8 +85,8 @@ function Hero() {
             >
               Découvrez Nos Magasins
             </MotionLink>
-            <MotionLink href="/presentation" className="secondaryButton">
-              BENEW
+            <MotionLink href="/channel" className="secondaryButton">
+              Channel Benew
             </MotionLink>
           </motion.div>
           <motion.button
