@@ -87,7 +87,7 @@ export default function AnalyticsInitializer({ isDevelopment = false }) {
             `[GTM] Page tracked: ${pathname} (${loadTime.toFixed(2)}ms)`,
           );
         }
-      }, 100);
+      }, 50);
     }
   }, [pathname, isDevelopment]);
 

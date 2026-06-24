@@ -1,3 +1,4 @@
+// components/contact/index.jsx
 'use client';
 
 import './styles/index.scss';

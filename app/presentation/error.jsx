@@ -1,3 +1,4 @@
+// Fichier : app/presentation/error.jsx
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -73,6 +74,8 @@ export default function PresentationError({ error, reset }) {
 
     try {
       trackEvent('error_retry_attempt', {
+        event_category: 'errors',
+        event_label: 'presentation_retry',
         page: 'presentation',
         retry_number: retryCount + 1,
       });

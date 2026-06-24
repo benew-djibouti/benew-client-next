@@ -308,7 +308,7 @@ const ChannelList = ({ videos: initialVideos = [] }) => {
   useEffect(() => {
     if (initialVideos.length > 0) {
       try {
-        trackEvent('page_view', {
+        trackEvent('view_video_list', {
           event_category: 'channel',
           event_label: 'channel_list',
           videos_count: initialVideos.length,

@@ -1,3 +1,4 @@
+// components/contact/formContainer/index.jsx
 'use client';
 
 import { useRef, useState, useCallback, memo } from 'react';
@@ -141,12 +142,14 @@ const FormContainer = () => {
           message: result.message,
         });
 
-        // Tracker le succès
-        trackEvent('contact_form_submit_success', {
-          event_category: 'contact',
-          event_label: 'form_submission_successful',
-          conversion: true,
-        });
+        // Ne tracker la conversion que si le score de risque est bas
+        if (!result.riskScore || result.riskScore < 4) {
+          trackEvent('contact_form_submit_success', {
+            event_category: 'contact',
+            event_label: 'form_submission_successful',
+            conversion: true,
+          });
+        }
 
         formRef.current.reset();
       } else {

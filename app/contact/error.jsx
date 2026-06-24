@@ -1,3 +1,4 @@
+// app/contact/error.jsx
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -22,6 +23,8 @@ export default function ContactError({ error, reset }) {
     if (!error) return;
     try {
       trackEvent('error_boundary_shown', {
+        event_category: 'errors',
+        event_label: 'contact_error',
         page: 'contact',
         error_name: error?.name || 'Unknown',
       });
