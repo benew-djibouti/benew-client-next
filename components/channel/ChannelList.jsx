@@ -10,6 +10,7 @@ import PageTracker from '../analytics/PageTracker';
 import './channelStyles/index.scss';
 
 import ParallaxSkeleton from '../layouts/parallax/ParallaxSkeleton';
+import * as pixel from '@/lib/fpixel';
 
 // =============================
 // IMPORTS DYNAMIQUES (ssr:false obligatoire)
@@ -312,8 +313,14 @@ const ChannelList = ({ videos: initialVideos = [] }) => {
           event_label: 'channel_list',
           videos_count: initialVideos.length,
         });
+
+        pixel.event('ViewChannel', {
+          content_name: 'Chaîne de Tutoriels Benew',
+          content_category: 'Tutorial Videos',
+          num_items: initialVideos.length,
+        });
       } catch (e) {
-        console.warn('[Analytics] Error tracking channel page view:', e);
+        console.warn('[Analytics] Error tracking channel view:', e);
       }
     }
   }, []);
@@ -327,6 +334,13 @@ const ChannelList = ({ videos: initialVideos = [] }) => {
         event_label: video.video_title,
         video_id: video.video_id,
         video_category: video.video_category,
+      });
+
+      pixel.event('WatchTutorial', {
+        content_name: video.video_title,
+        content_ids: [video.video_id],
+        content_category: video.video_category || 'General Tuto',
+        video_duration: video.video_duration_seconds || 0,
       });
     } catch (e) {
       console.warn('[Analytics] Error tracking video play:', e);
