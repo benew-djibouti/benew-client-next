@@ -23,6 +23,7 @@ import { formatPrice, getApplicationLevelLabel } from '@/utils/helpers';
 import { trackEvent } from '@/utils/analytics';
 import PageTracker from '../analytics/PageTracker';
 import AppImage from './AppImage';
+import * as pixel from '@/lib/fpixel';
 
 const OrderModal = dynamic(() => import('../modal/OrderModal'), {
   loading: () => (
@@ -550,6 +551,15 @@ const SingleTemplateShops = ({
           template_id: templateID,
           application_fee: app.application_fee,
           application_rent: app.application_rent,
+        });
+
+        // AJOUTER — Meta Pixel InitiateCheckout
+        pixel.event('InitiateCheckout', {
+          content_name: app.application_name,
+          content_ids: [app.application_id],
+          content_type: 'product',
+          value: app.application_fee,
+          currency: 'DJF',
         });
       } catch (error) {
         console.warn('[Analytics] Error tracking order start:', error);

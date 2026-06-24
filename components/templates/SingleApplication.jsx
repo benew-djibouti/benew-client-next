@@ -23,6 +23,7 @@ import { formatPrice, getApplicationLevelLabel } from '@/utils/helpers';
 import { trackEvent } from '@/utils/analytics';
 import PageTracker from '../analytics/PageTracker';
 import AppImage from './AppImage';
+import * as pixel from '@/lib/fpixel';
 
 // Hors du composant, au niveau module
 const CARDS_CONFIG = [
@@ -538,6 +539,15 @@ const SingleApplication = ({ application, template, platforms, context }) => {
           application_id: applicationId,
           total_images: allImages.length,
         });
+
+        // AJOUTER — Meta Pixel ViewContent
+        pixel.event('ViewContent', {
+          content_name: application.application_name,
+          content_ids: [applicationId],
+          content_type: 'product',
+          value: application.application_fee,
+          currency: 'DJF',
+        });
       } catch (error) {
         console.warn('[Analytics] Error:', error);
       }
@@ -598,12 +608,21 @@ const SingleApplication = ({ application, template, platforms, context }) => {
         event_category: 'ecommerce',
         application_id: applicationId,
       });
+
+      // AJOUTER — Meta Pixel InitiateCheckout
+      pixel.event('InitiateCheckout', {
+        content_name: application.application_name,
+        content_ids: [applicationId],
+        content_type: 'product',
+        value: application.application_fee,
+        currency: 'DJF',
+      });
     } catch (error) {
       console.warn('[Analytics] Error:', error);
     }
 
     setIsModalOpen(true);
-  }, [platforms, applicationId]);
+  }, [platforms, applicationId, application]);
 
   const handleOrderModalClose = useCallback(() => {
     setIsModalOpen(false);
