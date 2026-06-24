@@ -1,3 +1,4 @@
+// components/contact/ContactInfoModal.jsx
 'use client';
 
 import { memo, useEffect, useRef } from 'react';

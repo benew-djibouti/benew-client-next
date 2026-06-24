@@ -1,3 +1,4 @@
+// Fichier : components/modal/PresentationModal.jsx
 'use client';
 
 import { useEffect, useRef } from 'react';

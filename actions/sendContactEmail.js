@@ -453,6 +453,7 @@ export async function sendContactEmail(formData) {
       message:
         'Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.',
       code: 'EMAIL_SENT',
+      riskScore: botCheck.riskScore, // ← AJOUTER : exposer le score même en succès
     };
   } catch (error) {
     let userMessage =

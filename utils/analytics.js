@@ -177,13 +177,9 @@ export const initializeGTMConsent = () => {
  * Envoie un événement à GTM/GA4 de manière robuste
  */
 export const trackEvent = (eventName, parameters = {}) => {
-  // Vérifier le consentement
-  if (!hasAnalyticsConsent()) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[GTM] Event bloqué - pas de consentement: ${eventName}`);
-    }
-    return;
-  }
+  // ⛔ Le blocage par consentement est retiré ici — c'est GTM (Consent Mode v2)
+  // qui décide, via les tags, d'envoyer ou non les données à Google.
+  // Le dataLayer doit toujours recevoir l'événement.
 
   if (typeof window !== 'undefined') {
     const eventData = {
