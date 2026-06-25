@@ -1,3 +1,4 @@
+// app/templates/[id]/applications/[appID]/error.jsx
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
