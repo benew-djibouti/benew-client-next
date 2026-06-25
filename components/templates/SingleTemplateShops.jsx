@@ -516,18 +516,6 @@ const SingleTemplateShops = ({
   const paymentErrorTimerRef = useRef(null); // ← ajouter cette ligne
   const galleryCloseTimerRef = useRef(null);
 
-  useEffect(() => {
-    if (templateID && applications.length > 0) {
-      trackEvent('template_detail_view', {
-        event_category: 'ecommerce',
-        event_label: applications[0]?.template_name || 'Template',
-        template_id: templateID,
-        applications_count: applications.length,
-        has_payment_methods: platforms.length > 0,
-      });
-    }
-  }, [templateID]);
-
   const handleOrderClick = useCallback(
     (app) => {
       if (!platforms || platforms.length === 0) {
@@ -551,6 +539,7 @@ const SingleTemplateShops = ({
           template_id: templateID,
           application_fee: app.application_fee,
           application_rent: app.application_rent,
+          currency: 'DJF', // ← AJOUTER pour cohérence avec Meta Pixel
         });
 
         // AJOUTER — Meta Pixel InitiateCheckout

@@ -322,44 +322,21 @@ TemplateCard.displayName = 'TemplateCard';
 
 // Composant principal simplifié
 const TemplatesList = ({ templates = [] }) => {
-  const viewedTemplatesRef = useRef(new Set());
-
-  // Tracking de la page view
-  useEffect(() => {
-    if (templates.length > 0) {
-      try {
-        trackEvent('page_view', {
-          event_category: 'templates',
-          event_label: 'templates_list',
-          templates_count: templates.length,
-        });
-      } catch (error) {
-        console.warn('[Analytics] Error tracking page view:', error);
-      }
-    }
-  }, [templates.length]);
-
   // Handler pour le clic sur un template
-  const handleTemplateClick = useCallback(
-    (template) => {
-      if (!viewedTemplatesRef.current.has(template.template_id)) {
-        try {
-          trackEvent('template_click', {
-            event_category: 'ecommerce',
-            event_label: template.template_name,
-            template_id: template.template_id,
-            template_name: template.template_name,
-            applications_count: template.applications_count || 0,
-          });
-
-          viewedTemplatesRef.current.add(template.template_id); // mutation directe
-        } catch (error) {
-          console.warn('[Analytics] Error tracking template click:', error);
-        }
-      }
-    },
-    [], // ← pas de dépendances — callback stable pour toujours
-  );
+  // MODIFIER handleTemplateClick — retirer la vérification du Set
+  const handleTemplateClick = useCallback((template) => {
+    try {
+      trackEvent('template_click', {
+        event_category: 'ecommerce',
+        event_label: template.template_name,
+        template_id: template.template_id,
+        template_name: template.template_name,
+        applications_count: template.applications_count || 0,
+      });
+    } catch (error) {
+      console.warn('[Analytics] Error tracking template click:', error);
+    }
+  }, []);
 
   // États vides
   if (!templates || templates.length === 0) {

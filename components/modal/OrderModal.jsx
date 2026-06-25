@@ -310,6 +310,7 @@ const OrderModal = ({
     applicationFee,
     applicationName,
     applicationCategory,
+    metaCookies,
     onClose,
   ]);
 
