@@ -743,6 +743,17 @@ const SingleApplication = ({ application, template, platforms, context }) => {
             {application.application_description ||
               'Aucune description disponible.'}
           </p>
+
+          <div className="app-description-divider" />
+
+          <div className="app-description-credentials">
+            <p className="app-credentials-code">
+              {`Code: ${getApplicationLevelLabel(application.application_level).short}`}
+            </p>
+            <p className="app-credentials-admin-title">Utilisateur Admin:</p>
+            <p className="app-credentials-line">Login: test-test@test.com</p>
+            <p className="app-credentials-line">Password: Testeur12345*</p>
+          </div>
         </div>
       </ContentModal>
 

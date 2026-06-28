@@ -45,11 +45,11 @@ export function getApplicationLevelLabel(level) {
       long: 'Magasin Simplifié',
     },
     2: {
-      short: 'MS+',
+      short: 'MS⁺',
       long: 'Magasin Standard',
     },
     3: {
-      short: 'MS2+',
+      short: 'MS²⁺',
       long: 'Magasin Supérieur',
     },
     4: {
