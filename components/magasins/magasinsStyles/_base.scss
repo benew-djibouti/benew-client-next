@@ -39,6 +39,7 @@
 .magasins-section-title {
   display: flex;
   align-items: center;
+  justify-content: flex-end; // ← AJOUTER
   gap: 1rem;
   color: $text-color;
   font-size: clamp(1.25rem, 0.54vw + 1.05rem, 1.75rem);
