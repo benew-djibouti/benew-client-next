@@ -1,0 +1,108 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _base.scss
+// ================================
+
+.magasins-container {
+  width: 100%;
+}
+
+.magasins-content {
+  scroll-snap-align: start; // ← AJOUTER
+  width: 100%;
+  min-height: 100vh;
+  padding: clamp(2rem, 2.17vw + 1.2rem, 4rem) clamp(1rem, 2.72vw + 0rem, 3.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2.5rem, 2.17vw + 1.7rem, 4.5rem);
+  background-image: url('/stars.png');
+  background-repeat: repeat;
+  background-size: auto;
+  background-position: center;
+}
+
+// ================================
+// SECTION (web / mobile)
+// ================================
+
+.magasins-section {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 1.09vw + 1.1rem, 2.5rem);
+}
+
+.magasins-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; // ← AJOUTER
+  gap: 1rem;
+  color: $text-color;
+  font-size: clamp(1.25rem, 0.54vw + 1.05rem, 1.75rem);
+  font-weight: 700;
+  margin: 0;
+  padding-bottom: clamp(0.75rem, 0.27vw + 0.65rem, 1rem);
+  border-bottom: 1px solid rgba($primary-color, 0.2);
+}
+
+.magasins-section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($primary-color, 0.12);
+  border: 1px solid rgba($primary-color, 0.3);
+  color: $primary-color;
+  font-size: clamp(0.75rem, 0.05vw + 0.73rem, 0.8rem);
+  font-weight: 600;
+  width: clamp(1.5rem, 0.27vw + 1.4rem, 1.75rem);
+  height: clamp(1.5rem, 0.27vw + 1.4rem, 1.75rem);
+  border-radius: 50%;
+}
+
+// ================================
+// GRILLE
+// ================================
+
+.magasins-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: clamp(1.25rem, 1.09vw + 0.85rem, 2.25rem);
+}
+
+// ================================
+// ÉTATS VIDE / ERREUR
+// ================================
+
+.magasins-error,
+.magasins-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+  gap: 1rem;
+
+  h2 {
+    color: $primary-color;
+    font-size: clamp(1.5rem, 0.54vw + 1.3rem, 2rem);
+    margin: 0;
+  }
+
+  p {
+    color: $text-color-muted;
+    font-size: clamp(0.95rem, 0.11vw + 0.91rem, 1.05rem);
+    margin: 0;
+  }
+
+  small {
+    color: $text-color-muted;
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+}

@@ -1,3 +1,4 @@
+// components/layouts/sidebar/links/index.jsx
 'use client';
 
 import { motion } from 'framer-motion';
@@ -9,6 +10,7 @@ const MotionLink = motion.create(Link);
 const NAV_ITEMS = [
   { title: 'Accueil', path: '' },
   { title: 'Modèles', path: 'templates' },
+  { title: 'Magasins', path: 'magasins' },
   { title: 'Chaîne Tuto', path: 'channel' },
   { title: 'Présentation', path: 'presentation' },
   { title: 'Contact', path: 'contact' },

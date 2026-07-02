@@ -1,3 +1,4 @@
+// components/layouts/sidebar/index.jsx
 'use client';
 
 import { useState } from 'react';

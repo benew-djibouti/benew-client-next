@@ -1,0 +1,67 @@
+@use 'sass:color';
+@use '../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _image.scss
+// ================================
+
+.magasins-card-image {
+  position: relative;
+  overflow: hidden;
+  height: 200px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  @include tablet-up {
+    height: 210px;
+  }
+
+  @include desktop-up {
+    height: 220px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 60%,
+      rgba($background-color, 0.15) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+}
+
+.magasins-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+  position: relative;
+  z-index: 0;
+
+  .magasins-card:hover & {
+    transform: scale(1.06);
+  }
+
+  @include desktop-up {
+    .magasins-card:hover & {
+      transform: scale(1.04);
+    }
+  }
+}
+
+.magasins-card-img-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba($color-purple, 0.08),
+    rgba($primary-color, 0.04)
+  );
+}

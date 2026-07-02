@@ -68,7 +68,7 @@ function Hero() {
           <motion.h1 variants={textVariants}>COMMENCES TON HISTOIRE</motion.h1>
           <motion.div className="buttonGroup" variants={textVariants}>
             <MotionLink
-              href="/templates"
+              href="/magasins"
               className="primaryButton"
               onClick={() => {
                 try {
