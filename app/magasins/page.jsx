@@ -132,3 +132,5 @@ export default async function MagasinsPage() {
     />
   );
 }
+
+export const revalidate = 300;
