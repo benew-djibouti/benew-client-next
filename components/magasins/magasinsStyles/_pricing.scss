@@ -1,0 +1,56 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _pricing.scss
+// ================================
+
+.magasins-card-pricing {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.375rem, 0.08vw + 0.35rem, 0.5rem);
+  margin-top: auto;
+  padding-top: clamp(0.5rem, 0.22vw + 0.42rem, 0.75rem);
+  border-top: 1px solid rgba($text-color, 0.06);
+}
+
+.magasins-card-fee {
+  font-weight: 700;
+  color: $primary-color;
+  text-shadow: 0 2px 4px rgba($primary-color, 0.3);
+  transition: all 0.3s ease;
+  margin: 0;
+  font-size: clamp(0.9rem, 0.38vw + 0.76rem, 1.25rem);
+
+  span {
+    color: $text-color-muted;
+    font-size: 0.75em;
+    font-weight: 500;
+  }
+
+  &:hover {
+    animation: pricePulse 1s ease-in-out infinite;
+  }
+}
+
+.magasins-card-rent {
+  color: $secondary-color;
+  font-weight: 600;
+  margin: 0;
+  font-size: clamp(0.8rem, 0.05vw + 0.78rem, 0.85rem);
+
+  span {
+    font-size: 0.9em;
+    font-weight: 400;
+  }
+}
+
+@keyframes pricePulse {
+  0%,
+  100% {
+    text-shadow: 0 2px 4px rgba($primary-color, 0.3);
+  }
+  50% {
+    text-shadow: 0 4px 8px rgba($primary-color, 0.6);
+  }
+}

@@ -1,0 +1,126 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _card.scss
+// ================================
+
+.magasins-card {
+  background: linear-gradient(
+    145deg,
+    rgba($background-color, 0.9),
+    rgba($background-color, 0.7)
+  );
+  border: 1px solid rgba($primary-color, 0.15);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba($primary-color, 0.08);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($primary-color, 0.4),
+      transparent
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
+
+  &:hover {
+    transform: translateY(-6px);
+    border-color: rgba($primary-color, 0.35);
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.4),
+      0 4px 16px rgba($primary-color, 0.15);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+}
+
+// Corps de la carte
+.magasins-card-body {
+  padding: clamp(1rem, 0.54vw + 0.8rem, 1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+// Nom
+.magasins-card-name {
+  color: $text-color;
+  font-size: clamp(1rem, 0.27vw + 0.9rem, 1.25rem);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.3;
+  text-shadow: 0 2px 4px rgba($background-color, 0.5);
+  transition: all 0.3s ease;
+
+  .magasins-card:hover & {
+    color: $primary-color;
+    transform: translateX(4px);
+  }
+}
+
+// Niveau
+.magasins-card-level {
+  display: inline-block;
+  color: $secondary-color;
+  font-size: clamp(0.75rem, 0.05vw + 0.73rem, 0.8rem);
+  font-weight: 600;
+  font-style: italic;
+  align-self: flex-start;
+}
+
+// Meta (niveau + catégorie)
+.magasins-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+// Badge catégorie
+.magasins-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: clamp(0.65rem, 0.05vw + 0.63rem, 0.7rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+
+  &--web {
+    background: rgba($color-purple, 0.2);
+    border: 1px solid rgba($color-purple, 0.4);
+    color: $color-purple;
+  }
+
+  &--mobile {
+    background: rgba($primary-color, 0.15);
+    border: 1px solid rgba($primary-color, 0.35);
+    color: $primary-color;
+  }
+}

@@ -1,0 +1,138 @@
+@use 'sass:color';
+@use '../../../../app/styles/abstracts' as *;
+
+// ================================
+// 📄 _responsive.scss
+// ================================
+
+@include mobile-only {
+  .magasins-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .magasins-card-image {
+    height: 180px;
+  }
+}
+
+@include mobile-landscape {
+  .magasins-content {
+    padding: 1.5rem 0.75rem;
+  }
+
+  .magasins-card-image {
+    height: 170px;
+  }
+
+  .magasins-card-body {
+    padding: 1rem;
+  }
+}
+
+@include tablet-only {
+  .magasins-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (pointer: coarse) {
+  .magasins-card-btn {
+    min-height: 48px;
+
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      opacity: 0.8;
+      transform: scale(0.98);
+    }
+  }
+
+  .magasins-card:hover {
+    transform: none;
+  }
+
+  .magasins-card:active {
+    transform: translateY(-4px);
+  }
+}
+
+@include reduced-motion {
+  .magasins-card,
+  .magasins-card-img,
+  .magasins-card-name,
+  .magasins-card-btn {
+    transition: none;
+    animation: none;
+
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+
+  .magasins-card::before,
+  .magasins-card-btn::before {
+    display: none;
+  }
+
+  .magasins-card-fee:hover {
+    animation: none;
+  }
+}
+
+@include high-density {
+  .magasins-card {
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.4),
+      0 4px 16px rgba($primary-color, 0.1);
+  }
+
+  .magasins-card-img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+@include from('large-1920') {
+  .magasins-content {
+    padding: 5rem 4rem;
+  }
+
+  .magasins-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .magasins-card-image {
+    height: 240px;
+  }
+}
+
+@media (max-width: 359px) {
+  .magasins-content {
+    padding: 1rem 0.5rem;
+  }
+
+  .magasins-card-image {
+    height: 160px;
+  }
+
+  .magasins-card-body {
+    padding: 0.875rem 0.75rem;
+  }
+
+  .magasins-card-name {
+    font-size: 0.95rem;
+  }
+
+  .magasins-card-fee {
+    font-size: 0.85rem;
+  }
+
+  .magasins-card-btn {
+    font-size: 0.75rem;
+    min-height: 38px;
+    padding: 0.5rem 0.75rem;
+  }
+}
