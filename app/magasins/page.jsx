@@ -17,7 +17,7 @@ export const metadata = {
     'applications mobile',
     'e-commerce',
     'benew',
-    'Djibouti',
+    // 'Djibouti',
   ],
   openGraph: {
     title: 'Magasins - Benew | Toutes nos applications',
