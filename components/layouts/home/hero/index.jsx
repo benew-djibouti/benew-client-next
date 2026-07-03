@@ -1,3 +1,4 @@
+// components/layouts/home/hero/index.jsx
 'use client';
 
 import Image from 'next/image';
@@ -62,6 +63,30 @@ function Hero() {
           initial="initial"
           animate="animate"
         >
+          <MotionLink
+            href="/magasins"
+            className="hero-promo-badge"
+            variants={textVariants}
+            onClick={() => {
+              try {
+                trackEvent('promo_badge_click', {
+                  event_category: 'hero',
+                  event_label: 'summer_promo',
+                  button_type: 'promo_badge',
+                  page_section: 'hero',
+                });
+              } catch (e) {
+                console.warn('[Analytics] Error tracking promo click:', e);
+              }
+            }}
+          >
+            <span className="hero-promo-icon">☀️</span>
+            <span className="hero-promo-text">
+              Promotion d&apos;été — Prix réduits sur tous nos magasins
+            </span>
+            <span className="hero-promo-arrow">→</span>
+          </MotionLink>
+
           <motion.h2 variants={textVariants}>
             LES MAGASINS DE L&apos;ESPOIR
           </motion.h2>

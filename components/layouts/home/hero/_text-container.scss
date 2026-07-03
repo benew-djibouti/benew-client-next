@@ -122,4 +122,82 @@
     display: inline-flex;
     align-items: center;
   }
+
+  .hero-promo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    background: linear-gradient(
+      135deg,
+      rgba($primary-color, 0.15),
+      rgba($secondary-color, 0.1)
+    );
+    border: 1px solid rgba($primary-color, 0.4);
+    backdrop-filter: blur(8px);
+    text-decoration: none;
+    cursor: pointer;
+    animation: promoPulse 2.5s ease-in-out infinite;
+    transition: all 0.3s ease;
+
+    @include from('large-1280') {
+      align-self: flex-start;
+    }
+
+    &:hover {
+      background: linear-gradient(
+        135deg,
+        rgba($primary-color, 0.25),
+        rgba($secondary-color, 0.15)
+      );
+      border-color: rgba($primary-color, 0.7);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($primary-color, 0.2);
+
+      .hero-promo-arrow {
+        transform: translateX(4px);
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    @media (pointer: coarse) {
+      &:hover {
+        transform: none;
+      }
+      &:active {
+        opacity: 0.8;
+        transform: scale(0.98);
+      }
+    }
+  }
+
+  .hero-promo-icon {
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    line-height: 1;
+  }
+
+  .hero-promo-text {
+    color: $primary-color;
+    font-size: clamp(0.7rem, 0.8vw + 0.4rem, 0.85rem);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+
+    @media (max-width: 400px) {
+      white-space: normal;
+      text-align: center;
+    }
+  }
+
+  .hero-promo-arrow {
+    color: $primary-color;
+    font-size: clamp(0.8rem, 1vw, 1rem);
+    font-weight: 700;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
 }
