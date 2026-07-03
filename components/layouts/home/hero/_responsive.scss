@@ -130,6 +130,20 @@
   .hero .imageContainer .heroImage {
     animation: none;
   }
+
+  // Désactivation des animations pour le badge promo
+  .hero .wrapper .hero-textContainer .hero-promo-badge {
+    animation: none;
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+
+    .hero-promo-arrow {
+      transition: none;
+    }
+  }
 }
 
 // =============================
