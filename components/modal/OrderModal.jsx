@@ -12,6 +12,8 @@ import {
 } from '@/utils/analytics';
 import { formatPrice } from '@/utils/helpers';
 
+import { generateWhatsAppLink } from '@/lib/whatsappNotification';
+
 // Valeurs initiales extraites pour pouvoir les réutiliser proprement
 const INITIAL_FORM_DATA = {
   name: '',
@@ -34,6 +36,7 @@ const OrderModal = ({
   const [error, setError] = useState('');
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
   const [orderNumber, setOrderNumber] = useState(null);
+  const [whatsappLink, setWhatsappLink] = useState(null);
 
   // Ajouter une ref sur la modale
   const modalRef = useRef(null);
@@ -297,6 +300,18 @@ const OrderModal = ({
 
       // Aller à la confirmation
       setOrderNumber(result.orderNumber || null);
+
+      // Générer le lien WhatsApp pour le client
+      const waLink = generateWhatsAppLink({
+        orderNumber: result.orderNumber || result.orderId,
+        clientName: `${formData.firstName} ${formData.lastName}`,
+        applicationName: applicationName || 'Application Benew',
+        applicationFee: applicationFee,
+        paymentMethods: formData.paymentMethods || [],
+      });
+
+      setWhatsappLink(waLink);
+
       setStep(4);
     } catch (err) {
       setError(err.message);
@@ -537,6 +552,33 @@ const OrderModal = ({
                     votre reçu de paiement par message.
                   </p>
                 </div>
+              )}
+
+              {/* Bouton WhatsApp */}
+              {whatsappLink && (
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="order-whatsapp-btn"
+                  onClick={() => {
+                    try {
+                      trackEvent('whatsapp_order_click', {
+                        event_category: 'ecommerce',
+                        event_label: 'order_confirmation_whatsapp',
+                        order_number: orderNumber,
+                      });
+                    } catch (e) {
+                      console.warn(
+                        '[Analytics] Error tracking whatsapp click:',
+                        e,
+                      );
+                    }
+                  }}
+                >
+                  <span className="order-whatsapp-icon">📱</span>
+                  Envoyer ma commande sur WhatsApp
+                </a>
               )}
 
               <div className="order-confirmation-main-message">

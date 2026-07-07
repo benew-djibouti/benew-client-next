@@ -517,3 +517,51 @@
     }
   }
 }
+
+// Bouton WhatsApp
+.order-whatsapp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: clamp(0.875rem, 0.3vw + 0.77rem, 1rem)
+    clamp(1.25rem, 0.61vw + 1.03rem, 1.5rem);
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: clamp(0.95rem, 0.12vw + 0.91rem, 1rem);
+  min-height: clamp(44px, 0.98vw + 40.5px, 48px);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+
+  &:hover {
+    background: linear-gradient(135deg, #20c55c, #0f7a6d);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @media (pointer: coarse) {
+    &:hover {
+      transform: none;
+    }
+    &:active {
+      opacity: 0.85;
+      transform: scale(0.98);
+    }
+  }
+}
+
+.order-whatsapp-icon {
+  font-size: 1.2em;
+  line-height: 1;
+}
