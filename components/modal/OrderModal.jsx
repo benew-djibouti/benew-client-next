@@ -304,10 +304,13 @@ const OrderModal = ({
       // Générer le lien WhatsApp pour le client
       const waLink = generateWhatsAppLink({
         orderNumber: result.orderNumber || result.orderId,
-        clientName: `${formData.firstName} ${formData.lastName}`,
+        clientName: formData.name,
         applicationName: applicationName || 'Application Benew',
         applicationFee: applicationFee,
-        paymentMethods: formData.paymentMethods || [],
+        paymentMethods: (formData.paymentMethods || []).map((id) => {
+          const platform = platforms?.find((p) => p.platform_id === id);
+          return platform?.platform_name || id;
+        }),
       });
 
       setWhatsappLink(waLink);
